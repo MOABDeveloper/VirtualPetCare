@@ -105,16 +105,6 @@ public class MyFrame extends JFrame {
         return buttonLabel;
     }
 
-    private JLabel buttonText(String text, int x, int y, int width, int height) {
-        JLabel label = new JLabel(text);
-        label.setFont(customFont);
-        label.setForeground(Color.WHITE);
-        label.setBounds(x, y, width, height);
-
-        return label;
-
-    }
-
     private JLayeredPane createMainScreen() {
         // layered pane
         JLayeredPane layeredPane = new JLayeredPane();
@@ -137,30 +127,22 @@ public class MyFrame extends JFrame {
         windowsLabel.setBounds(70, 35, width, height);
         layeredPane.add(windowsLabel, Integer.valueOf(1));
 
-        // buttons HERE HRE
+        // buttons
         JButton tutorialButton = buttonCreate(240, 430, 192, 64, "resources/button.png", "resources/button_clicked.png", "Tutorial");
-        /* JLabel tutorialLabel = new JLabel("Tutorial");
+        JLabel tutorialLabel = new JLabel("Tutorial");
         tutorialLabel.setFont(customFont);
         tutorialLabel.setForeground(Color.WHITE);
-        tutorialLabel.setBounds(270, 430, 192, 64); */
-        JLabel tutorialLabel = buttonText("Tutorial", 270, 430, 192, 64);
+        tutorialLabel.setBounds(270, 430, 192, 64);
         layeredPane.add(tutorialLabel, Integer.valueOf(2));
         layeredPane.add(tutorialButton, Integer.valueOf(2));
 
         JButton newGameButton = buttonCreate(240, 340, 192, 64, "resources/button.png", "resources/button_clicked.png", "New Game");
-        JLabel newGameLabel = buttonText("New Game", 275, 340, 192, 64);
-        layeredPane.add(newGameLabel, Integer.valueOf(2));
         layeredPane.add(newGameButton, Integer.valueOf(2));
 
-
         JButton loadButton = buttonCreate(450, 340, 192, 64, "resources/button.png", "resources/button_clicked.png", "Load");
-        JLabel loadLabel = buttonText("Load", 510, 340, 192, 64);
-        layeredPane.add(loadLabel, Integer.valueOf(2));
         layeredPane.add(loadButton, Integer.valueOf(2));
 
         JButton creditButton = buttonCreate(450, 430, 192, 64, "resources/button.png", "resources/button_clicked.png", "Credit");
-        JLabel creditLabel = buttonText("Credits", 490, 430, 192, 64);
-        layeredPane.add(creditLabel, Integer.valueOf(2));
         layeredPane.add(creditButton, Integer.valueOf(2));
 
         JButton parentalControlButton = buttonCreate(850, 620, 192, 64, "resources/button.png", "resources/button_clicked.png", "Parental Control");
