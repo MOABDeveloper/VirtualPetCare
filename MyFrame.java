@@ -4,12 +4,27 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class MyFrame extends JFrame {
     private CardLayout cardLayout;
     private JPanel mainPanel;
-
+    private Font customFont;
     MyFrame() {
+        // Load custom font
+        try {
+            // loading font from resources folder
+            InputStream fontStream = getClass().getResourceAsStream("/resources/Early GameBoy.ttf");
+            if (fontStream == null) {
+                throw new IOException("Font file not found!");
+            }
+            customFont = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(16f); // def size
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+            // if font fails to load, go back to default
+            customFont = new Font("Arial", Font.PLAIN, 24);
+        }
         // actual screen
         this.setTitle("Virtual Pet");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -79,7 +94,7 @@ public class MyFrame extends JFrame {
             }
         });
 
-        // Add ActionListener for button functionality
+        // ActionListener for button functionality
         buttonLabel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -114,6 +129,11 @@ public class MyFrame extends JFrame {
 
         // buttons
         JButton tutorialButton = buttonCreate(240, 430, 192, 64, "resources/button.png", "resources/button_clicked.png", "Tutorial");
+        JLabel tutorialLabel = new JLabel("Tutorial");
+        tutorialLabel.setFont(customFont);
+        tutorialLabel.setForeground(Color.WHITE);
+        tutorialLabel.setBounds(270, 430, 192, 64);
+        layeredPane.add(tutorialLabel, Integer.valueOf(2));
         layeredPane.add(tutorialButton, Integer.valueOf(2));
 
         JButton newGameButton = buttonCreate(240, 340, 192, 64, "resources/button.png", "resources/button_clicked.png", "New Game");
@@ -142,23 +162,20 @@ public class MyFrame extends JFrame {
         backgroundLabel.setBounds(0, 0, 1080, 750);
         layered.add(backgroundLabel, Integer.valueOf(0));
 
-        // Game screen content
-        JLabel label = new JLabel("Welcome to the Tutorial!");
-        label.setFont(new Font("Arial", Font.BOLD, 24));
+        // game screen content
+        JLabel label = new JLabel("< HOME");
+        label.setFont(customFont);
         label.setForeground(Color.WHITE);
-        label.setBounds(200, 200, 500, 50);
+        label.setBounds(60, 15, 500, 50);
         layered.add(label, Integer.valueOf(1));
 
+        ImageIcon tutorialImage = new ImageIcon("resources/tut.png");
+
+
+
         // Button to switch back to the home screen
-        JButton backButton = new JButton("Back to Home");
-        backButton.setBounds(200, 300, 200, 50);
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(mainPanel, "Home"); // Switch back to the home screen
-            }
-        });
-        layered.add(backButton, Integer.valueOf(1));
+        JButton homeButton = buttonCreate(20, 10, 192, 64, "resources/button.png", "resources/button_clicked.png", "Home");
+        layered.add(homeButton, Integer.valueOf(1));
 
         return layered;
     }
