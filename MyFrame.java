@@ -47,9 +47,6 @@ public class MyFrame extends JFrame {
         ImageIcon iconImage = new ImageIcon("resources/Purple.png");
         this.setIconImage(iconImage.getImage());
 
-        for (Component c : mainPanel.getComponents()) {
-            System.out.println("Existing panel: " + c.getClass().getName());
-        }
 
         this.setVisible(true);
     }
