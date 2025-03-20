@@ -105,6 +105,16 @@ public class MyFrame extends JFrame {
         return buttonLabel;
     }
 
+    private JLabel buttonText(String text, int x, int y, int width, int height) {
+        JLabel label = new JLabel(text);
+        label.setFont(customFont);
+        label.setForeground(Color.WHITE);
+        label.setBounds(x, y, width, height);
+
+        return label;
+
+    }
+
     private JLayeredPane createMainScreen() {
         // layered pane
         JLayeredPane layeredPane = new JLayeredPane();
@@ -117,32 +127,36 @@ public class MyFrame extends JFrame {
         layeredPane.add(backgroundLabel, Integer.valueOf(0));
 
         // windows + icon image
-        ImageIcon windowsImage = new ImageIcon("resources/windowsion.png");
-        int width = windowsImage.getIconWidth() - 200;
-        int height = windowsImage.getIconHeight() - 200;
+        ImageIcon windowsImage = new ImageIcon("resources/windowsicon.png");
+        int width = windowsImage.getIconWidth() + 100;
+        int height = windowsImage.getIconHeight() + 100;
         Image scaledWindow = windowsImage.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
         ImageIcon windowIcon = new ImageIcon(scaledWindow);
 
         JLabel windowsLabel = new JLabel(windowIcon);
-        windowsLabel.setBounds(70, 35, width, height);
+        windowsLabel.setBounds(-66, -60, width, height);
         layeredPane.add(windowsLabel, Integer.valueOf(1));
 
-        // buttons
+        // buttons HERE HRE
         JButton tutorialButton = buttonCreate(240, 430, 192, 64, "resources/button.png", "resources/button_clicked.png", "Tutorial");
-        JLabel tutorialLabel = new JLabel("Tutorial");
-        tutorialLabel.setFont(customFont);
-        tutorialLabel.setForeground(Color.WHITE);
-        tutorialLabel.setBounds(270, 430, 192, 64);
+        JLabel tutorialLabel = buttonText("Tutorial", 270, 430, 192, 64);
         layeredPane.add(tutorialLabel, Integer.valueOf(2));
         layeredPane.add(tutorialButton, Integer.valueOf(2));
 
         JButton newGameButton = buttonCreate(240, 340, 192, 64, "resources/button.png", "resources/button_clicked.png", "New Game");
+        JLabel newGameLabel = buttonText("New Game", 275, 340, 192, 64);
+        layeredPane.add(newGameLabel, Integer.valueOf(2));
         layeredPane.add(newGameButton, Integer.valueOf(2));
 
+
         JButton loadButton = buttonCreate(450, 340, 192, 64, "resources/button.png", "resources/button_clicked.png", "Load");
+        JLabel loadLabel = buttonText("Load", 510, 340, 192, 64);
+        layeredPane.add(loadLabel, Integer.valueOf(2));
         layeredPane.add(loadButton, Integer.valueOf(2));
 
         JButton creditButton = buttonCreate(450, 430, 192, 64, "resources/button.png", "resources/button_clicked.png", "Credit");
+        JLabel creditLabel = buttonText("Credits", 490, 430, 192, 64);
+        layeredPane.add(creditLabel, Integer.valueOf(2));
         layeredPane.add(creditButton, Integer.valueOf(2));
 
         JButton parentalControlButton = buttonCreate(850, 620, 192, 64, "resources/button.png", "resources/button_clicked.png", "Parental Control");
@@ -170,12 +184,26 @@ public class MyFrame extends JFrame {
         layered.add(label, Integer.valueOf(1));
 
         ImageIcon tutorialImage = new ImageIcon("resources/tut.png");
+        JLabel tutorialLabel = new JLabel(tutorialImage);
+        tutorialLabel.setBounds(95, 70, 860, 645);
+        layered.add(tutorialLabel, Integer.valueOf(2));
 
-
+        ImageIcon textBoxImage = new ImageIcon("resources/text_box.png");
+        JLabel textBoxLabel = new JLabel(textBoxImage);
+        textBoxLabel.setBounds(105, 100, 860, 540);
+        layered.add(textBoxLabel, Integer.valueOf(1));
 
         // Button to switch back to the home screen
         JButton homeButton = buttonCreate(20, 10, 192, 64, "resources/button.png", "resources/button_clicked.png", "Home");
         layered.add(homeButton, Integer.valueOf(1));
+
+        JButton rightArrow = buttonCreate(800, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Tutorial");
+        layered.add(rightArrow, Integer.valueOf(1));
+
+        ImageIcon rightArrowImage = new ImageIcon("resources/right_arrow.png");
+        JLabel rightArrowLabel = new JLabel(rightArrowImage);
+        rightArrowLabel.setBounds(817, 265, 32, 32);
+        layered.add(rightArrowLabel, Integer.valueOf(2));
 
         return layered;
     }
