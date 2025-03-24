@@ -16,11 +16,15 @@ public class ParentalControlScreen extends JLayeredPane {
         add(backgroundLabel, Integer.valueOf(0));
 
         // Game screen content
-        JLabel label = new JLabel("Welcome to the parental control screen!");
+        ImageIcon password = new ImageIcon("resources/password_popup.png");
+        JLabel passwordLabel = new JLabel(password);
+        passwordLabel.setBounds(0, 0, 980, 650);
+        add(passwordLabel, Integer.valueOf(2));
+        /*JLabel label = new JLabel("Welcome to the parental control screen!");
         label.setFont(new Font("Arial", Font.BOLD, 24));
         label.setForeground(Color.WHITE);
         label.setBounds(200, 200, 500, 50);
-        add(label, Integer.valueOf(1));
+        add(label, Integer.valueOf(1)); */
 
         // Button to switch back to the home screen
         JButton backButton = new JButton("Back to Home");
