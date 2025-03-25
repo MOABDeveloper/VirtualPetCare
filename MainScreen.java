@@ -11,6 +11,11 @@ public class MainScreen extends JFrame {
     private static CardLayout cardLayout;
     private static JPanel mainPanel;
     private static Font customFont;
+    private static JLabel passwordLabel;
+    private static JLabel overlayLabel;
+    private static TutorialScreen tutorialScreen; // Store the TutorialScreen instance
+
+
     MainScreen() {
         // Load custom font
         try {
@@ -37,11 +42,10 @@ public class MainScreen extends JFrame {
 
         // create screens
         JLayeredPane homeScreen = createMainScreen();
-        JLayeredPane tutorialScreen = new TutorialScreen(customFont);
+        tutorialScreen = new TutorialScreen(customFont);
         JLayeredPane newGameScreen = new NewGameScreen(customFont, cardLayout, mainPanel);
         JLayeredPane loadScreen = new LoadScreen(customFont, cardLayout, mainPanel);
         JLayeredPane creditScreen = new CreditScreen(customFont, cardLayout, mainPanel);
-        JLayeredPane parentalControl = new ParentalControlScreen(customFont, cardLayout, mainPanel);
 
         // add screens to the main panel
         mainPanel.add(homeScreen, "Home");
@@ -49,7 +53,6 @@ public class MainScreen extends JFrame {
         mainPanel.add(newGameScreen, "New Game");
         mainPanel.add(loadScreen, "Load");
         mainPanel.add(creditScreen, "Credit");
-        mainPanel.add(parentalControl, "Parental Control");
 
 
         // add main panel to the frame
@@ -120,6 +123,7 @@ public class MainScreen extends JFrame {
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(1080, 750));
 
+
         // background
         ImageIcon background = new ImageIcon("resources/grid.png");
         JLabel backgroundLabel = new JLabel(background);
@@ -137,8 +141,16 @@ public class MainScreen extends JFrame {
         windowsLabel.setBounds(-66, -60, width, height);
         layeredPane.add(windowsLabel, Integer.valueOf(1));
 
+        ImageIcon overlayImage = new ImageIcon("resources/opacity.png"); // Replace with your image path
+        overlayLabel = new JLabel(overlayImage);
+        overlayLabel.setBounds(0, 0, 1080, 750); // Adjust bounds as needed
+        overlayLabel.setVisible(false);
+        layeredPane.add(overlayLabel, Integer.valueOf(2));
+
         // buttons
         JButton tutorialButton = buttonCreate(240, 430, 192, 64, "resources/button.png", "resources/button_clicked.png", "Tutorial");
+        tutorialButton.addActionListener(e -> tutorialScreen.resetToGiveGift());
+        cardLayout.show(mainPanel, "Tutorial");
         JLabel tutorialLabel = buttonText("Tutorial", 270, 430, 192, 64);
         layeredPane.add(tutorialLabel, Integer.valueOf(2));
         layeredPane.add(tutorialButton, Integer.valueOf(2));
@@ -154,15 +166,74 @@ public class MainScreen extends JFrame {
         layeredPane.add(loadLabel, Integer.valueOf(2));
         layeredPane.add(loadButton, Integer.valueOf(2));
 
+
         JButton creditButton = buttonCreate(450, 430, 192, 64, "resources/button.png", "resources/button_clicked.png", "Credit");
         JLabel creditLabel = buttonText("Credits", 490, 430, 192, 64);
         layeredPane.add(creditLabel, Integer.valueOf(2));
         layeredPane.add(creditButton, Integer.valueOf(2));
 
-        JButton parentalControlButton = buttonCreate(850, 620, 192, 64, "resources/button.png", "resources/button_clicked.png", "Parental Control");
+        JButton parentalControlButton = buttonCreate(850, 620, 192, 64, "resources/button.png", "resources/button_clicked.png", "");
+        parentalControlButton.addActionListener(e -> showPasswordPopup(layeredPane));
         layeredPane.add(parentalControlButton, Integer.valueOf(2));
+
+
+        ImageIcon passwordIcon = new ImageIcon("resources/password_popup.png"); // actual pop-up
+        int desiredWidth = 1000;
+        int desiredHeight = 664;
+
+        Image scaledPassword = passwordIcon.getImage().getScaledInstance(desiredWidth, desiredHeight, Image.SCALE_SMOOTH);
+        passwordLabel = new JLabel(new ImageIcon(scaledPassword));
+        passwordLabel.setBounds(20, 66, desiredWidth, desiredHeight);
+        passwordLabel.setVisible(false);
+        layeredPane.add(passwordLabel, Integer.valueOf(3)); // move above everything else
 
         return layeredPane;
     }
 
+    private static void showPasswordPopup(JLayeredPane parentPane) {
+        passwordLabel.setVisible(true);
+        overlayLabel.setVisible(true);
+
+
+        // Create "Back" button (only visible when popup is visible)
+        JButton backButton = buttonCreate(250,  400, 192, 64, "resources/button_parental_control.png", "resources/button_clicked_parental_controls.png", "Home");
+        backButton.setText("Back");
+        backButton.setFont(customFont);
+        backButton.setForeground(Color.decode("#7392B2"));
+        backButton.setHorizontalTextPosition(JButton.CENTER);
+        backButton.setVerticalTextPosition(JButton.CENTER);
+        backButton.setVisible(true);
+
+        // Create "Done" button
+        JButton doneButton = buttonCreate(600, 400, 192, 64, "resources/button_parental_control.png", "resources/button_clicked_parental_controls.png", "");
+        doneButton.setText("ENTER");
+        doneButton.setFont(customFont);
+        doneButton.setForeground(Color.decode("#7392B2"));
+        doneButton.setHorizontalTextPosition(JButton.CENTER);
+        doneButton.setVerticalTextPosition(JButton.CENTER);
+        doneButton.setVisible(true);
+
+        // Add action listeners
+        backButton.addActionListener(e -> {
+            passwordLabel.setVisible(false);
+            overlayLabel.setVisible(false); // Hide overlay when closing popup
+            parentPane.remove(backButton);
+            parentPane.remove(doneButton);
+            parentPane.repaint();
+        });
+
+        doneButton.addActionListener(e -> {
+            passwordLabel.setVisible(false);
+            overlayLabel.setVisible(false); // Hide overlay when closing popup
+            parentPane.remove(backButton);
+            parentPane.remove(doneButton);
+            parentPane.repaint();
+            // Add your logic for when "Done" is clicked
+        });
+
+        // Add buttons to parentPane (on a high layer)
+        parentPane.add(backButton, Integer.valueOf(4));
+        parentPane.add(doneButton, Integer.valueOf(4));
+        parentPane.repaint();
+    }
 }

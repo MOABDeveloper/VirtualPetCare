@@ -21,92 +21,88 @@ public class TutorialScreen extends JLayeredPane {
         JButton homeButton = MainScreen.buttonCreate(20, 10, 192, 64, "resources/button.png", "resources/button_clicked.png", "Home");
         add(homeButton, Integer.valueOf(2));
 
+        resetToGiveGift();
+
         // creating screens
-        JLayeredPane tutorialScreen = tutorialScreen();
+        JLayeredPane givingGift = giftGiving();
         JLayeredPane feedingScreen = feedingScreen();
+        JLayeredPane vetScreen = vetScreen();
 
         // add screens into panel
-        mainPanel.add(tutorialScreen, "Tutorial");
+        mainPanel.add(givingGift, "Give Gift");
         mainPanel.add(feedingScreen, "Feeding");
+        mainPanel.add(vetScreen, "Vet");
 
         // Show the initial screen
-        cardLayout.show(mainPanel, "Tutorial");
+        cardLayout.show(mainPanel, "Give Gift");
 
         setVisible(true);
     }
 
-    private JLayeredPane tutorialScreen() {
-        JLayeredPane tutorialScreen = new JLayeredPane();
-        tutorialScreen.setPreferredSize(new Dimension(1080, 750));
-
-        // Background
-        ImageIcon background = new ImageIcon("resources/grid.png");
-        JLabel backgroundLabel = new JLabel(background);
-        backgroundLabel.setBounds(0, 0, 1080, 750);
-        tutorialScreen.add(backgroundLabel, Integer.valueOf(0));
-
-        // Tutorial screen content
-        ImageIcon tutorialImage = new ImageIcon("resources/tut.png");
-        JLabel tutorialLabel = new JLabel(tutorialImage);
-        tutorialLabel.setBounds(95, 70, 860, 645);
-        tutorialScreen.add(tutorialLabel, Integer.valueOf(2));
-
-        ImageIcon textBoxImage = new ImageIcon("resources/text_box.png");
-        JLabel textBoxLabel = new JLabel(textBoxImage);
-        textBoxLabel.setBounds(105, 100, 860, 540);
-        tutorialScreen.add(textBoxLabel, Integer.valueOf(1));
+    private JLayeredPane giftGiving() {
+        JLayeredPane giftGivingScreen = new JLayeredPane();
+        giftGivingScreen.setPreferredSize(new Dimension(1080, 750));
 
         // button to switch to the feeding screen
         JButton rightArrow = createButtonWithCardLayout(800, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Feeding");
-        tutorialScreen.add(rightArrow, Integer.valueOf(1));
+        giftGivingScreen.add(rightArrow, Integer.valueOf(1));
 
         ImageIcon rightArrowImage = new ImageIcon("resources/right_arrow.png");
         JLabel rightArrowLabel = new JLabel(rightArrowImage);
         rightArrowLabel.setBounds(817, 265, 32, 32);
-        tutorialScreen.add(rightArrowLabel, Integer.valueOf(2));
+        giftGivingScreen.add(rightArrowLabel, Integer.valueOf(2));
 
-        return tutorialScreen;
+        return tutorialScreen("resources/give_gift_tutorial.png", giftGivingScreen);
     }
 
     private JLayeredPane feedingScreen() {
         JLayeredPane feedingScreen = new JLayeredPane();
         feedingScreen.setPreferredSize(new Dimension(1080, 750));
 
-        // Background
-        ImageIcon background = new ImageIcon("resources/grid.png");
-        JLabel backgroundLabel = new JLabel(background);
-        backgroundLabel.setBounds(0, 0, 1080, 750);
-        feedingScreen.add(backgroundLabel, Integer.valueOf(0));
-
-        ImageIcon tutorialImage = new ImageIcon("resources/tut.png");
-        JLabel tutorialLabel = new JLabel(tutorialImage);
-        tutorialLabel.setBounds(95, 70, 860, 645);
-        feedingScreen.add(tutorialLabel, Integer.valueOf(2));
-
-        ImageIcon textBoxImage = new ImageIcon("resources/text_box.png");
-        JLabel textBoxLabel = new JLabel(textBoxImage);
-        textBoxLabel.setBounds(105, 100, 860, 540);
-        feedingScreen.add(textBoxLabel, Integer.valueOf(1));
-
-        // Button to switch to the next screen
-        JButton rightArrow = createButtonWithCardLayout(800, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Giving Gift");
+        // Button to switch to the vet (next) screen
+        JButton rightArrow = createButtonWithCardLayout(800, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Vet");
         feedingScreen.add(rightArrow, Integer.valueOf(1));
 
-        ImageIcon rightArrowImage = new ImageIcon("resources/right_arrow.png");
-        JLabel rightArrowLabel = new JLabel(rightArrowImage);
-        rightArrowLabel.setBounds(817, 265, 32, 32);
-        feedingScreen.add(rightArrowLabel, Integer.valueOf(2));
-
-        // Button to switch back to the tutorial screen
-        JButton leftArrow = createButtonWithCardLayout(20, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Tutorial");
+        // Button to switch back to the gift giving (previous) screen
+        JButton leftArrow = createButtonWithCardLayout(175, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Give Gift");
         feedingScreen.add(leftArrow, Integer.valueOf(1));
 
-        ImageIcon leftArrowImage = new ImageIcon("resources/left_arrow.png");
-        JLabel leftArrowLabel = new JLabel(leftArrowImage);
-        leftArrowLabel.setBounds(17, 265, 32, 32);
-        feedingScreen.add(leftArrowLabel, Integer.valueOf(2));
+        arrowImageIcon(feedingScreen);
 
-        return feedingScreen;
+        return tutorialScreen("resources/feeding_tutorial.png", feedingScreen);
+    }
+
+    private JLayeredPane vetScreen() {
+        JLayeredPane vetScreen = new JLayeredPane();
+        vetScreen.setPreferredSize(new Dimension(1080, 750));
+
+        // Button to switch to the vet (next) screen
+        JButton rightArrow = createButtonWithCardLayout(800, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Bed");
+        vetScreen.add(rightArrow, Integer.valueOf(1));
+
+        // Button to switch back to the gift giving (previous) screen
+        JButton leftArrow = createButtonWithCardLayout(800, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Feeding");
+        vetScreen.add(leftArrow, Integer.valueOf(1));
+
+        arrowImageIcon(vetScreen);
+
+        return tutorialScreen("resources/vet_tutorial.png", vetScreen);
+
+    }
+
+    private void arrowImageIcon(JLayeredPane screenSource) {
+        ImageIcon rightArrowImage = new ImageIcon("resources/right_arrow.png");
+        ImageIcon leftArrowImage = new ImageIcon("resources/left_arrow.png");
+
+        JLabel rightArrowLabel = new JLabel(rightArrowImage);
+        JLabel leftArrowLabel = new JLabel(leftArrowImage);
+
+        rightArrowLabel.setBounds(817, 265, 32, 32);
+        leftArrowLabel.setBounds(190, 265, 32, 32);
+
+        screenSource.add(rightArrowLabel, Integer.valueOf(2));
+        screenSource.add(leftArrowLabel, Integer.valueOf(2));
+
     }
 
     // Wrapper method to create buttons with CardLayout functionality
@@ -124,5 +120,36 @@ public class TutorialScreen extends JLayeredPane {
 
         return button;
     }
+
+    public void resetToGiveGift() {
+        cardLayout.show(mainPanel, "Give Gift");
+    }
+
+    private JLayeredPane tutorialScreen(String defaultImageSource, JLayeredPane screenSource) {
+        ImageIcon background = new ImageIcon("resources/grid.png");
+        JLabel backgroundLabel = new JLabel(background);
+
+        backgroundLabel.setBounds(0, 0, 1080, 750);
+        screenSource.add(backgroundLabel, Integer.valueOf(1));
+
+        ImageIcon defaultImageIcon = new ImageIcon(defaultImageSource);
+        int width = defaultImageIcon.getIconWidth() - 1000;
+        int height = defaultImageIcon.getIconHeight() - 700;
+        Image scaledImageIcon = defaultImageIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        ImageIcon imageIcon = new ImageIcon(scaledImageIcon);
+
+        JLabel imageLabel = new JLabel(imageIcon);
+        imageLabel.setBounds(-86, -90, width, height);
+        screenSource.add(imageLabel, Integer.valueOf(2));
+
+        ImageIcon textBoxImageIcon = new ImageIcon("resources/text_box.png");
+        JLabel textBoxLabel = new JLabel(textBoxImageIcon);
+        textBoxLabel.setBounds(105, 100, 860, 540);
+        screenSource.add(textBoxLabel, Integer.valueOf(2));
+
+        return screenSource;
+
+    }
+
 }
 
