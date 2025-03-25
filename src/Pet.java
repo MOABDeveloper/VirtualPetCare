@@ -57,28 +57,48 @@ public class Pet {
         this.happiness = maxHappiness;
     }
 
-    public int setHappiness(int happinessValue) {
-        // Happiness is always between 0 and maxHappiness
-        this.happiness = Math.max(0, Math.min(happinessValue, maxHappiness));
-        return this.happiness;
+
+    public int increaseHappiness(int amount) {
+        happiness = Math.min(happiness + amount, maxHappiness);
+        return happiness;
     }
 
-    public int setFullness(int fullnessValue) {
-        // Fullness is always between 0 and maxFullness
-        this.fullness = Math.max(0, Math.min(fullnessValue, maxFullness));
-        return this.fullness;
+    public int decreaseHappiness(int amount) {
+        happiness = Math.max(happiness - amount, 0);
+        return happiness;
     }
 
-    public int setHealth(int healthValue) {
-        // Health is always between 0 and maxHealth
-        this.health = Math.max(0, Math.min(healthValue, maxHealth));
-        return this.health;
+
+    public int increaseFullness(int amount) {
+        fullness = Math.min(fullness + amount, maxFullness);
+        return fullness;
     }
 
-    public int setSleepiness(int sleepinessValue) {
-        // Sleepiness is always between 0 and maxSleep
-        this.sleep = Math.max(0, Math.min(sleepinessValue, maxSleep));
-        return this.sleep;
+    public int decreaseFullness(int amount) {
+        fullness = Math.max(fullness - amount, 0);
+        return fullness;
+    }
+
+
+    public int increaseHealth(int amount) {
+        health = Math.min(health + amount, maxHealth);
+        return health;
+    }
+
+    public int decreaseHealth(int amount) {
+        health = Math.max(health - amount, 0);
+        return health;
+    }
+
+
+    public int increaseSleep(int amount) {
+        sleep = Math.min(sleep + amount, maxSleep);
+        return sleep;
+    }
+
+    public int decreaseSleep(int amount) {
+        sleep = Math.max(sleep - amount, 0);
+        return sleep;
     }
 
     public int getHappiness() {
@@ -124,15 +144,13 @@ public class Pet {
         }
 
         // Decrease stats
-        sleep -= sleepDeclineRate;
-        fullness -= fullnessDeclineRate;
-        // Happiness always declines as time passes
-        // Happiness declines faster if the pet is hungry (fullness == 0)
-        happiness -= (fullness <= 0 ? happinessDeclineRate * 2 : happinessDeclineRate);
+        decreaseSleep(sleepDeclineRate);
+        decreaseFullness(fullnessDeclineRate);
+        decreaseHappiness(fullness <= 0 ? happinessDeclineRate * 2 : happinessDeclineRate);
 
         // Hunger Logic
         if (fullness <= 0) {
-            health -= Math.max(1, healthDeclineRate);
+            decreaseHealth(Math.max(1, healthDeclineRate));
             isHungry = true;
         } else {
             isHungry = false;
@@ -143,7 +161,7 @@ public class Pet {
 
         // Sleep logic
         if (sleep <= 0) {
-            health -= Math.max(1, healthDeclineRate);
+            decreaseHealth(Math.max(1, healthDeclineRate));
             sleep = 0;
             isSleeping = true;
         }
@@ -153,11 +171,6 @@ public class Pet {
             health = 0;
             isDead = true;
         }
-
-        setHealth(health);
-        setSleepiness(sleep);
-        setFullness(fullness);
-        setHappiness(happiness);
     }
 
     public void printStats() {

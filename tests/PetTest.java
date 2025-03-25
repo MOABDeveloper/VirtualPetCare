@@ -1,35 +1,47 @@
 package tests;
-
 import src.Pet;
 
 public class PetTest {
-    public static void main(String[] args) throws InterruptedException {
-        // Create a new pet with max stats
-        Pet pet = new Pet("Buddy", 100, 100, 100, 100);
+    public static void main(String[] args) {
+        // Create a new pet with defined max stats
+        Pet pet = new Pet("Fluffy", 100, 100, 100, 100);
 
-        // Set stat decline rates for testing
-        pet.setHealth(100);           // current health
-        pet.setSleepiness(10);        // simulate already tired
-        pet.setFullness(0);           // simulate already hungry
-        pet.setHappiness(50);         // mid-level happiness
+        // Print starting stats
+        System.out.println("Initial stats:");
+        pet.printStats();
 
-        // Simulate custom decline rates (this would normally go in PetOption1)
-        // You could create setters later, but for now you can directly set fields or extend the Pet class
-        // For this demo, just call applyDecline() and print
+        // Simulate some stat changes
+        System.out.println("\nDecreasing stats manually:");
+        pet.decreaseHealth(10);
+        pet.decreaseFullness(20);
+        pet.decreaseSleep(15);
+        pet.decreaseHappiness(5);
+        pet.printStats();
 
-        // Apply decline a few times and print after each
-        for (int i = 1; i <= 5; i++) {
-            System.out.println("Tick " + i);
-            pet.applyDecline();
-            pet.printStats();
+        // Increase stats back
+        System.out.println("\nIncreasing stats manually:");
+        pet.increaseHealth(5);
+        pet.increaseFullness(10);
+        pet.increaseSleep(10);
+        pet.increaseHappiness(15);
+        pet.printStats();
+
+        // Apply multiple declines and observe changes
+        System.out.println("\nSimulating passive decline over 5 ticks:");
+        // Set artificial decline rates for testing
+        // You'd normally want these values exposed via methods, but for now we set them manually
+        for (int i = 0; i < 5; i++) {
+            System.out.println("Tick " + (i + 1));
+            pet.applyDecline(); // apply decay logic
+            pet.printStats();   // show current stats
             System.out.println();
-            Thread.sleep(1000); // pause for 1 sec between updates (just for readability)
         }
 
-        // Check for state flags
-        System.out.println("Pet is sleeping? " + pet.isSleeping());
-        System.out.println("Pet is hungry? " + pet.isHungry());
-        System.out.println("Pet is angry? " + pet.isAngry());
-        System.out.println("Pet is dead? " + pet.isDead());
+        // Check flags
+        System.out.println("State checks:");
+        System.out.println("Sleeping? " + pet.isSleeping());
+        System.out.println("Hungry? " + pet.isHungry());
+        System.out.println("Angry? " + pet.isAngry());
+        System.out.println("Dead? " + pet.isDead());
     }
 }
