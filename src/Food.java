@@ -1,7 +1,7 @@
 package src;
 
 public class Food {
-    private String name;        // ADD THIS
+    private String name;
     private int price;
     private int fullness;
     private String description;

@@ -34,6 +34,9 @@ public class Pet {
     private int lastPlayTime;
     private int playCooldownDuration;
 
+    // Current outfit name; null means no outfit equipped
+    private String currentOutfit;
+
     /**
      * Creates a new Pet instance with assigned max stats
      * Initializes all current stats to their respective max values
@@ -57,7 +60,6 @@ public class Pet {
         this.happiness = maxHappiness;
     }
 
-
     public int increaseHappiness(int amount) {
         happiness = Math.min(happiness + amount, maxHappiness);
         return happiness;
@@ -67,7 +69,6 @@ public class Pet {
         happiness = Math.max(happiness - amount, 0);
         return happiness;
     }
-
 
     public int increaseFullness(int amount) {
         fullness = Math.min(fullness + amount, maxFullness);
@@ -79,7 +80,6 @@ public class Pet {
         return fullness;
     }
 
-
     public int increaseHealth(int amount) {
         health = Math.min(health + amount, maxHealth);
         return health;
@@ -89,7 +89,6 @@ public class Pet {
         health = Math.max(health - amount, 0);
         return health;
     }
-
 
     public int increaseSleep(int amount) {
         sleep = Math.min(sleep + amount, maxSleep);
@@ -138,17 +137,14 @@ public class Pet {
     }
 
     public void applyDecline() {
-        // If the pet is dead or is sleeping, don't decline anything
         if (isDead || isSleeping) {
             return;
         }
 
-        // Decrease stats
         decreaseSleep(sleepDeclineRate);
         decreaseFullness(fullnessDeclineRate);
         decreaseHappiness(fullness <= 0 ? happinessDeclineRate * 2 : happinessDeclineRate);
 
-        // Hunger Logic
         if (fullness <= 0) {
             decreaseHealth(Math.max(1, healthDeclineRate));
             isHungry = true;
@@ -156,21 +152,34 @@ public class Pet {
             isHungry = false;
         }
 
-        // Happiness logic
         isHappy = happiness > 0;
 
-        // Sleep logic
         if (sleep <= 0) {
             decreaseHealth(Math.max(1, healthDeclineRate));
             sleep = 0;
             isSleeping = true;
         }
 
-        // Checking if pet is dead
         if (health <= 0) {
             health = 0;
             isDead = true;
         }
+    }
+
+    public boolean isWearingOutfit() {
+        return currentOutfit != null;
+    }
+
+    public String getCurrentOutfit() {
+        return currentOutfit;
+    }
+
+    /**
+     * Sets the current outfit for the pet (package-private).
+     * Can only be changed from within the same package (e.g., PlayerInventory).
+     */
+    void setOutfit(String outfitName) {
+        this.currentOutfit = outfitName;
     }
 
     public void printStats() {
