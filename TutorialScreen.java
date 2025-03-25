@@ -27,11 +27,17 @@ public class TutorialScreen extends JLayeredPane {
         JLayeredPane givingGift = giftGiving();
         JLayeredPane feedingScreen = feedingScreen();
         JLayeredPane vetScreen = vetScreen();
+        JLayeredPane exerciseScreen = exerciseScreen();
+        JLayeredPane sleepingScreen = sleepScreen();
+        JLayeredPane playScreen = playingScreen();
 
         // add screens into panel
         mainPanel.add(givingGift, "Give Gift");
         mainPanel.add(feedingScreen, "Feeding");
         mainPanel.add(vetScreen, "Vet");
+        mainPanel.add(exerciseScreen, "Exercise");
+        mainPanel.add(sleepingScreen, "Sleeping");
+        mainPanel.add(playScreen, "Play");
 
         // Show the initial screen
         cardLayout.show(mainPanel, "Give Gift");
@@ -77,11 +83,11 @@ public class TutorialScreen extends JLayeredPane {
         vetScreen.setPreferredSize(new Dimension(1080, 750));
 
         // Button to switch to the vet (next) screen
-        JButton rightArrow = createButtonWithCardLayout(800, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Bed");
+        JButton rightArrow = createButtonWithCardLayout(800, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Exercise");
         vetScreen.add(rightArrow, Integer.valueOf(1));
 
         // Button to switch back to the gift giving (previous) screen
-        JButton leftArrow = createButtonWithCardLayout(800, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Feeding");
+        JButton leftArrow = createButtonWithCardLayout(175, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Feeding");
         vetScreen.add(leftArrow, Integer.valueOf(1));
 
         arrowImageIcon(vetScreen);
@@ -90,7 +96,57 @@ public class TutorialScreen extends JLayeredPane {
 
     }
 
-    private void arrowImageIcon(JLayeredPane screenSource) {
+    private JLayeredPane exerciseScreen() {
+        JLayeredPane exerciseScreen = new JLayeredPane();
+        exerciseScreen.setPreferredSize(new Dimension(1080, 750));
+
+        // Button to switch to the vet (next) screen
+        JButton rightArrow = createButtonWithCardLayout(800, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Sleeping");
+        exerciseScreen.add(rightArrow, Integer.valueOf(1));
+
+        // Button to switch back to the gift giving (previous) screen
+        JButton leftArrow = createButtonWithCardLayout(175, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Vet");
+        exerciseScreen.add(leftArrow, Integer.valueOf(1));
+
+        arrowImageIcon(exerciseScreen);
+
+        return tutorialScreen("resources/exercise_tutorial.png", exerciseScreen);
+    }
+
+    private JLayeredPane sleepScreen() {
+        JLayeredPane sleepingScreen = new JLayeredPane();
+        sleepingScreen.setPreferredSize(new Dimension(1080, 750));
+
+        // Button to switch to the vet (next) screen
+        JButton rightArrow = createButtonWithCardLayout(800, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Play");
+        sleepingScreen.add(rightArrow, Integer.valueOf(1));
+
+        // Button to switch back to the gift giving (previous) screen
+        JButton leftArrow = createButtonWithCardLayout(175, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Exercise");
+        sleepingScreen.add(leftArrow, Integer.valueOf(1));
+
+        arrowImageIcon(sleepingScreen);
+
+        return tutorialScreen("resources/sleeping_tutorial.png", sleepingScreen);
+    }
+
+    private JLayeredPane playingScreen() {
+        JLayeredPane playScreen = new JLayeredPane();
+        playScreen.setPreferredSize(new Dimension(1080, 750));
+
+        // button to switch to the feeding screen
+        JButton leftArrow = createButtonWithCardLayout(175, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Sleeping");
+        playScreen.add(leftArrow, Integer.valueOf(1));
+
+        ImageIcon leftArrowImage = new ImageIcon("resources/left_arrow.png");
+        JLabel leftArrowLabel = new JLabel(leftArrowImage);
+        leftArrowLabel.setBounds(190, 265, 32, 32);
+        playScreen.add(leftArrowLabel, Integer.valueOf(2));
+
+        return tutorialScreen("resources/playing_tutorial.png", playScreen);
+    }
+
+    public void arrowImageIcon(JLayeredPane screenSource) {
         ImageIcon rightArrowImage = new ImageIcon("resources/right_arrow.png");
         ImageIcon leftArrowImage = new ImageIcon("resources/left_arrow.png");
 
@@ -106,7 +162,7 @@ public class TutorialScreen extends JLayeredPane {
     }
 
     // Wrapper method to create buttons with CardLayout functionality
-    private JButton createButtonWithCardLayout(int x, int y, int width, int height, String defaultImageSource, String pressedImageSource, String location) {
+    public JButton createButtonWithCardLayout(int x, int y, int width, int height, String defaultImageSource, String pressedImageSource, String location) {
         // Call the existing buttonCreate function
         JButton button = MainScreen.buttonCreate(x, y, width, height, defaultImageSource, pressedImageSource, location);
 

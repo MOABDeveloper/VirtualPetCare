@@ -70,7 +70,7 @@ public class MainScreen extends JFrame {
     }
 
     // Displays button based on characteristics
-    static JButton buttonCreate(int x, int y, int width, int height, String defaultImageSource, String pressedImageSource, String location) {
+    public static JButton buttonCreate(int x, int y, int width, int height, String defaultImageSource, String pressedImageSource, String location) {
         ImageIcon defaultImage = new ImageIcon(defaultImageSource);
         ImageIcon pressedImage = new ImageIcon(pressedImageSource);
 
