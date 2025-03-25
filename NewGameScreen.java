@@ -10,28 +10,31 @@ public class NewGameScreen extends JLayeredPane {
         this.customFont = customFont;
         setPreferredSize(new Dimension(1080, 750));
 
-        // Background
-        ImageIcon background = new ImageIcon("resources/grid.png");
-        JLabel backgroundLabel = new JLabel(background);
+        // Load background image
+        ImageIcon background = new ImageIcon("resources/character_selection.png");
+
+        // Check if image loaded properly
+        if (background.getImageLoadStatus() != MediaTracker.COMPLETE) {
+            System.err.println("Error: Image not found or couldn't be loaded");
+            // Fallback - paint background red so you know there's an issue
+            setBackground(Color.RED);
+        }
+
+        // Scale the image
+        Image scaledBackground = background.getImage().getScaledInstance(1080, 750, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(scaledBackground);
+
+        // Create background label
+        JLabel backgroundLabel = new JLabel(scaledIcon);
         backgroundLabel.setBounds(0, 0, 1080, 750);
+
+        // Add background to the lowest layer (THIS is the JLayeredPane)
         add(backgroundLabel, Integer.valueOf(0));
 
-        // Game screen content
-        JLabel label = new JLabel("Welcome to the New Game Screen!");
-        label.setFont(customFont);
-        label.setForeground(Color.WHITE);
-        label.setBounds(200, 200, 500, 50);
-        add(label, Integer.valueOf(1));
-
-        // Button to switch back to the home screen
-        JButton backButton = new JButton("Back to Home");
-        backButton.setBounds(200, 300, 200, 50);
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(mainPanel, "Home"); // Switch back to the home screen
-            }
-        });
-        add(backButton, Integer.valueOf(1));
+        // Add other components
+        //JButton button = TutorialScreen.createButtonWithCardLayout(800, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Feeding");
     }
+    //private JLayeredPane firstPet() {
+
+    //}
 }
