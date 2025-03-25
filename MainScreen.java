@@ -44,7 +44,7 @@ public class MainScreen extends JFrame {
         JLayeredPane homeScreen = createMainScreen();
         tutorialScreen = new TutorialScreen(customFont);
         JLayeredPane newGameScreen = new NewGameScreen(customFont, cardLayout, mainPanel);
-        JLayeredPane loadScreen = new LoadScreen(customFont, cardLayout, mainPanel);
+        JLayeredPane loadScreen = new LoadScreen(customFont);
         JLayeredPane creditScreen = new CreditScreen(customFont, cardLayout, mainPanel);
 
         // add screens to the main panel
@@ -118,7 +118,7 @@ public class MainScreen extends JFrame {
 
     }
 
-    public static JLayeredPane createMainScreen() {
+    private static JLayeredPane createMainScreen() {
         // layered pane
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(1080, 750));
@@ -196,7 +196,7 @@ public class MainScreen extends JFrame {
 
 
         // Create "Back" button (only visible when popup is visible)
-        JButton backButton = buttonCreate(250,  400, 192, 64, "resources/button_parental_control.png", "resources/button_clicked_parental_controls.png", "Home");
+        JButton backButton = buttonCreate(250,  400, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
         backButton.setText("Back");
         backButton.setFont(customFont);
         backButton.setForeground(Color.decode("#7392B2"));
@@ -205,7 +205,7 @@ public class MainScreen extends JFrame {
         backButton.setVisible(true);
 
         // Create "Done" button
-        JButton doneButton = buttonCreate(600, 400, 192, 64, "resources/button_parental_control.png", "resources/button_clicked_parental_controls.png", "");
+        JButton doneButton = buttonCreate(600, 400, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "");
         doneButton.setText("ENTER");
         doneButton.setFont(customFont);
         doneButton.setForeground(Color.decode("#7392B2"));

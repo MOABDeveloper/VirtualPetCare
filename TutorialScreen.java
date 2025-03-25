@@ -18,7 +18,7 @@ public class TutorialScreen extends JLayeredPane {
         mainPanel.setBounds(0, 0, 1080, 750); // Set bounds for the mainPanel
         add(mainPanel, Integer.valueOf(1)); // Add mainPanel to the layered pane
 
-        JButton homeButton = MainScreen.buttonCreate(20, 10, 192, 64, "resources/button.png", "resources/button_clicked.png", "Home");
+        JButton homeButton = MainScreen.buttonCreate(20, 10, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
         add(homeButton, Integer.valueOf(2));
 
         resetToGiveGift();

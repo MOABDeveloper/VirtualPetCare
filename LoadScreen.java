@@ -1,38 +1,48 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class LoadScreen extends JLayeredPane {
     private Font customFont;
+    private static CardLayout cardLayoutLoad;
+    private static JPanel mainPanelLoad;
 
-    public LoadScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel) {
+    public LoadScreen(Font customFont) {
         this.customFont = customFont;
         setPreferredSize(new Dimension(1080, 750));
 
-        // background
-        ImageIcon background = new ImageIcon("resources/grid.png");
-        JLabel backgroundLabel = new JLabel(background);
-        backgroundLabel.setBounds(0, 0, 1080, 750);
-        add(backgroundLabel, Integer.valueOf(0));
 
         // Game screen content
-        JLabel label = new JLabel("Welcome to the load game screen!");
-        label.setFont(new Font("Arial", Font.BOLD, 24));
-        label.setForeground(Color.WHITE);
-        label.setBounds(200, 200, 500, 50);
-        add(label, Integer.valueOf(1));
+        JLabel loadText = new JLabel("LOAD");
+        loadText.setFont(customFont);
+        loadText.setForeground(Color.WHITE);
+        Font resizedFont = customFont.deriveFont(Font.PLAIN, 30);
+        loadText.setFont(resizedFont);
+        loadText.setBounds(835, 78, 500, 50);
+        add(loadText, Integer.valueOf(2));
 
-        // Button to switch back to the home screen
-        JButton backButton = new JButton("Back to Home");
-        backButton.setBounds(200, 300, 200, 50);
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(mainPanel, "Home"); // Switch back to the home screen
-            }
-        });
+        JButton backButton = MainScreen.buttonCreate(20, 10, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
         add(backButton, Integer.valueOf(1));
+
+        setVisible(true);
+    }
+
+    private JLayeredPane emptySaves(){
+        JLayeredPane emptySaveScreen = new JLayeredPane();
+        emptySaveScreen.setBounds(0, 0, 1080, 750);
+
+        // load image
+        ImageIcon loadImage = new ImageIcon("resources/save_load_screen.png");
+        Image scaledLoad = loadImage.getImage().getScaledInstance(1080, 750, Image.SCALE_SMOOTH);
+        ImageIcon scaledLoadIcon = new ImageIcon(scaledLoad);
+
+        // Create background loadText
+        JLabel loadLabel = new JLabel(scaledLoadIcon);
+        loadLabel.setBounds(0, 0, 1080, 750);
+
+        // Add background to the lowest layer
+        emptySaveScreen.add(loadLabel, Integer.valueOf(2));
+
+        return emptySaveScreen;
     }
 }
 

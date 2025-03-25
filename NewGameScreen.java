@@ -32,8 +32,8 @@ public class NewGameScreen extends JLayeredPane {
         add(backgroundLabel, Integer.valueOf(0));
 
         // Add other components
-        //JButton button = TutorialScreen.createButtonWithCardLayout(800, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Feeding");
-    }
+         JButton homeButton = MainScreen.buttonCreate(20, 10, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
+        add(homeButton, Integer.valueOf(1));}
     //private JLayeredPane firstPet() {
 
     //}
