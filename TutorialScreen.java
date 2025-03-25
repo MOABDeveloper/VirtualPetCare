@@ -5,8 +5,8 @@ import java.awt.event.ActionListener;
 
 public class TutorialScreen extends JLayeredPane {
     private Font customFont;
-    private CardLayout cardLayout;
-    private JPanel mainPanel;
+    private static CardLayout cardLayout;
+    private static JPanel mainPanel;
 
     public TutorialScreen(Font customFont) {
         this.customFont = customFont;
@@ -162,7 +162,7 @@ public class TutorialScreen extends JLayeredPane {
     }
 
     // Wrapper method to create buttons with CardLayout functionality
-    public JButton createButtonWithCardLayout(int x, int y, int width, int height, String defaultImageSource, String pressedImageSource, String location) {
+    public static JButton createButtonWithCardLayout(int x, int y, int width, int height, String defaultImageSource, String pressedImageSource, String location) {
         // Call the existing buttonCreate function
         JButton button = MainScreen.buttonCreate(x, y, width, height, defaultImageSource, pressedImageSource, location);
 

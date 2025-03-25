@@ -43,7 +43,7 @@ public class MainScreen extends JFrame {
         // create screens
         JLayeredPane homeScreen = createMainScreen();
         tutorialScreen = new TutorialScreen(customFont);
-        JLayeredPane newGameScreen = new NewGameScreen(customFont, cardLayout, mainPanel);
+        JLayeredPane newGameScreen = new NewGameScreen(customFont);
         JLayeredPane loadScreen = new LoadScreen(customFont);
         JLayeredPane creditScreen = new CreditScreen(customFont, cardLayout, mainPanel);
 
