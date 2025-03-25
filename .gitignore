@@ -1,0 +1,9 @@
+# .gitignore
+
+# Ignore compiled Java files
+*.class
+
+# Ignore IntelliJ/IDEA and other IDE build folders
+/out/
+/.idea/
+/*.iml
