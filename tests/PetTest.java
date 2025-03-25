@@ -43,5 +43,16 @@ public class PetTest {
         System.out.println("Hungry? " + pet.isHungry());
         System.out.println("Angry? " + pet.isAngry());
         System.out.println("Dead? " + pet.isDead());
+
+        pet.setOutfit("Wizard Robe");
+
+        if (pet.isWearingOutfit()) {
+            System.out.println("Pet is wearing: " + pet.getCurrentOutfit());
+        } else {
+            System.out.println("Pet is not wearing anything!");
+        }
+
+        pet.setOutfit(null); // Unequip
+
     }
 }
