@@ -13,7 +13,7 @@ public class PlayerInventory {
     private final Map<String, Boolean> outfitInventory = new HashMap<>();
 
     public PlayerInventory() {
-        this.playerCoins = ;
+        this.playerCoins = 0;
     }
 
     public int getPlayerCoins() {
