@@ -12,6 +12,12 @@ public class PlayerInventory {
     private final Map<Toys, Integer> toyInventory = new HashMap<>();
     private final Map<String, Boolean> outfitInventory = new HashMap<>();
 
+
+
+    public PlayerInventory(int initialCoins) {
+        this.playerCoins = initialCoins;
+    }
+
     public int getPlayerCoins() {
         return playerCoins;
     }

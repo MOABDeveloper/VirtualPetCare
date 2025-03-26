@@ -1,29 +1,21 @@
 package src;
 
 public class Gifts {
-    private String type;      // e.g. "Hat", "Shirt"
-    private String model;     // e.g. "Holiday Edition", "Minimalist"
+    private String name;
     private int price;
 
-    public Gifts(String type, String model, int price) {
-        this.type = type;
-        this.model = model;
+    public Gifts(String name, int price) {
+        this.name = name;
         this.price = price;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public String getModel() {
-        return model;
+    public String getName() {
+        return name;
     }
 
     public int getPrice() {
         return price;
     }
 
-    public String getDescription() {
-        return type + " - " + model;
-    }
+
 }
