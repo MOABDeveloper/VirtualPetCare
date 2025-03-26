@@ -47,7 +47,6 @@ public class Store {
         return giftsMap;
     }
 
-
     public Food getFood(String name) {
         return foodMap.get(name);
     }
@@ -125,8 +124,6 @@ public class Store {
         }
         return false;
     }
-
-
 
 }
 
