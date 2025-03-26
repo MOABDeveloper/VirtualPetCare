@@ -1,11 +1,12 @@
 {
   "pet": {
     "name": "Fluffy",
+    "petType": "Dragon",
     "health": 80,
-    "happiness": 70,
     "sleep": 60,
     "fullness": 90,
-    "outfit": "outfit1"
+    "happiness": 70,
+    "currentOutfit": "outfit1"
   },
   "inventory": {
     "playerCoins": 2000,

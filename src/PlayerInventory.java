@@ -12,10 +12,8 @@ public class PlayerInventory {
     private final Map<Toys, Integer> toyInventory = new HashMap<>();
     private final Map<String, Boolean> outfitInventory = new HashMap<>();
 
-
-
     public PlayerInventory() {
-        this.playerCoins = 0;
+        this.playerCoins = ;
     }
 
     public int getPlayerCoins() {
@@ -26,7 +24,6 @@ public class PlayerInventory {
         this.playerCoins = playerCoins;
     }
 
-    // === INVENTORY ADD METHODS ===
     public void addFood(Food food, int quantity) {
         foodInventory.put(food, foodInventory.getOrDefault(food, 0) + quantity);
     }
@@ -52,8 +49,6 @@ public class PlayerInventory {
         toyInventory.put(toy, toyInventory.getOrDefault(toy, 0) + quantity);
     }
 
-    // INVENTORY COUNT GETTERS
-
     public int getGiftCount(Gifts gift) {
         return giftInventory.getOrDefault(gift, 0);
     }
@@ -62,7 +57,6 @@ public class PlayerInventory {
         return toyInventory.getOrDefault(toy, 0);
     }
 
-    // USE ITEMS
     public boolean consumeFood(Food food) {
         int count = getFoodCount(food);
         if (count > 0) {
@@ -71,7 +65,6 @@ public class PlayerInventory {
         }
         return false;
     }
-
 
     public boolean hasToy(Toys toy) {
         return getToyCount(toy) > 0;
@@ -102,5 +95,58 @@ public class PlayerInventory {
     public boolean ownsOutfit(String outfitName) {
         return outfitInventory.getOrDefault(outfitName, false);
     }
+
+    // a) Go to bed — only increases sleep if not already max
+    public void putPetToBed(Pet pet) {
+        if (!pet.isDead() && pet.getSleepiness() < 100) {
+            pet.increaseSleep(pet.getSleepDeclineRate()); // or fixed rate
+        }
+    }
+
+    // b) Feed — consumes food from inventory
+    public boolean feedPet(Pet pet, Food food) {
+        if (consumeFood(food)) {
+            pet.increaseFullness(food.getFullness());
+            return true;
+        }
+        return false;
+    }
+
+    // c) Give Gift — consumes gift from inventory
+    public boolean giveGiftToPet(Pet pet, Gifts gift) {
+        if (giveGift(gift)) {
+            pet.increaseHappiness(10); // or scale with gift
+            return true;
+        }
+        return false;
+    }
+
+    // d) Take to vet — apply health boost if cooldown allows
+    public boolean takePetToVet(Pet pet, int currentTime) {
+        if (currentTime - pet.getLastVetVisitTime() >= pet.getVetCooldownDuration()) {
+            pet.increaseHealth(30); // or tunable
+            pet.setLastVetVisitTime(currentTime);
+            return true;
+        }
+        return false;
+    }
+
+    // e) Play — apply happiness if cooldown allows
+    public boolean playWithPet(Pet pet, int currentTime) {
+        if (currentTime - pet.getLastPlayTime() >= pet.getPlayCooldownDuration()) {
+            pet.increaseHappiness(15);
+            pet.setLastPlayTime(currentTime);
+            return true;
+        }
+        return false;
+    }
+
+    // f) Exercise — trade sleep and fullness for health
+    public void exercisePet(Pet pet) {
+        pet.decreaseSleep(10);
+        pet.decreaseFullness(10);
+        pet.increaseHealth(15);
+    }
+
 
 }

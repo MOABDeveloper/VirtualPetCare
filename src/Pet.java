@@ -1,10 +1,13 @@
 package src;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Pet {
     // Pet name
     private String name;
-
-
+    private final Map<String, PetType> petTypeMap;
+    private String petType;
 
     // Current stats
     private int health;
@@ -39,17 +42,14 @@ public class Pet {
     // Current outfit name; null means no outfit equipped
     private String currentOutfit;
 
-    /**
-     * Creates a new Pet instance with assigned max stats
-     * Initializes all current stats to their respective max values
-     * @param name the pets name
-     * @param maxHealth maximum health of the pet
-     * @param maxSleep maximum sleep of the pet
-     * @param maxFullness maximum fullness of the pet
-     * @param maxHappiness maximum happiness of the pet
-     */
+
     public Pet(String name, int maxHealth, int maxSleep, int maxFullness, int maxHappiness) {
         this.name = name;
+
+        this.petTypeMap = new HashMap<>();
+        petTypeMap.put("PetOption1", new PetType(1.2F,.5F,.6F,1.3F));
+        petTypeMap.put("PetOption2",  new PetType(2F,2F,2F,2F));
+        petTypeMap.put("PetOption3",  new PetType(1.2F,.5F,.6F,1.3F));
 
         this.maxHealth = maxHealth;
         this.maxSleep = maxSleep;
@@ -60,6 +60,38 @@ public class Pet {
         this.sleep = maxSleep;
         this.fullness = maxFullness;
         this.happiness = maxHappiness;
+    }
+
+    public int getLastVetVisitTime() {
+        return lastVetVisitTime;
+    }
+
+    public void setLastVetVisitTime(int lastVetVisitTime) {
+        this.lastVetVisitTime = lastVetVisitTime;
+    }
+
+    public int getVetCooldownDuration() {
+        return vetCooldownDuration;
+    }
+
+    public void setVetCooldownDuration(int vetCooldownDuration) {
+        this.vetCooldownDuration = vetCooldownDuration;
+    }
+
+    public int getLastPlayTime() {
+        return lastPlayTime;
+    }
+
+    public void setLastPlayTime(int lastPlayTime) {
+        this.lastPlayTime = lastPlayTime;
+    }
+
+    public int getPlayCooldownDuration() {
+        return playCooldownDuration;
+    }
+
+    public void setPlayCooldownDuration(int playCooldownDuration) {
+        this.playCooldownDuration = playCooldownDuration;
     }
 
     public String getName() {
@@ -123,8 +155,26 @@ public class Pet {
     }
 
     public void updateRatesBasedOfType() {
-        // TO BE IMPLEMENTED **************************************************************
+        PetType type = petTypeMap.get(this.petType);
+        if (type == null) return;
+
+        // Set default base decline rates (these can be constants or tuned)
+        int baseHealth = 5;
+        int baseFullness = 5;
+        int baseSleep = 5;
+        int baseHappiness = 5;
+
+        // Apply multipliers from the selected PetType
+        this.healthDeclineRate = Math.round(baseHealth * type.getHealthDeclineMultiplier());
+        this.fullnessDeclineRate = Math.round(baseFullness * type.getFullnessDeclineMultiplier());
+        this.sleepDeclineRate = Math.round(baseSleep * type.getSleepDeclineMultiplier());
+        this.happinessDeclineRate = Math.round(baseHappiness * type.getHappinessDeclineMultiplier());
     }
+
+    public String getPetType() {
+        return petType;
+    }
+
 
     public boolean isSleeping() {
         return isSleeping;
@@ -142,30 +192,81 @@ public class Pet {
         return isDead;
     }
 
+    public void setHealthDeclineRate(int rate) {
+        this.healthDeclineRate = rate;
+    }
+
+    public void setFullnessDeclineRate(int rate) {
+        this.fullnessDeclineRate = rate;
+    }
+
+    public void setSleepDeclineRate(int rate) {
+        this.sleepDeclineRate = rate;
+    }
+
+    public void setHappinessDeclineRate(int rate) {
+        this.happinessDeclineRate = rate;
+    }
+
+    public int getHealthDeclineRate() {
+        return healthDeclineRate;
+    }
+
+    public int getFullnessDeclineRate() {
+        return fullnessDeclineRate;
+    }
+
+    public int getSleepDeclineRate() {
+        return sleepDeclineRate;
+    }
+
+    public int getHappinessDeclineRate() {
+        return happinessDeclineRate;
+    }
+
+    public void setPetType(String petType) {
+        if (petTypeMap.containsKey(petType)) {
+            this.petType = petType;
+            updateRatesBasedOfType();
+        } else {
+            System.out.println("❌ Invalid pet type: " + petType);
+        }
+    }
+
     public void applyDecline() {
-        if (isDead || isSleeping) {
-            return;
+        if (isDead) return;
+
+        // 1. Passive stat decline (except health)
+        if (!isSleeping) {
+            decreaseFullness(fullnessDeclineRate);
+            decreaseSleep(sleepDeclineRate);
+            decreaseHappiness(fullness <= 0 ? happinessDeclineRate * 2 : happinessDeclineRate);
+        } else {
+            // Regenerate sleep while sleeping
+            increaseSleep(sleepDeclineRate);
         }
 
-        decreaseSleep(sleepDeclineRate);
-        decreaseFullness(fullnessDeclineRate);
-        decreaseHappiness(fullness <= 0 ? happinessDeclineRate * 2 : happinessDeclineRate);
-
+        // 2. Check Hunger (Fullness == 0)
         if (fullness <= 0) {
-            decreaseHealth(Math.max(1, healthDeclineRate));
             isHungry = true;
+            decreaseHealth(healthDeclineRate); // gradual health loss
         } else {
             isHungry = false;
         }
 
+        // 3. Check Happiness (Angry state)
         isHappy = happiness > 0;
 
+        // 4. Sleep logic
         if (sleep <= 0) {
-            decreaseHealth(Math.max(1, healthDeclineRate));
+            decreaseHealth(healthDeclineRate); // penalty for exhaustion
             sleep = 0;
             isSleeping = true;
+        } else if (sleep >= maxSleep) {
+            isSleeping = false; // wakes up when rested
         }
 
+        // 5. Check Death
         if (health <= 0) {
             health = 0;
             isDead = true;
@@ -176,14 +277,26 @@ public class Pet {
         return currentOutfit != null;
     }
 
+    public boolean isWarningHealth() {
+        return health <= (maxHealth / 4);
+    }
+
+    public boolean isWarningSleep() {
+        return sleep <= (maxSleep / 4);
+    }
+
+    public boolean isWarningFullness() {
+        return fullness <= (maxFullness / 4);
+    }
+
+    public boolean isWarningHappiness() {
+        return happiness <= (maxHappiness / 4);
+    }
+
     public String getCurrentOutfit() {
         return currentOutfit;
     }
 
-    /**
-     * Sets the current outfit for the pet (package-private).
-     * Can only be changed from within the same package (e.g., PlayerInventory).
-     */
     public void setOutfit(String outfitName) {
         this.currentOutfit = outfitName;
     }
