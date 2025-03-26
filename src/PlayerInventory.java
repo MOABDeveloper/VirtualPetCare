@@ -96,14 +96,14 @@ public class PlayerInventory {
         return outfitInventory.getOrDefault(outfitName, false);
     }
 
-    // a) Go to bed — only increases sleep if not already max
+    // Go to bed — only increases sleep if not already max
     public void putPetToBed(Pet pet) {
         if (!pet.isDead() && pet.getSleepiness() < 100) {
             pet.increaseSleep(pet.getSleepDeclineRate()); // or fixed rate
         }
     }
 
-    // b) Feed — consumes food from inventory
+    // feed — consumes food from inventory
     public boolean feedPet(Pet pet, Food food) {
         if (consumeFood(food)) {
             pet.increaseFullness(food.getFullness());
@@ -112,7 +112,7 @@ public class PlayerInventory {
         return false;
     }
 
-    // c) Give Gift — consumes gift from inventory
+    // Give Gift — consumes gift from inventory
     public boolean giveGiftToPet(Pet pet, Gifts gift) {
         if (giveGift(gift)) {
             pet.increaseHappiness(10); // or scale with gift
@@ -121,7 +121,7 @@ public class PlayerInventory {
         return false;
     }
 
-    // d) Take to vet — apply health boost if cooldown allows
+    // Take to vet — apply health boost if cooldown allows
     public boolean takePetToVet(Pet pet, int currentTime) {
         if (currentTime - pet.getLastVetVisitTime() >= pet.getVetCooldownDuration()) {
             pet.increaseHealth(30); // or tunable
@@ -131,7 +131,7 @@ public class PlayerInventory {
         return false;
     }
 
-    // e) Play — apply happiness if cooldown allows
+    // Play — apply happiness if cooldown allows
     public boolean playWithPet(Pet pet, int currentTime) {
         if (currentTime - pet.getLastPlayTime() >= pet.getPlayCooldownDuration()) {
             pet.increaseHappiness(15);

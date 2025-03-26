@@ -46,6 +46,7 @@ public class Pet {
     public Pet(String name, int maxHealth, int maxSleep, int maxFullness, int maxHappiness) {
         this.name = name;
 
+        //SET THE THREE SELECTABLE PET TYPES AND THEIR CHARACTERISTICS
         this.petTypeMap = new HashMap<>();
         petTypeMap.put("PetOption1", new PetType(1.2F,.5F,.6F,1.3F));
         petTypeMap.put("PetOption2",  new PetType(2F,2F,2F,2F));
@@ -175,7 +176,6 @@ public class Pet {
         return petType;
     }
 
-
     public boolean isSleeping() {
         return isSleeping;
     }
@@ -190,6 +190,18 @@ public class Pet {
 
     public boolean isDead() {
         return isDead;
+    }
+
+    public void setDead(boolean isDead) {
+        this.isDead = isDead;
+    }
+
+    public void setSleeping(boolean isSleeping) {
+        this.isSleeping = isSleeping;
+    }
+
+    public void setHungry(boolean isHungry) {
+        this.isHungry = isHungry;
     }
 
     public void setHealthDeclineRate(int rate) {
@@ -299,6 +311,18 @@ public class Pet {
 
     public void setOutfit(String outfitName) {
         this.currentOutfit = outfitName;
+    }
+
+    public void resetState() {
+        this.isDead = false;
+        this.isSleeping = false;
+        this.isHungry = false;
+        this.isHappy = true;
+
+        this.health = maxHealth;
+        this.sleep = maxSleep;
+        this.fullness = maxFullness;
+        this.happiness = maxHappiness;
     }
 
     public void printStats() {
