@@ -31,8 +31,21 @@ public class PlayerInventory {
         foodInventory.put(food, foodInventory.getOrDefault(food, 0) + quantity);
     }
 
+    public int getFoodCount(Food food) {
+        return foodInventory.getOrDefault(food, 0);
+    }
+
     public void addGift(Gifts gift, int quantity) {
         giftInventory.put(gift, giftInventory.getOrDefault(gift, 0) + quantity);
+    }
+
+    public boolean giveGift(Gifts gift) {
+        int count = getGiftCount(gift);
+        if (count > 0) {
+            giftInventory.put(gift, count - 1);
+            return true;
+        }
+        return false;
     }
 
     public void addToy(Toys toy, int quantity) {
@@ -40,9 +53,6 @@ public class PlayerInventory {
     }
 
     // INVENTORY COUNT GETTERS
-    public int getFoodCount(Food food) {
-        return foodInventory.getOrDefault(food, 0);
-    }
 
     public int getGiftCount(Gifts gift) {
         return giftInventory.getOrDefault(gift, 0);
@@ -62,14 +72,6 @@ public class PlayerInventory {
         return false;
     }
 
-    public boolean giveGift(Gifts gift) {
-        int count = getGiftCount(gift);
-        if (count > 0) {
-            giftInventory.put(gift, count - 1);
-            return true;
-        }
-        return false;
-    }
 
     public boolean hasToy(Toys toy) {
         return getToyCount(toy) > 0;
@@ -93,20 +95,10 @@ public class PlayerInventory {
         return true;
     }
 
-
-    /**
-     * Adds an outfit to the player's owned outfits.
-     * @param outfitName Name of the outfit
-     */
     public void addOutfit(String outfitName) {
         outfitInventory.put(outfitName, true);
     }
 
-    /**
-     * Checks if the player owns the given outfit.
-     * @param outfitName Name of the outfit
-     * @return true if owned, false otherwise
-     */
     public boolean ownsOutfit(String outfitName) {
         return outfitInventory.getOrDefault(outfitName, false);
     }
