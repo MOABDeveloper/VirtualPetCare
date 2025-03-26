@@ -1,0 +1,26 @@
+{
+  "pet": {
+    "name": "Fluffy",
+    "health": 80,
+    "happiness": 70,
+    "sleep": 60,
+    "fullness": 90,
+    "outfit": "outfit1"
+  },
+  "inventory": {
+    "playerCoins": 2000,
+    "foodInventory": {
+      "Apple": 1
+    },
+    "giftInventory": {
+      "outfit1": 1
+    },
+    "toyInventory": {
+      "Tug Rope": 1
+    },
+    "outfitInventory": {
+      "outfit1": true
+    }
+  },
+  "totalPlayTime": 8000
+}
