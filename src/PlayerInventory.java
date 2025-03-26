@@ -14,8 +14,8 @@ public class PlayerInventory {
 
 
 
-    public PlayerInventory(int initialCoins) {
-        this.playerCoins = initialCoins;
+    public PlayerInventory() {
+        this.playerCoins = 0;
     }
 
     public int getPlayerCoins() {

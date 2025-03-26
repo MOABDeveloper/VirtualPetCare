@@ -6,7 +6,8 @@ public class StoreTest {
 
     public static void main(String[] args) {
         Store store = new Store();
-        PlayerInventory inventory = new PlayerInventory(1000); // Player starts with 1000 coins
+        PlayerInventory inventory = new PlayerInventory(); // Player starts with 1000 coins
+        inventory.setPlayerCoins(1000);
 
         // Test 1: Check retrieval methods
         System.out.println("Test 1: Retrieving All Items");

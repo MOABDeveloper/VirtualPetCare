@@ -4,6 +4,8 @@ public class Pet {
     // Pet name
     private String name;
 
+
+
     // Current stats
     private int health;
     private int sleep;
@@ -58,6 +60,10 @@ public class Pet {
         this.sleep = maxSleep;
         this.fullness = maxFullness;
         this.happiness = maxHappiness;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public int increaseHappiness(int amount) {
@@ -178,7 +184,7 @@ public class Pet {
      * Sets the current outfit for the pet (package-private).
      * Can only be changed from within the same package (e.g., PlayerInventory).
      */
-    void setOutfit(String outfitName) {
+    public void setOutfit(String outfitName) {
         this.currentOutfit = outfitName;
     }
 

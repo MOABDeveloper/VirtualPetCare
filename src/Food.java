@@ -28,4 +28,18 @@ public class Food {
     public String getDescription() {
         return description;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Food other = (Food) obj;
+        return name.equals(other.name); // compare by name
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode(); // ensure it hashes consistently
+    }
+
 }
