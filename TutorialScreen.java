@@ -2,15 +2,75 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class TutorialScreen extends JLayeredPane {
     private Font customFont;
     private static CardLayout cardLayout;
     private static JPanel mainPanel;
 
+    //For the backend
+    private src.TutorialScreen tutorialText;
+
+
+//    public TutorialScreen(Font customFont) {
+//        this.customFont = customFont;
+//        setPreferredSize(new Dimension(1080, 750));
+//
+//        //From the backend
+//        this.tutorialText = new src.TutorialScreen(null, null);
+//
+//        // set up, create new screen
+//        cardLayout = new CardLayout();
+//        mainPanel = new JPanel(cardLayout);
+//        mainPanel.setBounds(0, 0, 1080, 750); // Set bounds for the mainPanel
+//        add(mainPanel, Integer.valueOf(1)); // Add mainPanel to the layered pane
+//
+//        JButton homeButton = MainScreen.buttonCreate(20, 10, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
+//        add(homeButton, Integer.valueOf(2));
+//
+//        resetToGiveGift();
+//
+//        // creating screens
+//        JLayeredPane givingGift = giftGiving();
+//        JLayeredPane feedingScreen = feedingScreen();
+//        JLayeredPane vetScreen = vetScreen();
+//        JLayeredPane exerciseScreen = exerciseScreen();
+//        JLayeredPane sleepingScreen = sleepScreen();
+//        JLayeredPane playScreen = playingScreen();
+//
+//        // add screens into panel
+//        mainPanel.add(givingGift, "Give Gift");
+//        mainPanel.add(feedingScreen, "Feeding");
+//        mainPanel.add(vetScreen, "Vet");
+//        mainPanel.add(exerciseScreen, "Exercise");
+//        mainPanel.add(sleepingScreen, "Sleeping");
+//        mainPanel.add(playScreen, "Play");
+//
+//        // Show the initial screen
+//        cardLayout.show(mainPanel, "Give Gift");
+//        setVisible(true);
+//    }
+
     public TutorialScreen(Font customFont) {
         this.customFont = customFont;
         setPreferredSize(new Dimension(1080, 750));
+        try {
+            InputStream fontStream = getClass().getResourceAsStream("/resources/Early GameBoy.ttf");
+            if (fontStream == null) {
+                throw new IOException("Font file not found!");
+            }
+            this.customFont = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(16f);
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+            System.out.println("Font file not found!");
+            this.customFont = new Font("Arial", Font.PLAIN, 24);
+        }
+
+
+        // From the backend
+        this.tutorialText = new src.TutorialScreen();
 
         // set up, create new screen
         cardLayout = new CardLayout();
@@ -41,7 +101,6 @@ public class TutorialScreen extends JLayeredPane {
 
         // Show the initial screen
         cardLayout.show(mainPanel, "Give Gift");
-
         setVisible(true);
     }
 
@@ -49,7 +108,7 @@ public class TutorialScreen extends JLayeredPane {
         JLayeredPane giftGivingScreen = new JLayeredPane();
         giftGivingScreen.setPreferredSize(new Dimension(1080, 750));
 
-        // button to switch to the feeding screen
+        // Button to switch to the feeding screen
         JButton rightArrow = createButtonWithCardLayout(800, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Feeding", cardLayout, mainPanel);
         giftGivingScreen.add(rightArrow, Integer.valueOf(1));
 
@@ -58,8 +117,48 @@ public class TutorialScreen extends JLayeredPane {
         rightArrowLabel.setBounds(817, 265, 32, 32);
         giftGivingScreen.add(rightArrowLabel, Integer.valueOf(2));
 
-        return tutorialScreen("resources/give_gift_tutorial.png", giftGivingScreen);
+        // Build base tutorial screen
+        JLayeredPane screen = tutorialScreen("resources/give_gift_tutorial.png", giftGivingScreen);
+
+        // Add backend tutorial text
+//        JLabel textLabel = new JLabel("<html><div style='padding: 20px; font-size:16px;'>" + tutorialText.getScreen1() + "</div></html>");
+//        textLabel.setBounds(150, 450, 780, 140);  // Inside white box
+//        textLabel.setFont(customFont);
+//        textLabel.setVerticalAlignment(SwingConstants.TOP);
+//        screen.add(textLabel, Integer.valueOf(3));meow
+
+        JTextArea textArea = new JTextArea(tutorialText.getScreen1());
+        textArea.setFont(customFont.deriveFont(16f));
+        textArea.setForeground(Color.BLACK);
+        textArea.setOpaque(false);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        textArea.setEditable(false);
+        textArea.setFocusable(false);
+        textArea.setBounds(150, 460, 820, 120);
+        screen.add(textArea, Integer.valueOf(3));
+
+
+        return screen;
     }
+
+
+
+//    private JLayeredPane giftGiving() {
+//        JLayeredPane giftGivingScreen = new JLayeredPane();
+//        giftGivingScreen.setPreferredSize(new Dimension(1080, 750));
+//
+//        // button to switch to the feeding screen
+//        JButton rightArrow = createButtonWithCardLayout(800, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Feeding", cardLayout, mainPanel);
+//        giftGivingScreen.add(rightArrow, Integer.valueOf(1));
+//
+//        ImageIcon rightArrowImage = new ImageIcon("resources/right_arrow.png");
+//        JLabel rightArrowLabel = new JLabel(rightArrowImage);
+//        rightArrowLabel.setBounds(817, 265, 32, 32);
+//        giftGivingScreen.add(rightArrowLabel, Integer.valueOf(2));
+//
+//        return tutorialScreen("resources/give_gift_tutorial.png", giftGivingScreen);
+//    }
 
     private JLayeredPane feedingScreen() {
         JLayeredPane feedingScreen = new JLayeredPane();

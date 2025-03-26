@@ -11,13 +11,14 @@ public class Store {
 
         //Load in Default food items
         foodMap = new HashMap<>();
-        foodMap.put("Apple", new Food("Apple", 100, 8, "Fresh red apple"));
-        foodMap.put("Burger", new Food("Burger", 300, 12, "Grilled beef burger"));
-        foodMap.put("Salad", new Food("Salad", 300, 11, "Green salad"));
-        foodMap.put("Steak", new Food("Steak", 600, 55, "Sizzling and seared to perfection"));
-        foodMap.put("Chicken", new Food("Chicken", 450, 35, "Tender and golden"));
-        foodMap.put("Shrimp", new Food("Shrimp", 450, 40, "Plump little ocean gems"));
-        foodMap.put("Salmon", new Food("Salmon", 550, 50, "Fancy but friendly"));
+        foodMap.put("Apple", new Food("Apple", 50, 5, "Fresh red apple"));
+        foodMap.put("Strawberry", new Food("Strawberry", 60, 6, ""));
+        foodMap.put("Birria-Taco", new Food("Birria-Taco", 200, 20, ""));
+        foodMap.put("Burger", new Food("Burger", 500, 50, "Grilled beef burger"));
+        foodMap.put("Salad", new Food("Salad", 350, 35, "Green salad"));
+        foodMap.put("Steak", new Food("Steak", 1100, 100, "Sizzling and seared to perfection"));
+        foodMap.put("Chicken", new Food("Chicken",  650,65, "Tender and golden"));
+        foodMap.put("Salmon", new Food("Salmon" ,850, 85, "Fancy but friendly"));
 
         //Load in Default toy items
         toysMap = new HashMap<>();
