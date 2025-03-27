@@ -6,6 +6,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.InputStream;
+import src.ParentalControl;
+
 
 public class MainScreen extends JFrame {
     private static CardLayout cardLayout;
@@ -14,6 +16,7 @@ public class MainScreen extends JFrame {
     private static JLabel passwordLabel;
     private static JLabel overlayLabel;
     private static TutorialScreen tutorialScreen; // Store the TutorialScreen instance
+    private static ParentalControl parentalControl;
 
 
 
@@ -56,6 +59,12 @@ public class MainScreen extends JFrame {
         mainPanel.add(loadScreen, "Load");
         mainPanel.add(creditScreen, "Credit");
         mainPanel.add(inGameScreen, "InGame");
+
+        //ATTEMPTED TO ADD MOHAMMED-KAM
+        JLayeredPane parentalControlScreen = new ParentalControlScreen(customFont, cardLayout, mainPanel);
+        mainPanel.add(parentalControlScreen, "ParentalControlScreen");
+        parentalControl = new ParentalControl();
+
 
         // add main panel to the frame
         this.add(mainPanel);
@@ -192,13 +201,21 @@ public class MainScreen extends JFrame {
         return layeredPane;
     }
 
+
     private static void showPasswordPopup(JLayeredPane parentPane) {
         passwordLabel.setVisible(true);
         overlayLabel.setVisible(true);
 
+        // Password input field
+        JTextField passwordField = new JTextField();
 
-        // Create "Back" button (only visible when popup is visible)
-        JButton backButton = buttonCreate(250,  400, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
+        //password text box
+        passwordField.setBounds(210, 335, 650, 40);
+        parentPane.add(passwordField, Integer.valueOf(4));
+        passwordField.requestFocusInWindow();
+
+        // "Back" button
+        JButton backButton = buttonCreate(250, 400, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
         backButton.setText("Back");
         backButton.setFont(customFont);
         backButton.setForeground(Color.decode("#7392B2"));
@@ -206,7 +223,7 @@ public class MainScreen extends JFrame {
         backButton.setVerticalTextPosition(JButton.CENTER);
         backButton.setVisible(true);
 
-        // Create "Done" button
+        // "Enter" button
         JButton doneButton = buttonCreate(600, 400, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "");
         doneButton.setText("ENTER");
         doneButton.setFont(customFont);
@@ -218,24 +235,33 @@ public class MainScreen extends JFrame {
         // Add action listeners
         backButton.addActionListener(e -> {
             passwordLabel.setVisible(false);
-            overlayLabel.setVisible(false); // Hide overlay when closing popup
+            overlayLabel.setVisible(false);
             parentPane.remove(backButton);
             parentPane.remove(doneButton);
+            parentPane.remove(passwordField);
             parentPane.repaint();
         });
 
         doneButton.addActionListener(e -> {
+            String enteredPassword = passwordField.getText();
+
+            if (parentalControl.authenticate(enteredPassword)) { // Replace with your secure password
+                cardLayout.show(mainPanel, "ParentalControlScreen");
+            } else {
+                JOptionPane.showMessageDialog(parentPane, "Incorrect password!", "Access Denied", JOptionPane.ERROR_MESSAGE);
+            }
+
             passwordLabel.setVisible(false);
-            overlayLabel.setVisible(false); // Hide overlay when closing popup
+            overlayLabel.setVisible(false);
             parentPane.remove(backButton);
             parentPane.remove(doneButton);
+            parentPane.remove(passwordField);
             parentPane.repaint();
-            // Add your logic for when "Done" is clicked
         });
 
-        // Add buttons to parentPane (on a high layer)
         parentPane.add(backButton, Integer.valueOf(4));
         parentPane.add(doneButton, Integer.valueOf(4));
         parentPane.repaint();
     }
+
 }
