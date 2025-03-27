@@ -7,7 +7,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import src.ParentalControl;
-
+import src.GameData;
 
 public class MainScreen extends JFrame {
     private static CardLayout cardLayout;
@@ -48,9 +48,9 @@ public class MainScreen extends JFrame {
         JLayeredPane homeScreen = createMainScreen();
         tutorialScreen = new TutorialScreen(customFont);
         JLayeredPane newGameScreen = new NewGameScreen(customFont, cardLayout, mainPanel);
-        JLayeredPane loadScreen = new LoadScreen(customFont);
+        JLayeredPane loadScreen = new LoadScreen(customFont, mainPanel, cardLayout);
         JLayeredPane creditScreen = new CreditScreen(customFont);
-        JLayeredPane inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel);
+        //InGameScreen inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel);
 
         // add screens to the main panel
         mainPanel.add(homeScreen, "Home");
@@ -58,7 +58,7 @@ public class MainScreen extends JFrame {
         mainPanel.add(newGameScreen, "New Game");
         mainPanel.add(loadScreen, "Load");
         mainPanel.add(creditScreen, "Credit");
-        mainPanel.add(inGameScreen, "InGame");
+        //mainPanel.add(inGameScreen, "InGame");
 
         //ATTEMPTED TO ADD MOHAMMED-KAM
         parentalControl = new ParentalControl();

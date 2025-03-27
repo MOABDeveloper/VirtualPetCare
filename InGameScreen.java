@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import src.GameData;
 
 public class InGameScreen extends JLayeredPane {
     private Font customFont;
@@ -8,7 +9,7 @@ public class InGameScreen extends JLayeredPane {
     private JPanel mainPanel;
     // define variable for the height of the bar
 
-    public InGameScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel) {
+    public InGameScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel, GameData gameData) {
         this.customFont = customFont;
         this.cardLayout = cardLayout;
         this.mainPanel = mainPanel;
