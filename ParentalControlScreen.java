@@ -51,9 +51,27 @@ public class ParentalControlScreen extends JLayeredPane {
         add(avgPlayValue, Integer.valueOf(2));
 
         // Buttons
-        JButton resetStatsButton = createButton("RESET STATS", 600, 200, 200, 50);
-        JButton setPlayTimeButton = createButton("SET PLAY TIME", 600, 270, 200, 50);
-        JButton revivePetButton = createButton("REVIVE PET", 600, 340, 200, 50);
+        JButton resetStatsButton = MainScreen.buttonCreate(620,240, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "");
+        resetStatsButton.setText("RESET STATS");
+        resetStatsButton.setFont(customFont.deriveFont(13f));
+        resetStatsButton.setForeground(Color.decode("#7392B2"));
+        resetStatsButton.setHorizontalTextPosition(SwingConstants.CENTER);
+        resetStatsButton.setVerticalTextPosition(SwingConstants.CENTER);
+
+        JButton setPlayTimeButton = MainScreen.buttonCreate(620, 370, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "");
+        setPlayTimeButton.setText("SET PLAY TIME");
+        setPlayTimeButton.setFont(customFont.deriveFont(12f));
+        setPlayTimeButton.setForeground(Color.decode("#7392B2"));
+        setPlayTimeButton.setHorizontalTextPosition(SwingConstants.CENTER);
+        setPlayTimeButton.setVerticalTextPosition(SwingConstants.CENTER);
+
+        JButton revivePetButton = MainScreen.buttonCreate(620, 500, 192, 62, "resources/white_button.png", "resources/white_button_clicked.png", "");
+        revivePetButton.setText("REVIVE PET");
+        revivePetButton.setFont(customFont.deriveFont(13f));
+        revivePetButton.setForeground(Color.decode("#7392B2"));
+        revivePetButton.setHorizontalTextPosition(SwingConstants.CENTER);
+        revivePetButton.setVerticalTextPosition(SwingConstants.CENTER);
+
 
         add(resetStatsButton, Integer.valueOf(2));
         add(setPlayTimeButton, Integer.valueOf(2));
@@ -128,13 +146,6 @@ public class ParentalControlScreen extends JLayeredPane {
         label.setForeground(Color.WHITE);
         label.setBounds(x, y, width, height);
         return label;
-    }
-
-    private JButton createButton(String text, int x, int y, int width, int height) {
-        JButton button = new JButton(text);
-        button.setFont(customFont);
-        button.setBounds(x, y, width, height);
-        return button;
     }
 
     private String selectSaveFile() {

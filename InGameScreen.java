@@ -20,10 +20,12 @@ public class InGameScreen extends JLayeredPane {
 
         JButton backButton = MainScreen.buttonCreate(800,70, 70,70, "resources/home_button.png", "resources/home_button_clicked.png", "");
         backButton.setBounds(990, 15, 64, 64);
+
         ImageIcon homeIcon = new ImageIcon("resources/home_icon.png");
         JLabel homeIconLabel = new JLabel(homeIcon);
         homeIconLabel.setBounds(990, 15, 64, 64);
         add(homeIconLabel,Integer.valueOf(3));
+
         backButton.addActionListener(e -> cardLayout.show(mainPanel, "Home"));
         add(backButton, Integer.valueOf(2));
     }
@@ -53,7 +55,15 @@ public class InGameScreen extends JLayeredPane {
 
         // load button
         JButton loadButton = MainScreen.buttonCreate(90, 15, 50, 50, "resources/save_load_1.png", "resources/save_load_clicked_1.png", "Load");
+        ImageIcon loadIcon = new ImageIcon("resources/load_button.png");
+        JLabel loadIconLabel = new JLabel(loadIcon);
+        loadIconLabel.setBounds(102, 27, 28, 24);
+        add(loadIconLabel,Integer.valueOf(3));
         add(loadButton, Integer.valueOf(2));
+
+        // command buttons:
+        JButton playButton = MainScreen.buttonCreate(70,70, 116, 75, "resources/command_button_scaled.png", "resources/play_button_clicked.png", "");
+        add(playButton, Integer.valueOf(3));
     }
 
     private void healthBars(){
