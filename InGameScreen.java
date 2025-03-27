@@ -5,7 +5,8 @@ import java.net.URL;
 public class InGameScreen extends JLayeredPane {
     private Font customFont;
     private CardLayout cardLayout;  // Remove static
-    private JPanel mainPanel;      // Remove static
+    private JPanel mainPanel;
+    // define variable for the height of the bar
 
     public InGameScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel) {
         this.customFont = customFont;
@@ -98,6 +99,5 @@ public class InGameScreen extends JLayeredPane {
         JLabel gifLabel = new JLabel(gifIcon);
         gifLabel.setBounds(300, 30, 622, 632);
         add(gifLabel, Integer.valueOf(3));
-
     }
 }

@@ -33,11 +33,5 @@ public class LoadScreen extends JLayeredPane {
         add(homeButton, Integer.valueOf(2));
 
 
-
-        cardLayout = new CardLayout();
-        mainPanel = new JPanel(cardLayout);
-        mainPanel.setBounds(0, 0, 1080, 750);
-        add(mainPanel, Integer.valueOf(0));
-
     }
 }
