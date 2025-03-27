@@ -5,7 +5,10 @@ import java.awt.event.ActionListener;
 
 public class CreditScreen extends JLayeredPane {
     private Font customFont;
-    public CreditScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel) {
+    private static CardLayout cardLayout;
+    private static JPanel mainPanel;
+
+    public CreditScreen(Font customFont) {
         this.customFont = customFont;
         setPreferredSize(new Dimension(1080, 750));
 

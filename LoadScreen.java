@@ -32,6 +32,8 @@ public class LoadScreen extends JLayeredPane {
         JButton homeButton = MainScreen.buttonCreate(20, 10, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
         add(homeButton, Integer.valueOf(2));
 
+
+
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
         mainPanel.setBounds(0, 0, 1080, 750);

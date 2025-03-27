@@ -16,6 +16,7 @@ public class MainScreen extends JFrame {
     private static TutorialScreen tutorialScreen; // Store the TutorialScreen instance
 
 
+
     MainScreen() {
         // Load custom font
         try {
@@ -43,9 +44,10 @@ public class MainScreen extends JFrame {
         // create screens
         JLayeredPane homeScreen = createMainScreen();
         tutorialScreen = new TutorialScreen(customFont);
-        JLayeredPane newGameScreen = new NewGameScreen(customFont);
+        JLayeredPane newGameScreen = new NewGameScreen(customFont, cardLayout, mainPanel);
         JLayeredPane loadScreen = new LoadScreen(customFont);
-        JLayeredPane creditScreen = new CreditScreen(customFont, cardLayout, mainPanel);
+        JLayeredPane creditScreen = new CreditScreen(customFont);
+        JLayeredPane inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel);
 
         // add screens to the main panel
         mainPanel.add(homeScreen, "Home");
@@ -53,7 +55,7 @@ public class MainScreen extends JFrame {
         mainPanel.add(newGameScreen, "New Game");
         mainPanel.add(loadScreen, "Load");
         mainPanel.add(creditScreen, "Credit");
-
+        mainPanel.add(inGameScreen, "InGame");
 
         // add main panel to the frame
         this.add(mainPanel);
