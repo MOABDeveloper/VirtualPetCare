@@ -1,11 +1,26 @@
 {
   "pet": {
-    "name": "Fluffy",
-    "petType": "Dragon",
+    "name": "Shadow",
     "health": 80,
     "sleep": 60,
     "fullness": 90,
     "happiness": 70,
+    "maxHealth": 100,
+    "maxSleep": 100,
+    "maxFullness": 100,
+    "maxHappiness": 100,
+    "healthDeclineRate": 5,
+    "fullnessDeclineRate": 5,
+    "sleepDeclineRate": 5,
+    "happinessDeclineRate": 5,
+    "isSleeping": false,
+    "isHungry": false,
+    "isHappy": true,
+    "isDead": false,
+    "lastVetVisitTime": 0,
+    "vetCooldownDuration": 30,
+    "lastPlayTime": 0,
+    "playCooldownDuration": 20,
     "currentOutfit": "outfit1"
   },
   "inventory": {

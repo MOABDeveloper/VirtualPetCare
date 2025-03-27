@@ -4,8 +4,14 @@ import src.*;
 
 public class PetBehaviorTest {
     public static void main(String[] args) {
-        Pet pet = new Pet("Buddy", 100, 100, 100, 100);
-
+        Pet pet = new Pet(
+                "Shadow", 100, 100, 100, 100,   // health, sleep, fullness, happiness
+                100, 100, 100, 100,             // maxHealth, maxSleep, maxFullness, maxHappiness
+                5, 5, 5, 5,                     // healthDeclineRate, fullnessDeclineRate, sleepDeclineRate, happinessDeclineRate
+                false, false, true, false,      // isSleeping, isHungry, isHappy, isDead
+                0, 30, 0, 20,                   // lastVetVisitTime, vetCooldownDuration, lastPlayTime, playCooldownDuration
+                "default_outfit"                // currentOutfit
+        );
         // Set fast decline rates for testing
         pet.setHealthDeclineRate(10);
         pet.setSleepDeclineRate(30);

@@ -1,49 +1,111 @@
 package src;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Pet {
     // Pet name
+    @SerializedName("name")
     private String name;
     private final Map<String, PetType> petTypeMap;
     private String petType;
 
     // Current stats
+    @SerializedName("health")
     private int health;
+    @SerializedName("Sleep")
     private int sleep;
+    @SerializedName("fullness")
     private int fullness;
+    @SerializedName("happiness")
     private int happiness;
 
     // Max values for each stat
+    @SerializedName("maxHealth")
     private final int maxHealth;
+    @SerializedName("maxSleep")
     private final int maxSleep;
+    @SerializedName("maxFullness")
     private final int maxFullness;
+    @SerializedName("maxHappiness")
     private final int maxHappiness;
 
     // Decline rates for each stat
+    @SerializedName("healthDeclineRate")
     private int healthDeclineRate;
+    @SerializedName("fullnessDeclineRate")
+
     private int fullnessDeclineRate;
+    @SerializedName("sleepDeclineRate")
+
     private int sleepDeclineRate;
+    @SerializedName("happinessDeclineRate")
+
     private int happinessDeclineRate;
 
     // State flags
+    @SerializedName("isSleeping")
+
     private boolean isSleeping;
+    @SerializedName("isHungry")
+
     private boolean isHungry;
+    @SerializedName("isHappy")
+
     private boolean isHappy;
+    @SerializedName("isDead")
+
     private boolean isDead;
 
     // Cooldowns
+    @SerializedName("lastVetVisitTime")
+
     private int lastVetVisitTime;
+    @SerializedName("vetCooldownDuration")
+
     private int vetCooldownDuration;
+    @SerializedName("lastPlayTime")
+
     private int lastPlayTime;
+    @SerializedName("playCooldownDuration")
+
     private int playCooldownDuration;
 
     // Current outfit name; null means no outfit equipped
+    @SerializedName("currentOutfit")
+
     private String currentOutfit;
 
-
-    public Pet(String name, int maxHealth, int maxSleep, int maxFullness, int maxHappiness) {
+//
+//    public Pet(String name, int maxHealth, int maxSleep, int maxFullness, int maxHappiness) {
+//        this.name = name;
+//
+//        //SET THE THREE SELECTABLE PET TYPES AND THEIR CHARACTERISTICS
+//        this.petTypeMap = new HashMap<>();
+//        petTypeMap.put("PetOption1", new PetType(1.2F,.5F,.6F,1.3F));
+//        petTypeMap.put("PetOption2",  new PetType(2F,2F,2F,2F));
+//        petTypeMap.put("PetOption3",  new PetType(1.2F,.5F,.6F,1.3F));
+//
+//        this.maxHealth = maxHealth;
+//        this.maxSleep = maxSleep;
+//        this.maxFullness = maxFullness;
+//        this.maxHappiness = maxHappiness;
+//
+//        this.health = maxHealth;
+//        this.sleep = maxSleep;
+//        this.fullness = maxFullness;
+//        this.happiness = maxHappiness;
+//
+//    }
+    // Ensure Gson can access final fields
+    public Pet(String name, int health, int sleep, int fullness, int happiness,
+               int maxHealth, int maxSleep, int maxFullness, int maxHappiness,
+               int healthDeclineRate, int fullnessDeclineRate, int sleepDeclineRate, int happinessDeclineRate,
+               boolean isSleeping, boolean isHungry, boolean isHappy, boolean isDead,
+               int lastVetVisitTime, int vetCooldownDuration, int lastPlayTime, int playCooldownDuration,
+               String currentOutfit) {
         this.name = name;
 
         //SET THE THREE SELECTABLE PET TYPES AND THEIR CHARACTERISTICS
@@ -52,15 +114,29 @@ public class Pet {
         petTypeMap.put("PetOption2",  new PetType(2F,2F,2F,2F));
         petTypeMap.put("PetOption3",  new PetType(1.2F,.5F,.6F,1.3F));
 
+
+        this.name = name;
+        this.health = health;
+        this.sleep = sleep;
+        this.fullness = fullness;
+        this.happiness = happiness;
         this.maxHealth = maxHealth;
         this.maxSleep = maxSleep;
         this.maxFullness = maxFullness;
         this.maxHappiness = maxHappiness;
-
-        this.health = maxHealth;
-        this.sleep = maxSleep;
-        this.fullness = maxFullness;
-        this.happiness = maxHappiness;
+        this.healthDeclineRate = healthDeclineRate;
+        this.fullnessDeclineRate = fullnessDeclineRate;
+        this.sleepDeclineRate = sleepDeclineRate;
+        this.happinessDeclineRate = happinessDeclineRate;
+        this.isSleeping = isSleeping;
+        this.isHungry = isHungry;
+        this.isHappy = isHappy;
+        this.isDead = isDead;
+        this.lastVetVisitTime = lastVetVisitTime;
+        this.vetCooldownDuration = vetCooldownDuration;
+        this.lastPlayTime = lastPlayTime;
+        this.playCooldownDuration = playCooldownDuration;
+        this.currentOutfit = currentOutfit;
     }
 
     public int getLastVetVisitTime() {
@@ -155,6 +231,34 @@ public class Pet {
         return this.sleep;
     }
 
+    public Map<String, PetType> getPetTypeMap() {
+        return petTypeMap;
+    }
+
+    public int getSleep() {
+        return sleep;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public int getMaxSleep() {
+        return maxSleep;
+    }
+
+    public int getMaxFullness() {
+        return maxFullness;
+    }
+
+    public int getMaxHappiness() {
+        return maxHappiness;
+    }
+
+    public boolean isHappy() {
+        return isHappy;
+    }
+
     public void updateRatesBasedOfType() {
         PetType type = petTypeMap.get(this.petType);
         if (type == null) return;
@@ -189,6 +293,12 @@ public class Pet {
     }
 
     public boolean isDead() {
+        if(getHealth() <= 0) {
+            isDead = true;
+        }
+        else{
+            isDead = false;
+        }
         return isDead;
     }
 
@@ -314,15 +424,15 @@ public class Pet {
     }
 
     public void resetState() {
-        this.isDead = false;
-        this.isSleeping = false;
-        this.isHungry = false;
-        this.isHappy = true;
+            this.isDead = false;
+            this.isSleeping = false;
+            this.isHungry = false;
+            this.isHappy = true;
 
-        this.health = maxHealth;
-        this.sleep = maxSleep;
-        this.fullness = maxFullness;
-        this.happiness = maxHappiness;
+            this.health = maxHealth;
+            this.sleep = maxSleep;
+            this.fullness = maxFullness;
+            this.happiness = maxHappiness;
     }
 
     public void printStats() {

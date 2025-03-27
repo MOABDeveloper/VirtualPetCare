@@ -2,15 +2,21 @@ import src.ParentalControl;
 
 import javax.swing.*;
 import java.awt.*;
+import src.GameData;
+import src.GameDataManager;
+import src.Pet;
 
 
 public class ParentalControlScreen extends JLayeredPane {
     private Font customFont;
 
-    public ParentalControlScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel) {
+    private ParentalControl parentalControl;
+
+
+    public ParentalControlScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel, ParentalControl parentalControl) {
         this.customFont = customFont;
         setPreferredSize(new Dimension(1080, 750));
-
+        this.parentalControl = parentalControl;
 
         // Add grid background
         ImageIcon gridBackground = new ImageIcon("resources/grid.png");
@@ -33,10 +39,12 @@ public class ParentalControlScreen extends JLayeredPane {
 
         // Labels
         JLabel totalPlayLabel = createLabel("TOTAL PLAY TIME:", 240, 245, 300, 40);
-        JLabel totalPlayValue = createLabel("10 hrs", 300, 328, 150, 40);
+        JLabel totalPlayValue = createLabel(String.valueOf(parentalControl.getTotalPlayTime()), 300, 328, 150, 40);
         totalPlayValue.setFont(customFont.deriveFont(40f));
-        JLabel avgPlayLabel = createLabel("AVERAGE PLAY TIME:", 220, 419, 300, 40);
-        JLabel avgPlayValue = createLabel("0.4 hrs", 300, 498, 500, 40);
+
+        JLabel avgPlayLabel = createLabel("AVERAGE PLAY TIME", 220, 419, 300, 40);
+        JLabel avgPlayValue = createLabel(String.valueOf(parentalControl.getAveragePlayTime()), 300, 498, 500, 40);
+        avgPlayValue.setFont(customFont.deriveFont(40f));
 
         add(totalPlayLabel, Integer.valueOf(2));
         add(totalPlayValue, Integer.valueOf(2));
@@ -52,7 +60,67 @@ public class ParentalControlScreen extends JLayeredPane {
         add(setPlayTimeButton, Integer.valueOf(2));
         add(revivePetButton, Integer.valueOf(2));
 
+        // RESET STATS button Logic
+        resetStatsButton.addActionListener(e -> {
+            parentalControl.resetStats();
+            totalPlayValue.setText(String.valueOf(parentalControl.getTotalPlayTime()));
+            avgPlayValue.setText(String.valueOf(parentalControl.getAveragePlayTime()));
+            JOptionPane.showMessageDialog(this, "Play time statistics have been reset.");
+        });
+
+        // SET PLAY TIME button → shows dialog to get start/end hour and enables limit
+        setPlayTimeButton.addActionListener(e -> {
+            try {
+                String startStr = JOptionPane.showInputDialog(this, "Enter allowed start hour (0–23):");
+                String endStr = JOptionPane.showInputDialog(this, "Enter allowed end hour (0–23):");
+
+                int startHour = Integer.parseInt(startStr);
+                int endHour = Integer.parseInt(endStr);
+
+                parentalControl.setPlayTimeWindow(startHour, endHour);
+                parentalControl.setLimitationsEnabled(true);
+
+                JOptionPane.showMessageDialog(this, "Play time window set from " + startHour + ":00 to " + endHour + ":00.");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Invalid input. Please enter valid hours (0–23).", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        revivePetButton.addActionListener(e -> {
+            // Step 1: Let the user select a save file
+            String saveFile = selectSaveFile();
+            if (saveFile == null) {
+                JOptionPane.showMessageDialog(null, "No save file selected.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Step 2: Load the pet from the save file
+            GameData gameData = GameDataManager.loadGame(saveFile);
+            if (gameData == null || gameData.getPet() == null) {
+                JOptionPane.showMessageDialog(null, "Failed to load pet from save file.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Pet pet = gameData.getPet();
+
+            System.out.println("Pet loaded from save file: " + pet.getName());
+            System.out.println("Pet health: " + pet.getHealth());
+            System.out.println("Pet isDead: " + pet.isDead());  // <-- Check if it's actually true
+
+
+            // Step 3: Try reviving the pet using parental controls
+            boolean revived = parentalControl.revivePet(pet);
+
+            // Step 4: Show the result to the user
+            if (revived) {
+                JOptionPane.showMessageDialog(null, "Pet successfully revived!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                GameDataManager.saveGame(saveFile, pet, gameData.getInventory(), gameData.getTotalPlayTime()); // Save updated pet state
+            } else {
+                JOptionPane.showMessageDialog(null, "The pet is not dead and doesn't need revival.", "Info", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
         setVisible(true);
+
     }
 
     private JLabel createLabel(String text, int x, int y, int width, int height) {
@@ -69,4 +137,16 @@ public class ParentalControlScreen extends JLayeredPane {
         button.setBounds(x, y, width, height);
         return button;
     }
+
+    private String selectSaveFile() {
+        JFileChooser fileChooser = new JFileChooser("saves/");
+        fileChooser.setDialogTitle("Select Save File");
+        int result = fileChooser.showOpenDialog(null);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            return fileChooser.getSelectedFile().getAbsolutePath();
+        }
+        return null; // No file selected
+    }
+
 }

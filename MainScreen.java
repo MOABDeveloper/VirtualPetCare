@@ -61,10 +61,9 @@ public class MainScreen extends JFrame {
         mainPanel.add(inGameScreen, "InGame");
 
         //ATTEMPTED TO ADD MOHAMMED-KAM
-        JLayeredPane parentalControlScreen = new ParentalControlScreen(customFont, cardLayout, mainPanel);
-        mainPanel.add(parentalControlScreen, "ParentalControlScreen");
         parentalControl = new ParentalControl();
-
+        JLayeredPane parentalControlScreen = new ParentalControlScreen(customFont, cardLayout, mainPanel,parentalControl);
+        mainPanel.add(parentalControlScreen, "ParentalControlScreen");
 
         // add main panel to the frame
         this.add(mainPanel);

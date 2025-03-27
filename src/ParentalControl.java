@@ -7,8 +7,8 @@ public class ParentalControl {
     private int allowedStartHour; // 24-hr format (e.g. 9 for 9am)
     private int allowedEndHour;   // e.g. 21 for 9pm
 
-    private long totalPlayTime;  // milliseconds
-    private int sessionCount;
+    private long totalPlayTime = 999;  // milliseconds
+    private int sessionCount = 10;
 
 
 
@@ -34,7 +34,6 @@ public class ParentalControl {
         this.limitationsEnabled = enabled;
     }
 
-
     // Parental Statistics (total & average play time)
     public long getAveragePlayTime() {
         return sessionCount == 0 ? 0 : totalPlayTime / sessionCount;
@@ -54,12 +53,13 @@ public class ParentalControl {
         sessionCount = 0;
     }
 
-
-    public void revivePet(Pet pet) {
-        if (pet == null) {
-            return;
+    public boolean revivePet(Pet pet) {
+        if (pet.isDead()) {
+            pet.resetState();
+            return true;
+        } else {
+            return false;
         }
-        pet.resetState();
     }
 
 

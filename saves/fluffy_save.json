@@ -9,18 +9,18 @@
     "maxSleep": 100,
     "maxFullness": 100,
     "maxHappiness": 100,
-    "healthDeclineRate": 0,
-    "fullnessDeclineRate": 0,
-    "sleepDeclineRate": 0,
-    "happinessDeclineRate": 0,
+    "healthDeclineRate": 5,
+    "fullnessDeclineRate": 5,
+    "sleepDeclineRate": 5,
+    "happinessDeclineRate": 5,
     "isSleeping": false,
     "isHungry": false,
-    "isHappy": false,
+    "isHappy": true,
     "isDead": false,
-    "lastVetVisitTime": 0,
-    "vetCooldownDuration": 0,
-    "lastPlayTime": 0,
-    "playCooldownDuration": 0,
+    "lastVetVisitTime": 6,
+    "vetCooldownDuration": 6,
+    "lastPlayTime": 6,
+    "playCooldownDuration": 6,
     "currentOutfit": "outfit1"
   },
   "inventory": {
@@ -38,5 +38,5 @@
       "outfit1": true
     }
   },
-  "totalPlayTime": 5000
+  "totalPlayTime": 7153
 }
