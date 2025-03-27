@@ -26,14 +26,10 @@ public class CreditScreen extends JLayeredPane {
         add(label, Integer.valueOf(1));
 
         // Button to switch back to the home screen
-        JButton backButton = new JButton("Back to Home");
-        backButton.setBounds(200, 300, 200, 50);
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(mainPanel, "Home"); // Switch back to the home screen
-            }
-        });
+        JButton backButton = new JButton("HOME");
+        backButton.setBounds(800, 70, 200, 50);
+        backButton.addActionListener(e -> cardLayout.show(mainPanel, "Home"));
+        add(backButton, Integer.valueOf(2));
 
         add(backButton, Integer.valueOf(1));
     }
