@@ -9,7 +9,6 @@ import src.Pet;
 
 public class ParentalControlScreen extends JLayeredPane {
     private Font customFont;
-
     private ParentalControl parentalControl;
 
 

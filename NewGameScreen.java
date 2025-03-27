@@ -9,11 +9,6 @@ public class NewGameScreen extends JLayeredPane {
     private JPanel petPanel;           // For pet selection screens
     private CardLayout mainCardLayout; // For main navigation
     private JPanel mainPanel;          // For main screens
-    private JLabel popUpLabel;
-    private JButton backButton;
-    private JButton doneButton;
-    private JLabel overlayLabel;
-    private JLabel nameLabel;
 
     public NewGameScreen(Font customFont, CardLayout mainCardLayout, JPanel mainPanel) {
         this.customFont = customFont;
@@ -99,10 +94,10 @@ public class NewGameScreen extends JLayeredPane {
         return button;
     }
 
-    private void displayPopup(JLayeredPane sourceScreen) {
+    private JLabel[] displayPopup(JLayeredPane sourceScreen) {
         // Overlay
         ImageIcon overlayIcon = new ImageIcon("resources/opacity.png");
-        overlayLabel = new JLabel(overlayIcon);
+        JLabel overlayLabel = new JLabel(overlayIcon);
         overlayLabel.setBounds(0, 0, 1080, 750);
         overlayLabel.setVisible(false);
         sourceScreen.add(overlayLabel, Integer.valueOf(5));
@@ -112,22 +107,25 @@ public class NewGameScreen extends JLayeredPane {
         int width = popupIcon.getIconWidth() - 1000;
         int height = popupIcon.getIconHeight() - 664;
         Image scaledPopup = popupIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        popUpLabel = new JLabel(new ImageIcon(scaledPopup));
+        JLabel popUpLabel = new JLabel(new ImageIcon(scaledPopup));
         popUpLabel.setBounds(20, 66, width, height);
         popUpLabel.setVisible(false);
         sourceScreen.add(popUpLabel, Integer.valueOf(6));
+
+        return new JLabel[]{overlayLabel, popUpLabel};
     }
+
 
     private JLayeredPane firstPet() {
         JLayeredPane firstPet = new JLayeredPane();
         firstPet.setPreferredSize(new Dimension(1080, 750));
         arrowButtons(firstPet, 1);
         backgroundScreen("resources/id_card_sprite1.png", firstPet);
-        displayPopup(firstPet);
+        JLabel[] popupElements = displayPopup(firstPet); // Store overlay and popup labels
 
         // Choose button
         JButton chooseButton = MainScreen.buttonCreate(445, 620, 192, 64, "resources/button.png", "resources/button_clicked.png", "Choose");
-        chooseButton.addActionListener(e -> showPopup(firstPet));
+        chooseButton.addActionListener(e -> showPopup(firstPet, popupElements[0], popupElements[1]));
         firstPet.add(chooseButton, Integer.valueOf(4));
 
         return firstPet;
@@ -137,47 +135,79 @@ public class NewGameScreen extends JLayeredPane {
         JLayeredPane secondPet = new JLayeredPane();
         secondPet.setPreferredSize(new Dimension(1080, 750));
         arrowButtons(secondPet, 2);
-        return backgroundScreen("resources/id_card_sprite2.png", secondPet);
+        backgroundScreen("resources/id_card_sprite2.png", secondPet);
+        JLabel[] popupElements = displayPopup(secondPet); // Store overlay and popup labels
+
+        // Choose button
+        JButton chooseButton = MainScreen.buttonCreate(445, 620, 192, 64, "resources/button.png", "resources/button_clicked.png", "Choose");
+        chooseButton.addActionListener(e -> showPopup(secondPet, popupElements[0], popupElements[1]));
+        secondPet.add(chooseButton, Integer.valueOf(4));
+
+        return secondPet;
     }
 
     private JLayeredPane thirdPet() {
         JLayeredPane thirdPet = new JLayeredPane();
         thirdPet.setPreferredSize(new Dimension(1080, 750));
         arrowButtons(thirdPet, 3);
-        return backgroundScreen("resources/id_card_sprite3.png", thirdPet);
+        backgroundScreen("resources/id_card_sprite3.png", thirdPet);
+        JLabel[] popupElements = displayPopup(thirdPet); // Store overlay and popup labels
+
+        // Choose button
+        JButton chooseButton = MainScreen.buttonCreate(445, 620, 192, 64, "resources/button.png", "resources/button_clicked.png", "Choose");
+        chooseButton.addActionListener(e -> showPopup(thirdPet, popupElements[0], popupElements[1]));
+        thirdPet.add(chooseButton, Integer.valueOf(4));
+
+        return thirdPet;
     }
 
-    private void showPopup(JLayeredPane parentPane) {
+    private void showPopup(JLayeredPane parentPane, JLabel overlayLabel, JLabel popUpLabel) {
         // Make popup visible
         overlayLabel.setVisible(true);
         popUpLabel.setVisible(true);
 
         // Back Button (closes popup)
-        backButton = MainScreen.buttonCreate(250, 440, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Back");
+        JButton backButton = MainScreen.buttonCreate(250, 440, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", ""); // Empty text
+        backButton.setText("BACK"); // Set text explicitly
         backButton.setFont(customFont);
         backButton.setForeground(Color.decode("#7392B2"));
-        backButton.addActionListener(e -> hidePopup(parentPane));
-        parentPane.add(backButton, Integer.valueOf(7));
+        backButton.setHorizontalTextPosition(SwingConstants.CENTER);
+        backButton.setVerticalTextPosition(SwingConstants.CENTER);
 
-        // Done Button (navigates to InGame screen)
-        doneButton = MainScreen.buttonCreate(600, 440, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "InGame");
-        doneButton.setText("DONE");
-        doneButton.setFont(customFont);
-        doneButton.setForeground(Color.decode("#7392B2"));
-        doneButton.setHorizontalTextPosition(SwingConstants.CENTER);
-        doneButton.setVerticalTextPosition(SwingConstants.CENTER);
-        doneButton.addActionListener(e -> {
-            hidePopup(parentPane);
-            mainCardLayout.show(mainPanel, "InGame"); // Use main navigation
+        // Enter Button (navigates to InGame screen)
+        JButton enterButton = MainScreen.buttonCreate(600, 440, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", ""); // Empty text
+        enterButton.setText("ENTER"); // Set text explicitly
+        enterButton.setFont(customFont);
+        enterButton.setForeground(Color.decode("#7392B2"));
+        enterButton.setHorizontalTextPosition(SwingConstants.CENTER);
+        enterButton.setVerticalTextPosition(SwingConstants.CENTER);
+
+        // Add action listeners
+        backButton.addActionListener(e -> {
+            hidePopup(parentPane, overlayLabel, popUpLabel, backButton, enterButton);
         });
-        parentPane.add(doneButton, Integer.valueOf(7));
+
+        enterButton.addActionListener(e -> {
+            hidePopup(parentPane, overlayLabel, popUpLabel, backButton, enterButton);
+            mainCardLayout.show(mainPanel, "InGame");
+        });
+
+        // Add buttons to parent pane
+        parentPane.add(backButton, Integer.valueOf(7));
+        parentPane.add(enterButton, Integer.valueOf(7));
     }
 
-    private void hidePopup(JLayeredPane parentPane) {
+    private void hidePopup(JLayeredPane parentPane, JLabel overlayLabel, JLabel popUpLabel, JButton backButton, JButton doneButton) {
+        // Hide overlay and popup
         overlayLabel.setVisible(false);
         popUpLabel.setVisible(false);
+
+        // Remove buttons
         parentPane.remove(backButton);
         parentPane.remove(doneButton);
+
+        // Refresh UI
+        parentPane.revalidate();
         parentPane.repaint();
     }
 }
