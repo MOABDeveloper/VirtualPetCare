@@ -59,7 +59,7 @@ public class MainScreen extends JFrame {
         mainPanel.add(homeScreen, "Home");
         mainPanel.add(tutorialScreen, "Tutorial");
         mainPanel.add(newGameScreen, "New Game");
-        mainPanel.add(loadScreen, "Load");
+//        mainPanel.add(loadScreen, "Load");
         mainPanel.add(creditScreen, "Credit");
         //mainPanel.add(inGameScreen, "InGame");
 
@@ -114,9 +114,24 @@ public class MainScreen extends JFrame {
         buttonLabel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (location.equals("Load")) {
+                    // Remove old LoadScreen if it exists (optional but clean)
+                    for (Component comp : mainPanel.getComponents()) {
+                        if (comp instanceof LoadScreen) {
+                            mainPanel.remove(comp);
+                            break;
+                        }
+                    }
+
+                    // Rebuild LoadScreen with updated data
+                    JLayeredPane refreshedLoadScreen = new LoadScreen(customFont, mainPanel, cardLayout);
+                    mainPanel.add(refreshedLoadScreen, "Load");
+                }
+
                 cardLayout.show(mainPanel, location);
             }
         });
+
 
         return buttonLabel;
     }
