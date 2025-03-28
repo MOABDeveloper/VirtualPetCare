@@ -166,7 +166,7 @@ public class NewGameScreen extends JLayeredPane {
         popUpLabel.setVisible(true);
 
         // Back Button (closes popup)
-        JButton backButton = MainScreen.buttonCreate(250, 440, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", ""); // Empty text
+        JButton backButton = MainScreen.buttonCreate(250, 440, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "First Pet"); // Empty text
         backButton.setText("BACK"); // Set text explicitly
         backButton.setFont(customFont);
         backButton.setForeground(Color.decode("#7392B2"));
