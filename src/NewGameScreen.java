@@ -17,6 +17,9 @@ public class NewGameScreen extends JLayeredPane {
         this.mainPanel = mainPanel;
         setPreferredSize(new Dimension(1080, 750));
 
+
+
+
         // Set up internal pet selection navigation
         this.petCardLayout = new CardLayout();
         this.petPanel = new JPanel(petCardLayout);
@@ -198,8 +201,16 @@ public class NewGameScreen extends JLayeredPane {
             parentPane.remove(petNameField);
             parentPane.repaint();
         });
-
         enterButton.addActionListener(e -> {
+            // Check if a new game can be created
+            if (!GameDataManager.canCreateNewGame()) {
+                JOptionPane.showMessageDialog(parentPane,
+                        "Maximum save files reached! Delete a save to create a new game.",
+                        "Save Limit Reached",
+                        JOptionPane.WARNING_MESSAGE);
+                return;  // Stop execution if save limit is reached
+            }
+
             String petName = petNameField.getText().trim();
 
             if (!petName.isEmpty()) {
@@ -207,6 +218,7 @@ public class NewGameScreen extends JLayeredPane {
 
                 int maxHealth = 100, maxSleep = 100, maxFullness = 100, maxHappiness = 100;
 
+                ///CHANGE COOLDOWNS TO DEFAULT IMPLEMENT DEFAULT GETTERS IN PET
                 Pet newPet = new Pet(
                         petName, petType,
                         maxHealth, maxSleep, maxFullness, maxHappiness,
@@ -224,7 +236,7 @@ public class NewGameScreen extends JLayeredPane {
 
                 GameData newData = GameDataManager.loadGame(filename);  // Load saved data
 
-                // ✅ Replace or add the InGameScreen dynamically
+                //Replace or add the InGameScreen dynamically
                 InGameScreen inGameScreen = new InGameScreen(customFont, mainCardLayout, mainPanel, newData);
                 mainPanel.add(inGameScreen, "InGame");
 
@@ -240,23 +252,53 @@ public class NewGameScreen extends JLayeredPane {
             parentPane.repaint();
         });
 
+//        enterButton.addActionListener(e -> {
+//            String petName = petNameField.getText().trim();
+//
+//            if (!petName.isEmpty()) {
+//                System.out.println("✅ New Pet Created - Name: " + petName + ", Type: " + petType);
+//
+//                int maxHealth = 100, maxSleep = 100, maxFullness = 100, maxHappiness = 100;
+//
+//                Pet newPet = new Pet(
+//                        petName, petType,
+//                        maxHealth, maxSleep, maxFullness, maxHappiness,
+//                        maxHealth, maxSleep, maxFullness, maxHappiness,
+//                        5, 5, 5, 5,
+//                        false, false, true, false,
+//                        0, 30, 0, 20,
+//                        null
+//                );
+//
+//                PlayerInventory inventory = new PlayerInventory();
+//
+//                String filename = "saves/" + petName + ".json";
+//                GameDataManager.saveGame(filename, newPet, inventory, 0);
+//
+//                GameData newData = GameDataManager.loadGame(filename);  // Load saved data
+//
+//                // ✅ Replace or add the InGameScreen dynamically
+//                InGameScreen inGameScreen = new InGameScreen(customFont, mainCardLayout, mainPanel, newData);
+//                mainPanel.add(inGameScreen, "InGame");
+//
+//                // Switch to InGame view
+//                mainCardLayout.show(mainPanel, "InGame");
+//            }
+//
+//            overlayLabel.setVisible(false);
+//            popUpLabel.setVisible(false);
+//            parentPane.remove(backButton);
+//            parentPane.remove(enterButton);
+//            parentPane.remove(petNameField);
+//            parentPane.repaint();
+//        });
+
         // Add buttons to higher layers to ensure they're on top
         parentPane.add(backButton, Integer.valueOf(8));  // Higher than popup (6) and overlay (5)
         parentPane.add(enterButton, Integer.valueOf(8));
         parentPane.repaint();
     }
 
-    private static boolean containsProfanity(String text) {
-        String[] blacklist = {"badword1", "badword2", "offensiveword"}; // Add more words as needed
-        String lowercaseText = text.toLowerCase();
-
-        for (String word : blacklist) {
-            if (lowercaseText.contains(word)) {
-                return true;
-            }
-        }
-        return false;
-    }
     private static void showErrorPopup(JLayeredPane parentPane, String message) {
         JOptionPane.showMessageDialog(parentPane, message, "Invalid Input", JOptionPane.ERROR_MESSAGE);
     }

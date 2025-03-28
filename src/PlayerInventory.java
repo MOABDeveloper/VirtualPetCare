@@ -149,4 +149,7 @@ public class PlayerInventory {
     }
 
 
+    public Map<Food, Integer> getFoodInventory() {
+        return foodInventory;
+    }
 }

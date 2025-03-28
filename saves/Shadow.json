@@ -27,7 +27,8 @@
   "inventory": {
     "playerCoins": 2000,
     "foodInventory": {
-      "Apple": 1
+      "Apple": 2,
+      "Strawberry": 10
     },
     "giftInventory": {
       "outfit1": 1
@@ -39,5 +40,5 @@
       "outfit1": true
     }
   },
-  "totalPlayTime": 195800
+  "totalPlayTime": 201698
 }

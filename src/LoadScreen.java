@@ -37,6 +37,17 @@ public class LoadScreen extends JLayeredPane {
         add(loadLabel, Integer.valueOf(1));
         // ======== BACKGROUND UNCHANGED =========
 
+        JButton deleteButton = MainScreen.buttonCreate(
+                800, 10, 192, 64, // Adjust position as needed
+                "resources/button.png",
+                "resources/button_clicked.png",
+                "Delete Save"
+        );
+
+        deleteButton.addActionListener(e -> promptDeleteSave());
+
+        add(deleteButton, Integer.valueOf(2)); // Ensure it appears on top
+
         // Back Button (Returns to MainScreen)
         JButton homeButton = MainScreen.buttonCreate(
                 20, 10, 192, 64,
@@ -123,6 +134,77 @@ public class LoadScreen extends JLayeredPane {
     private void switchToInGameScreen(GameData gameData) {
         MainScreen.showInGameScreen(gameData);
     }
+
+
+
+
+    private void promptDeleteSave() {
+        File[] saveFiles = getSaveFiles();
+
+        if (saveFiles.length == 0) {
+            JOptionPane.showMessageDialog(this, "No save files found.", "Delete Save", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        // Create an array of file names
+        String[] saveNames = new String[saveFiles.length];
+        for (int i = 0; i < saveFiles.length; i++) {
+            saveNames[i] = saveFiles[i].getName();
+        }
+
+        // Ask user to select a file
+        String selectedFile = (String) JOptionPane.showInputDialog(
+                this,
+                "Select a save file to delete:",
+                "Delete Save",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                saveNames,
+                saveNames[0]
+        );
+
+        // If user canceled, do nothing
+        if (selectedFile == null) return;
+
+        // Confirm before deleting
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Are you sure you want to delete " + selectedFile + "?",
+                "Confirm Delete",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            File fileToDelete = new File(SAVE_DIR + selectedFile);
+            if (fileToDelete.delete()) {
+                JOptionPane.showMessageDialog(this, "Save file deleted successfully.", "Delete Save", JOptionPane.INFORMATION_MESSAGE);
+                refreshLoadScreen();
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to delete save file.", "Delete Save", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void refreshLoadScreen() {
+        // Remove the current LoadScreen from mainPanel
+        mainPanel.remove(this);
+
+        // Create a new instance of LoadScreen
+        LoadScreen newLoadScreen = new LoadScreen(customFont, mainPanel, cardLayout);
+
+        // Add the new LoadScreen to the mainPanel
+        mainPanel.add(newLoadScreen, "LoadScreen");
+
+        // Switch to the updated LoadScreen
+        cardLayout.show(mainPanel, "LoadScreen");
+
+        // Repaint and revalidate to reflect changes
+        mainPanel.revalidate();
+        mainPanel.repaint();
+    }
+
+
+
 
 }
 

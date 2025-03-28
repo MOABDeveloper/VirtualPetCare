@@ -396,6 +396,54 @@ public class InGameScreen extends JLayeredPane {
         inventoryPane.setBounds(popupX, popupY, popupIcon.getIconWidth(), popupIcon.getIconHeight());
         add(inventoryPane, JLayeredPane.POPUP_LAYER);
 
+
+        if (inventoryType.equals("Feed")) {
+            PlayerInventory inventory = gameData.getInventory();
+            int x = 100, y = 120;
+
+            for (Component c : inventoryPane.getComponents()) {
+                if (c != popupLabel && c != closeButton && c != xLabel) {
+                    inventoryPane.remove(c);
+                }
+            }
+
+            for (Food food : inventory.getFoodInventory().keySet()) {
+                int quantity = inventory.getFoodCount(food);
+                if (quantity <= 0) continue;
+
+                JButton foodButton = new JButton("<html>" + food.getName() + "<br>x" + quantity + "</html>");
+                foodButton.setBounds(x, y, 120, 60);
+                foodButton.setFont(customFont.deriveFont(12f));
+                inventoryPane.add(foodButton, JLayeredPane.PALETTE_LAYER);
+
+                foodButton.addActionListener(e -> {
+                    boolean fed = inventory.feedPet(pet, food);
+                    if (fed) {
+                        FullnessProgressBar.setValue(pet.getFullness());
+                        playSound("resources/eat_sound.wav");
+                        System.out.println("🍊 " + pet.getName() + " ate " + food.getName());
+
+                        remove(inventoryPane);
+                        revalidate();
+                        repaint();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Out of " + food.getName() + "!", "No Food", JOptionPane.WARNING_MESSAGE);
+                    }
+                });
+
+                y += 70;
+            }
+        }
+
+        // Close button logic
+        closeButton.addActionListener(e -> {
+            remove(inventoryPane);
+            revalidate();
+            repaint();
+        });
+
+
+
         // close
         closeButton.addActionListener(e -> {
             remove(inventoryPane);
@@ -405,6 +453,8 @@ public class InGameScreen extends JLayeredPane {
 
         revalidate();
         repaint();
+
+
     }
 
     private void spriteGifs() {

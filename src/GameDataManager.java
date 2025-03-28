@@ -9,6 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Map;
+import java.io.File;
+
 
 public class GameDataManager {
     private static final Gson gson = new GsonBuilder()
@@ -67,4 +69,14 @@ public class GameDataManager {
             return null;
         }
     }
+
+    public static boolean canCreateNewGame() {
+        File dir = new File("saves/");
+        if (dir.exists() && dir.isDirectory()) {
+            return dir.listFiles((dir1, name) -> name.endsWith(".json")).length < 3;
+        }
+        return true; // Allow if the directory doesn't exist
+    }
+
+
 }
