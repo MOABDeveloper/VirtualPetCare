@@ -162,15 +162,15 @@ public class NewGameScreen extends JLayeredPane {
 
         return thirdPet;
     }
-
     private static void showPopup(JLayeredPane parentPane, JLabel overlayLabel, JLabel popUpLabel, String petType) {
-        // Show popup overlay
+        // Show popup overlay AND the popup itself
         overlayLabel.setVisible(true);
+        popUpLabel.setVisible(true);
 
         // Pet name input field
         JTextField petNameField = new JTextField();
-        petNameField.setBounds(210, 335, 650, 40);
-        parentPane.add(petNameField, Integer.valueOf(5));
+        petNameField.setBounds(210, 360, 650, 40);
+        parentPane.add(petNameField, Integer.valueOf(7));  // Higher layer than popup
         petNameField.requestFocusInWindow();
 
         // Back Button (closes popup)
@@ -192,6 +192,7 @@ public class NewGameScreen extends JLayeredPane {
         // Add action listeners
         backButton.addActionListener(e -> {
             overlayLabel.setVisible(false);
+            popUpLabel.setVisible(false);
             parentPane.remove(backButton);
             parentPane.remove(enterButton);
             parentPane.remove(petNameField);
@@ -218,7 +219,6 @@ public class NewGameScreen extends JLayeredPane {
 
                 PlayerInventory inventory = new PlayerInventory();
 
-
                 String filename = "saves/" + petName + ".json";
                 GameDataManager.saveGame(filename, newPet, inventory, 0);
 
@@ -233,35 +233,16 @@ public class NewGameScreen extends JLayeredPane {
             }
 
             overlayLabel.setVisible(false);
+            popUpLabel.setVisible(false);
             parentPane.remove(backButton);
             parentPane.remove(enterButton);
             parentPane.remove(petNameField);
             parentPane.repaint();
         });
 
-
-
-
-//        if (containsProfanity(petName)) {
-//                showErrorPopup(parentPane, "Inappropriate name! Please choose another.");
-//                return;
-//            }
-//
-//            System.out.println("✅ New Pet Created - Name: " + petName + ", Type: " + petType);
-//            // Store the pet name in game logic here
-//
-//            // Cleanup
-//            overlayLabel.setVisible(false);
-//            parentPane.remove(backButton);
-//            parentPane.remove(enterButton);
-//            parentPane.remove(petNameField);
-//            parentPane.repaint();
-//
-//            mainCardLayout.show(mainPanel, "InGame");
-//        });
-
-        parentPane.add(backButton, Integer.valueOf(5));
-        parentPane.add(enterButton, Integer.valueOf(5));
+        // Add buttons to higher layers to ensure they're on top
+        parentPane.add(backButton, Integer.valueOf(8));  // Higher than popup (6) and overlay (5)
+        parentPane.add(enterButton, Integer.valueOf(8));
         parentPane.repaint();
     }
 

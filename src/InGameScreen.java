@@ -229,7 +229,6 @@ public class InGameScreen extends JLayeredPane {
         JButton saveButton = MainScreen.buttonCreate(17, 15, 50, 50, "resources/save.png", "resources/save_clicked.png", "Save");
         add(saveButton, Integer.valueOf(2));
 
-        // attach save action
         saveButton.addActionListener(e -> {
             // Save the game
             GameDataManager.saveGame(
@@ -242,58 +241,51 @@ public class InGameScreen extends JLayeredPane {
             // Create custom components
             JPanel panel = new JPanel(new BorderLayout(10, 10));
             panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-            panel.setBackground(new Color(240, 240, 240)); // Light gray background
+            panel.setBackground(new Color(240, 240, 240));
 
-            // Custom message with HTML formatting
+            // Custom message
             JLabel messageLabel = new JLabel("<html><div style='text-align: center;'>"
                     + "<font size=4 color='#2E86C1'><b>Game Saved!</b></font><br>"
                     + "<font size=3 color='#5D6D7E'>Your progress is safe</font></div></html>");
             messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
             panel.add(messageLabel, BorderLayout.CENTER);
 
-            // Customize the button
-            UIManager.put("OptionPane.okButtonText", "Got it!");
-            UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.BOLD, 14));
-            UIManager.put("Button.background", new Color(52, 152, 219));
-            UIManager.put("Button.foreground", Color.WHITE);
+            // Create a custom button without focus painting
+            JButton okButton = new JButton("Got it!");
+            okButton.setFont(new Font("Arial", Font.BOLD, 14));
+            okButton.setBackground(new Color(52, 152, 219));
+            okButton.setForeground(Color.WHITE);
+            okButton.setFocusPainted(false);  // This removes the focus border
+            okButton.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
 
-            // Create the option pane
-            JOptionPane optionPane = new JOptionPane(
-                    panel,
-                    JOptionPane.PLAIN_MESSAGE,
-                    JOptionPane.DEFAULT_OPTION,
-                    null, // No extra icon since we have our own
-                    new Object[]{"Got it!"},
-                    "Got it!"
-            );
+            okButton.addActionListener(ev -> {
+                Window window = SwingUtilities.getWindowAncestor(panel);
+                if (window != null) {
+                    window.dispose();
+                }
+            });
 
-            // Create and position the dialog
-            JDialog dialog = optionPane.createDialog("Save Successful");
-            dialog.setSize(350, 200); // Adjusted size
-            dialog.setLocation(
-                    (1080 - dialog.getWidth()) / 2, // Center horizontally
-                    50 // Fixed position from top
-            );
+            // Create button panel
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            buttonPanel.setBackground(new Color(240, 240, 240));
+            buttonPanel.add(okButton);
+            panel.add(buttonPanel, BorderLayout.SOUTH);
+
+            // Create the dialog
+            JDialog dialog = new JDialog((Frame)null, "Save Successful", true);
+            dialog.setContentPane(panel);
+            dialog.setSize(350, 200);
+            dialog.setLocationRelativeTo(this);
+            dialog.setResizable(false);
             dialog.setVisible(true);
         });
-//        // attach save action
-//        saveButton.addActionListener(e -> {
-//            GameDataManager.saveGame(
-//                    "saves/" + pet.getName() + ".json",
-//                    gameData.getPet(),
-//                    gameData.getInventory(),
-//                    gameData.getTotalPlayTime()
-//            );
-//            JOptionPane.showMessageDialog(this, "✅ Game saved!", "Save", JOptionPane.INFORMATION_MESSAGE);
-//        });
 
         // stop music button
         JButton musicToggle = MainScreen.buttonCreate(90, 15, 50, 50, "resources/save.png", "resources/save_clicked.png", "");
         ImageIcon musicIcon = new ImageIcon("resources/Speaker-Crossed.png");
         JLabel musicLabel = new JLabel(musicIcon);
 
-// Position the icon centered on the button (adjust these values as needed)
+        // Position the icon centered on the button (adjust these values as needed)
         int iconX = 90 + (50 - 26)/2;  // button x + (button width - icon width)/2
         int iconY = 15 + (50 - 28)/2;  // button y + (button height - icon height)/2
         musicLabel.setBounds(iconX, iconY, 26, 28);
@@ -336,32 +328,83 @@ public class InGameScreen extends JLayeredPane {
         shopButton.addActionListener(e -> {
             for (Component comp : mainPanel.getComponents()) {
                 if (comp instanceof StoreScreen) {
-                    ((StoreScreen)comp).resetToFirstPage(); // Reset to first page
+                    ((StoreScreen)comp).resetToFirstPage();
                     break;
                 }
             }
-            cardLayout.show(mainPanel, "Shop"); // Then show the shop
+            cardLayout.show(mainPanel, "Shop");
         });
-
         add(shopButton, Integer.valueOf(2));
 
-        JButton feedButton = MainScreen.buttonCreate(210,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", ""); // this needs to have a function to open the food inventory
+        // Feed Button with Inventory Popup
+        JButton feedButton = MainScreen.buttonCreate(210,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
+        feedButton.addActionListener(e -> showInventoryPopup(feedButton, "Feed"));
         add(feedButton, Integer.valueOf(2));
 
-        JButton playButton = MainScreen.buttonCreate(390,550, 128,128, "resources/command_button.png", "resources/command_button_clicked.png", ""); // this needs to have a function to open the toy inventory
+        // Play Button with Inventory Popup
+        JButton playButton = MainScreen.buttonCreate(390,550, 128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
+        playButton.addActionListener(e -> showInventoryPopup(playButton, "Play"));
         add(playButton, Integer.valueOf(2));
 
-        JButton giveGift = MainScreen.buttonCreate(560, 550, 128,128, "resources/command_button.png", "resources/command_button_clicked.png", ""); // function, give a gift (the outfits)
+        // Gift Button with Inventory Popup
+        JButton giveGift = MainScreen.buttonCreate(560, 550, 128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
+        giveGift.addActionListener(e -> showInventoryPopup(giveGift, "Gift"));
         add(giveGift, Integer.valueOf(2));
 
-        JButton exerciseButton = MainScreen.buttonCreate(730,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", ""); // this should change the sprite into the exercise gif
+        JButton exerciseButton = MainScreen.buttonCreate(730,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
         add(exerciseButton, Integer.valueOf(2));
 
         JButton vetButton = MainScreen.buttonCreate(900,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
-        vetButton.addActionListener(e -> {
-            playSound("resources/heal_sound.wav"); // this takes like 5 seconds before the sound starts. i think its a good idea so we can move the sprite off screen by then and make it seem like it went to the vet
-        });
+        vetButton.addActionListener(e -> playSound("resources/heal_sound.wav"));
         add(vetButton, Integer.valueOf(2));
+    }
+
+    private void showInventoryPopup(JButton sourceButton, String inventoryType) {
+        // inventory popup
+        ImageIcon originalIcon = new ImageIcon("resources/inventory_popup.png");
+        Image scaledImage = originalIcon.getImage().getScaledInstance(originalIcon.getIconWidth()/2, originalIcon.getIconHeight()/2, Image.SCALE_SMOOTH);
+        ImageIcon popupIcon = new ImageIcon(scaledImage);
+        JLabel popupLabel = new JLabel(popupIcon);
+
+        // close button
+        JButton closeButton = MainScreen.buttonCreate(380, 60, 100, 100, "resources/save.png", "resources/save_clicked.png", "");
+
+        JLabel xLabel = new JLabel("X");
+        xLabel.setFont(customFont.deriveFont(Font.BOLD, 19f));
+        xLabel.setForeground(Color.BLACK);
+        xLabel.setBounds(423, 100, 20, 20);
+        xLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // inventory JLayeredPane
+        JLayeredPane inventoryPane = new JLayeredPane();
+        inventoryPane.setPreferredSize(new Dimension(popupIcon.getIconWidth(), popupIcon.getIconHeight()));
+
+        // add components to inventoryPane
+        popupLabel.setBounds(0, 30, popupIcon.getIconWidth(), popupIcon.getIconHeight());
+        inventoryPane.add(popupLabel, JLayeredPane.DEFAULT_LAYER);
+        inventoryPane.add(closeButton, JLayeredPane.PALETTE_LAYER);
+        inventoryPane.add(xLabel, JLayeredPane.POPUP_LAYER);
+
+        // positioning of the popup
+        int popupX = sourceButton.getX() + (sourceButton.getWidth() - popupIcon.getIconWidth())/2;
+        int popupY = sourceButton.getY() - popupIcon.getIconHeight() + 110;
+
+        // making sure it stays within the screen
+        popupX = Math.max(0, Math.min(popupX, getWidth() - popupIcon.getIconWidth()));
+        popupY = Math.max(0, Math.min(popupY, getHeight() - popupIcon.getIconHeight()));
+
+        inventoryPane.setBounds(popupX, popupY, popupIcon.getIconWidth(), popupIcon.getIconHeight());
+        add(inventoryPane, JLayeredPane.POPUP_LAYER);
+
+        // close
+        closeButton.addActionListener(e -> {
+            remove(inventoryPane);
+            revalidate();
+            repaint();
+        });
+
+        revalidate();
+        repaint();
     }
 
     private void spriteGifs() {
@@ -370,10 +413,10 @@ public class InGameScreen extends JLayeredPane {
         gifLabel.setBounds(300, 30, 622, 632);
         add(gifLabel, Integer.valueOf(3));
 
-        ImageIcon swissRoll = new ImageIcon("resources/swissroll.gif");
-        JLabel swissRollLabel = new JLabel(swissRoll);
-        swissRollLabel.setBounds(280, 100, 142, 102);
-        add(swissRollLabel, Integer.valueOf(3));
+        ImageIcon orangeGif = new ImageIcon("resources/orange.gif");
+        JLabel orangeLabel = new JLabel(orangeGif);
+        orangeLabel.setBounds(300, 30, 405, 393);
+        add(orangeLabel, Integer.valueOf(3));
     }
 
     public void stopDecayTimer() {

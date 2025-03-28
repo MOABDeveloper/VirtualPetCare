@@ -19,10 +19,6 @@ public class MainScreen extends JFrame {
     private static ParentalControl parentalControl;
 
     private static InGameScreen inGameScreen;
-
-
-
-
     MainScreen() {
         // Load custom font
         try {
@@ -38,7 +34,7 @@ public class MainScreen extends JFrame {
             customFont = new Font("Arial", Font.PLAIN, 24);
         }
         MusicPlayer.playBackgroundMusic("resources/verdanturf.wav");
-        MusicPlayer.setVolume(0.2f);
+        MusicPlayer.setVolume(0.05f);
         // actual screen
         this.setTitle("Virtual Pet");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

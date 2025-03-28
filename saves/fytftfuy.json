@@ -1,0 +1,34 @@
+{
+  "pet": {
+    "name": "fytftfuy",
+    "petType": "PetOption1",
+    "health": 0,
+    "sleep": 45,
+    "fullness": 0,
+    "happiness": 0,
+    "maxHealth": 100,
+    "maxSleep": 100,
+    "maxFullness": 100,
+    "maxHappiness": 100,
+    "healthDeclineRate": 6,
+    "fullnessDeclineRate": 3,
+    "sleepDeclineRate": 3,
+    "happinessDeclineRate": 7,
+    "isSleeping": true,
+    "isHungry": true,
+    "isHappy": false,
+    "isDead": true,
+    "lastVetVisitTime": 0,
+    "vetCooldownDuration": 30,
+    "lastPlayTime": 0,
+    "playCooldownDuration": 20
+  },
+  "inventory": {
+    "playerCoins": 0,
+    "foodInventory": {},
+    "giftInventory": {},
+    "toyInventory": {},
+    "outfitInventory": {}
+  },
+  "totalPlayTime": 40744
+}
