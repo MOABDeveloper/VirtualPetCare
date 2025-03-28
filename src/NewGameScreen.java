@@ -35,7 +35,6 @@ public class NewGameScreen extends JLayeredPane {
 
         // Home button (uses main navigation)
         JButton homeButton = MainScreen.buttonCreate(20, 10, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
-        homeButton.addActionListener(e -> mainCardLayout.show(mainPanel, "Home"));
         add(homeButton, Integer.valueOf(3));
 
         setVisible(true);

@@ -10,8 +10,7 @@ import java.io.File;
 public class LoadScreen extends JLayeredPane {
     private Font customFont;
     private static final String SAVE_DIR = "saves/";
-    private static final String BUTTON_IMG = "resources/load_file.png";
-    private static final String BUTTON_IMG_CLICKED = "resources/load_file_clicked.png";
+    private static final String BUTTON_IMG = "resources/load_file_clicked.png";
     private static final int BUTTON_WIDTH = 580;
     private static final int BUTTON_HEIGHT = 100;
 
@@ -61,8 +60,6 @@ public class LoadScreen extends JLayeredPane {
 
                 //Load and scale images
                 ImageIcon defaultIcon = scaleImageIcon(BUTTON_IMG, 798 ,  138 );
-                ImageIcon clickedIcon = scaleImageIcon(BUTTON_IMG_CLICKED, 798 ,  138);
-
 
                 // Declare final variable to avoid scope issue
                 final JButton saveButton = new JButton(defaultIcon);
@@ -85,11 +82,6 @@ public class LoadScreen extends JLayeredPane {
 
                 // Change button appearance when clicked
                 saveButton.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                        saveButton.setIcon(clickedIcon);
-                    }
-
                     @Override
                     public void mouseReleased(MouseEvent e) {
                         saveButton.setIcon(defaultIcon);
@@ -131,10 +123,6 @@ public class LoadScreen extends JLayeredPane {
     private void switchToInGameScreen(GameData gameData) {
         MainScreen.showInGameScreen(gameData);
     }
-
-
-
-
 
 }
 

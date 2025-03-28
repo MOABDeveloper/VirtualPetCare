@@ -54,6 +54,7 @@ public class MainScreen extends JFrame {
         JLayeredPane loadScreen = new LoadScreen(customFont, mainPanel, cardLayout);
         JLayeredPane creditScreen = new CreditScreen(customFont);
         //InGameScreen inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel);
+        JLayeredPane shopScreen = new Shop(customFont, cardLayout, mainPanel);
 
         // add screens to the main panel
         mainPanel.add(homeScreen, "Home");
@@ -62,6 +63,7 @@ public class MainScreen extends JFrame {
 //        mainPanel.add(loadScreen, "Load");
         mainPanel.add(creditScreen, "Credit");
         //mainPanel.add(inGameScreen, "InGame");
+        mainPanel.add(shopScreen, "Shop");
 
         //ATTEMPTED TO ADD MOHAMMED-KAM
         parentalControl = new ParentalControl();

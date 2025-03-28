@@ -12,7 +12,6 @@ public class InGameScreen extends JLayeredPane {
     private CardLayout cardLayout;  // Remove static
     private JPanel mainPanel;
 
-    // define variable for the height of the bar
     private JProgressBar HealthProgressBar;
     private JProgressBar SleepProgressBar;
     private JProgressBar HappinessProgressBar;
@@ -35,8 +34,6 @@ public class InGameScreen extends JLayeredPane {
         setBackground();
         this.pet = gameData.getPet();
         this.gameData = gameData;
-
-
 
 
         // Create and position progress bar for health
@@ -115,18 +112,6 @@ public class InGameScreen extends JLayeredPane {
         //Place bar below the graphics
         add(HappinessProgressBar, Integer.valueOf(1));
         //Finished Health Progress bar
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         healthBars();
@@ -225,7 +210,7 @@ public class InGameScreen extends JLayeredPane {
         add(backgroundLabel, Integer.valueOf(0));
 
         // actual file thing
-        ImageIcon inGameWindow = new ImageIcon("resources/ingamescreen_dark.png");
+        ImageIcon inGameWindow = new ImageIcon("resources/ingamescreen.png");
         Image scaledWindow = inGameWindow.getImage().getScaledInstance(1080, 750, Image.SCALE_SMOOTH);
         ImageIcon scaledWindowIcon = new ImageIcon(scaledWindow);
 
@@ -251,8 +236,6 @@ public class InGameScreen extends JLayeredPane {
             JOptionPane.showMessageDialog(this, "✅ Game saved!", "Save", JOptionPane.INFORMATION_MESSAGE);
         });
 
-
-
         // load button
         JButton loadButton = MainScreen.buttonCreate(90, 15, 50, 50, "resources/save_load_1.png", "resources/save_load_clicked_1.png", "Load");
         ImageIcon loadIcon = new ImageIcon("resources/load_button.png");
@@ -261,9 +244,6 @@ public class InGameScreen extends JLayeredPane {
         add(loadIconLabel,Integer.valueOf(3));
         add(loadButton, Integer.valueOf(2));
 
-        // command buttons:
-        JButton playButton = MainScreen.buttonCreate(70,70, 116, 75, "resources/command_button_scaled.png", "resources/play_button_clicked.png", "");
-        add(playButton, Integer.valueOf(3));
     }
 
     private void healthBars(){
@@ -288,8 +268,19 @@ public class InGameScreen extends JLayeredPane {
         add(happinessBarLabel, Integer.valueOf(2));
     }
 
-    private void commandButtons(){
-        JButton shopButton = MainScreen.buttonCreate(70, 500,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "InGame");
+    private void commandButtons() {
+        JButton shopButton = MainScreen.buttonCreate(30, 550, 128, 128, "resources/command_button.png", "resources/command_button_clicked.png", "Shop");
+        shopButton.removeActionListener(shopButton.getActionListeners()[0]);
+        shopButton.addActionListener(e -> {
+            for (Component comp : mainPanel.getComponents()) {
+                if (comp instanceof Shop) {
+                    ((Shop)comp).resetToFirstPage(); // Reset to first page
+                    break;
+                }
+            }
+            cardLayout.show(mainPanel, "Shop"); // Then show the shop
+        });
+
         add(shopButton, Integer.valueOf(2));
     }
 
