@@ -23,6 +23,9 @@ public class InGameScreen extends JLayeredPane {
 
     private Timer statDecayTimer;
 
+    private GameData gameData;
+
+
 
     public InGameScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel, GameData gameData) {
         this.customFont = customFont;
@@ -31,6 +34,9 @@ public class InGameScreen extends JLayeredPane {
         setPreferredSize(new Dimension(1080, 750));
         setBackground();
         this.pet = gameData.getPet();
+        this.gameData = gameData;
+
+
 
 
         // Create and position progress bar for health
@@ -178,7 +184,7 @@ public class InGameScreen extends JLayeredPane {
             // TODO: Save to file periodically if desired
         });
 
-        // Start the timer
+// Start the timer
         statDecayTimer.start();
 
 
@@ -233,6 +239,19 @@ public class InGameScreen extends JLayeredPane {
         // save icon
         JButton saveButton = MainScreen.buttonCreate(17, 15, 50, 50, "resources/save_load_1.png", "resources/save_load_clicked_1.png", "Save");
         add(saveButton, Integer.valueOf(2));
+
+        // attach save action
+        saveButton.addActionListener(e -> {
+            GameDataManager.saveGame(
+                    "saves/" + pet.getName() + ".json",
+                    gameData.getPet(),
+                    gameData.getInventory(),
+                    gameData.getTotalPlayTime()
+            );
+            JOptionPane.showMessageDialog(this, "✅ Game saved!", "Save", JOptionPane.INFORMATION_MESSAGE);
+        });
+
+
 
         // load button
         JButton loadButton = MainScreen.buttonCreate(90, 15, 50, 50, "resources/save_load_1.png", "resources/save_load_clicked_1.png", "Load");

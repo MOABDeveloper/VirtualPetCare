@@ -50,7 +50,7 @@ public class LoadScreen extends JLayeredPane {
         // Load the save files and create buttons
         File[] saveFiles = getSaveFiles();
 
-        for (int i = 0; i < Math.min(2, saveFiles.length); i++) {
+        for (int i = 0; i < Math.min(3, saveFiles.length); i++) {
             final String filePath = saveFiles[i].getAbsolutePath(); // Make final for inner class
 
             GameData gameData = GameDataManager.loadGame(filePath);
