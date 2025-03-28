@@ -420,7 +420,7 @@ public class InGameScreen extends JLayeredPane {
                     boolean fed = inventory.feedPet(pet, food);
                     if (fed) {
                         FullnessProgressBar.setValue(pet.getFullness());
-                        playSound("resources/eat_sound.wav");
+                        playSound("resources/eating_sound.wav");
                         System.out.println("🍊 " + pet.getName() + " ate " + food.getName());
 
                         remove(inventoryPane);
