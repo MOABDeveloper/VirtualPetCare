@@ -5,7 +5,7 @@ public class PetTest {
     public static void main(String[] args) {
         // Create a new pet with defined max stats
         Pet pet = new Pet(
-                "Shadow", 100, 100, 100, 100,   // health, sleep, fullness, happiness
+                "Shadow", "Petoption1", 100, 100, 100, 100,   // health, sleep, fullness, happiness
                 100, 100, 100, 100,             // maxHealth, maxSleep, maxFullness, maxHappiness
                 5, 5, 5, 5,                     // healthDeclineRate, fullnessDeclineRate, sleepDeclineRate, happinessDeclineRate
                 false, false, true, false,      // isSleeping, isHungry, isHappy, isDead
