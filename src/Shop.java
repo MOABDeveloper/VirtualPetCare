@@ -73,18 +73,22 @@ public class Shop extends JLayeredPane {
         allButtons.add(item2);
 
         JButton item3 = createShopItem("resources/item_image.png", 720, 130);
+        item3.addActionListener(e -> showPopup("resources/store_popup.png"));
         page.add(item3, Integer.valueOf(2));
         allButtons.add(item3);
 
         JButton item4 = createShopItem("resources/item_image.png", 200, 370);
+        item4.addActionListener(e -> showPopup("resources/store_popup.png"));
         page.add(item4, Integer.valueOf(2));
         allButtons.add(item4);
 
         JButton item5 = createShopItem("resources/item_image.png", 460, 370);
+        item5.addActionListener(e -> showPopup("resources/store_popup.png"));
         page.add(item5, Integer.valueOf(2));
         allButtons.add(item5);
 
         JButton item6 = createShopItem("resources/item_image.png", 720, 370);
+        item6.addActionListener(e -> showPopup("resources/store_popup.png"));
         page.add(item6, Integer.valueOf(2));
         allButtons.add(item6);
 
