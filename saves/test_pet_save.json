@@ -1,7 +1,7 @@
 {
   "pet": {
     "name": "Shadow",
-    "health": 80,
+    "health": 100,
     "sleep": 60,
     "fullness": 90,
     "happiness": 70,

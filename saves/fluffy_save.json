@@ -1,7 +1,7 @@
 {
   "pet": {
     "name": "Fluffy",
-    "health": 100,
+    "health": 80,
     "sleep": 100,
     "fullness": 100,
     "happiness": 100,

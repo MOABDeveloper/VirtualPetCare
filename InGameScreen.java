@@ -1,21 +1,58 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URL;
 import src.GameData;
+import src.Pet;
+
+
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+
 
 public class InGameScreen extends JLayeredPane {
     private Font customFont;
     private CardLayout cardLayout;  // Remove static
     private JPanel mainPanel;
     // define variable for the height of the bar
+    private JProgressBar progressBar;
+    private Pet pet;
+    private static String health_red = "#A94337";
+
+    private Timer statDecayTimer;
+
 
     public InGameScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel, GameData gameData) {
         this.customFont = customFont;
         this.cardLayout = cardLayout;
         this.mainPanel = mainPanel;
         setPreferredSize(new Dimension(1080, 750));
-
         setBackground();
+        this.pet = gameData.getPet();
+
+
+        // Create and position progress bar
+        progressBar = new JProgressBar(JProgressBar.VERTICAL, 0,pet.getMaxHealth()); //min,max
+        progressBar.setBounds(26, 81, 25, 135); // (x, y, width, height)
+        progressBar.setValue(pet.getHealth()); // Initial value
+        progressBar.setStringPainted(false); // Show percentage text
+
+        // Paint the progress bar colors
+        updateProgressBarColor(progressBar,pet.getHealth());
+
+        //Set Background Color
+        progressBar.setBackground(Color.decode("#f9e6c6"));
+        progressBar.repaint();
+
+        progressBar.revalidate();
+
+        add(progressBar, Integer.valueOf(1)); // Add above other elements
+
+
+
         healthBars();
         commandButtons();
         spriteGifs();
@@ -30,6 +67,33 @@ public class InGameScreen extends JLayeredPane {
 
         backButton.addActionListener(e -> cardLayout.show(mainPanel, "Home"));
         add(backButton, Integer.valueOf(2));
+    }
+
+    public static void updateProgressBarColor(JProgressBar progressBar, int health) {
+        // Change color based on health percentage
+        if (health <= 10) {
+            progressBar.setForeground(Color.decode("#A94337"));
+        } else if (health <= 20) {
+            progressBar.setForeground(Color.decode("#B54F32"));
+        } else if (health <= 30) {
+            progressBar.setForeground(Color.decode("#C05C2E"));
+        } else if (health <= 40) {
+            progressBar.setForeground(Color.decode("#CB6829"));
+        } else if (health <= 50) {
+            progressBar.setForeground(Color.decode("#D67524"));
+        } else if (health <= 60) {
+            progressBar.setForeground(Color.decode("#E1821F"));
+        } else if (health <= 70) {
+            progressBar.setForeground(Color.decode("#EC8E1A"));
+        } else if (health <= 80) {
+            progressBar.setForeground(Color.decode("#F79B15"));
+        } else if (health <= 90) {
+            progressBar.setForeground(Color.decode("#83B52B"));
+        } else {
+            progressBar.setForeground(Color.decode("#37A943"));
+        }
+
+        progressBar.repaint();
     }
 
     private void setBackground() {
@@ -101,4 +165,11 @@ public class InGameScreen extends JLayeredPane {
         gifLabel.setBounds(300, 30, 622, 632);
         add(gifLabel, Integer.valueOf(3));
     }
+
+    public void stopDecayTimer() {
+        if (statDecayTimer != null) {
+            statDecayTimer.stop();
+        }
+    }
+
 }

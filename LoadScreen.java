@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import src.GameData;
 import src.GameDataManager;
-//import InGameScreen; // Ensure this is imported
+
 
 public class LoadScreen extends JLayeredPane {
     private Font customFont;
@@ -37,6 +37,15 @@ public class LoadScreen extends JLayeredPane {
         loadLabel.setBounds(0, 0, 1080, 750);
         add(loadLabel, Integer.valueOf(1));
         // ======== BACKGROUND UNCHANGED =========
+
+        // Back Button (Returns to MainScreen)
+        JButton homeButton = MainScreen.buttonCreate(
+                20, 10, 192, 64,
+                "resources/white_button.png",
+                "resources/white_button_clicked.png",
+                "Home"
+        );
+        add(homeButton, Integer.valueOf(2));
 
         // Load the save files and create buttons
         File[] saveFiles = getSaveFiles();
@@ -128,6 +137,10 @@ public class LoadScreen extends JLayeredPane {
 
 
 
+
+
+
+
 //import javax.swing.*;
 //import java.awt.*;
 //import java.awt.event.MouseAdapter;
@@ -135,15 +148,23 @@ public class LoadScreen extends JLayeredPane {
 //import java.io.File;
 //import src.GameData;
 //import src.GameDataManager;
+////import InGameScreen; // Ensure this is imported
 //
 //public class LoadScreen extends JLayeredPane {
 //    private Font customFont;
 //    private static final String SAVE_DIR = "saves/";
 //    private static final String BUTTON_IMG = "resources/load_file.png";
 //    private static final String BUTTON_IMG_CLICKED = "resources/load_file_clicked.png";
+//    private static final int BUTTON_WIDTH = 580;
+//    private static final int BUTTON_HEIGHT = 100;
 //
-//    public LoadScreen(Font customFont) {
+//    private JPanel mainPanel;
+//    private CardLayout cardLayout;
+//
+//    public LoadScreen(Font customFont, JPanel mainPanel, CardLayout cardLayout) {
 //        this.customFont = customFont;
+//        this.mainPanel = mainPanel;
+//        this.cardLayout = cardLayout;
 //        setPreferredSize(new Dimension(1080, 750));
 //
 //        // ======== DO NOT CHANGE BACKGROUND =========
@@ -164,13 +185,15 @@ public class LoadScreen extends JLayeredPane {
 //        File[] saveFiles = getSaveFiles();
 //
 //        for (int i = 0; i < Math.min(2, saveFiles.length); i++) {
-//            GameData gameData = GameDataManager.loadGame(saveFiles[i].getAbsolutePath());
+//            final String filePath = saveFiles[i].getAbsolutePath(); // Make final for inner class
+//
+//            GameData gameData = GameDataManager.loadGame(filePath);
 //            if (gameData != null) {
 //                String petName = gameData.getPet().getName();
 //                int petHealth = gameData.getPet().getHealth();
 //                int playerCoins = gameData.getInventory().getPlayerCoins();
 //
-//                // Load and scale images
+//                //Load and scale images
 //                ImageIcon defaultIcon = scaleImageIcon(BUTTON_IMG, 798 ,  138 );
 //                ImageIcon clickedIcon = scaleImageIcon(BUTTON_IMG_CLICKED, 798 ,  138);
 //
@@ -205,11 +228,28 @@ public class LoadScreen extends JLayeredPane {
 //                    public void mouseReleased(MouseEvent e) {
 //                        saveButton.setIcon(defaultIcon);
 //                    }
+//
+//                    @Override
+//                    public void mouseClicked(MouseEvent e) {
+//                        // Load game data
+//                        GameData loadedGame = GameDataManager.loadGame(filePath);
+//                        if (loadedGame != null) {
+//                            // Switch to InGameScreen
+//                            switchToInGameScreen(loadedGame);
+//                        }
+//                    }
 //                });
 //
 //                add(saveButton, Integer.valueOf(2));
 //            }
 //        }
+//    }
+//
+//    // Helper function to scale ImageIcons
+//    private ImageIcon scaleImageIcon(String path, int width, int height) {
+//        ImageIcon icon = new ImageIcon(path);
+//        Image img = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+//        return new ImageIcon(img);
 //    }
 //
 //    // Get save files from the directory
@@ -221,12 +261,10 @@ public class LoadScreen extends JLayeredPane {
 //        return new File[0];
 //    }
 //
-//    // Helper function to scale ImageIcons
-//    private ImageIcon scaleImageIcon(String path, int width, int height) {
-//        ImageIcon icon = new ImageIcon(path);
-//        Image img = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-//        return new ImageIcon(img);
+//    // Switch to InGameScreen
+//    private void switchToInGameScreen(GameData gameData) {
+//        InGameScreen inGameScreen = new InGameScren(customFont, cardLayout, mainPanel, gameData);
+//        mainPanel.add(inGameScreen, "InGameScreen");
+//        cardLayout.show(mainPanel, "InGameScreen");
 //    }
-//
 //}
-//
