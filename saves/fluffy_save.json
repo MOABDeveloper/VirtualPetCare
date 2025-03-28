@@ -9,7 +9,7 @@
     "maxSleep": 100,
     "maxFullness": 100,
     "maxHappiness": 100,
-    "healthDeclineRate": 5,
+    "healthDeclineRate": 10,
     "fullnessDeclineRate": 5,
     "sleepDeclineRate": 5,
     "happinessDeclineRate": 5,

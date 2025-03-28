@@ -127,12 +127,15 @@ public class LoadScreen extends JLayeredPane {
         return new File[0];
     }
 
-    // Switch to InGameScreen
+    // Switch to InGameScreen using MainScreen's managed instance
     private void switchToInGameScreen(GameData gameData) {
-        InGameScreen inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel, gameData);
-        mainPanel.add(inGameScreen, "InGameScreen");
-        cardLayout.show(mainPanel, "InGameScreen");
+        MainScreen.showInGameScreen(gameData);
     }
+
+
+
+
+
 }
 
 

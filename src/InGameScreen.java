@@ -11,8 +11,13 @@ public class InGameScreen extends JLayeredPane {
     private Font customFont;
     private CardLayout cardLayout;  // Remove static
     private JPanel mainPanel;
+
     // define variable for the height of the bar
-    private JProgressBar progressBar;
+    private JProgressBar HealthProgressBar;
+    private JProgressBar SleepProgressBar;
+    private JProgressBar HappinessProgressBar;
+    private JProgressBar FullnessProgressBar;
+
     private Pet pet;
     private static String health_red = "#A94337";
 
@@ -28,22 +33,93 @@ public class InGameScreen extends JLayeredPane {
         this.pet = gameData.getPet();
 
 
-        // Create and position progress bar
-        progressBar = new JProgressBar(JProgressBar.VERTICAL, 0,pet.getMaxHealth()); //min,max
-        progressBar.setBounds(26, 81, 25, 135); // (x, y, width, height)
-        progressBar.setValue(pet.getHealth()); // Initial value
-        progressBar.setStringPainted(false); // Show percentage text
+        // Create and position progress bar for health
+        HealthProgressBar = new JProgressBar(JProgressBar.VERTICAL, 0,pet.getMaxHealth());
+        HealthProgressBar.setBounds(26, 81, 25, 135);
+        HealthProgressBar.setValue(pet.getHealth()); // Initial value
+        HealthProgressBar.setStringPainted(false); // Show percentage text
 
         // Paint the progress bar colors
-        updateProgressBarColor(progressBar,pet.getHealth());
+        updateProgressBarColor(HealthProgressBar,pet.getHealth());
 
         //Set Background Color
-        progressBar.setBackground(Color.decode("#f9e6c6"));
-        progressBar.repaint();
+        HealthProgressBar.setBackground(Color.decode("#f9e6c6"));
+        HealthProgressBar.repaint();
 
-        progressBar.revalidate();
+        HealthProgressBar.revalidate();
 
-        add(progressBar, Integer.valueOf(1)); // Add above other elements
+        //Place bar below the graphics
+        add(HealthProgressBar, Integer.valueOf(1));
+        //Finished Health Progress bar
+
+        // Create and position progress bar for Sleep
+        SleepProgressBar = new JProgressBar(JProgressBar.VERTICAL, 0,pet.getMaxSleep());
+        SleepProgressBar.setBounds(101, 81, 25, 135);
+        SleepProgressBar.setValue(pet.getSleep()); // Initial value
+        SleepProgressBar.setStringPainted(false); // Show percentage text
+
+        // Paint the progress bar colors
+        updateProgressBarColor(SleepProgressBar,pet.getSleep());
+
+        //Set Background Color
+        SleepProgressBar.setBackground(Color.decode("#f9e6c6"));
+        SleepProgressBar.repaint();
+
+        SleepProgressBar.revalidate();
+
+        //Place bar below the graphics
+        add(SleepProgressBar, Integer.valueOf(1));
+        //Finished sleep progress bar
+
+        // Create and position progress bar for health
+        FullnessProgressBar = new JProgressBar(JProgressBar.VERTICAL, 0,pet.getMaxFullness());
+        FullnessProgressBar.setBounds(26, 299, 25, 135);
+        FullnessProgressBar.setValue(pet.getFullness()); // Initial value
+        FullnessProgressBar.setStringPainted(false); // Show percentage text
+
+        // Paint the progress bar colors
+        updateProgressBarColor(FullnessProgressBar,pet.getFullness());
+
+        //Set Background Color
+        FullnessProgressBar.setBackground(Color.decode("#f9e6c6"));
+        FullnessProgressBar.repaint();
+
+        FullnessProgressBar.revalidate();
+
+        //Place bar below the graphics
+        add(FullnessProgressBar, Integer.valueOf(1));
+        //Finished Health Progress bar
+
+
+        // Create and position progress bar for health
+        HappinessProgressBar = new JProgressBar(JProgressBar.VERTICAL, 0,pet.getMaxHappiness());
+        HappinessProgressBar.setBounds(101, 299, 25, 135);
+        HappinessProgressBar.setValue(pet.getHappiness()); // Initial value
+        HappinessProgressBar.setStringPainted(false); // Show percentage text
+
+        // Paint the progress bar colors
+        updateProgressBarColor(HappinessProgressBar,pet.getHappiness());
+
+        //Set Background Color
+        HappinessProgressBar.setBackground(Color.decode("#f9e6c6"));
+        HappinessProgressBar.repaint();
+
+        HappinessProgressBar.revalidate();
+
+        //Place bar below the graphics
+        add(HappinessProgressBar, Integer.valueOf(1));
+        //Finished Health Progress bar
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -59,8 +135,53 @@ public class InGameScreen extends JLayeredPane {
         homeIconLabel.setBounds(990, 15, 64, 64);
         add(homeIconLabel,Integer.valueOf(3));
 
-        backButton.addActionListener(e -> cardLayout.show(mainPanel, "Home"));
+//        backButton.addActionListener(e -> cardLayout.show(mainPanel, "Home"));
+//        add(backButton, Integer.valueOf(2));
+
+        backButton.addActionListener(e -> {
+            stopDecayTimer();
+            cardLayout.show(mainPanel, "Home");
+        });
+
         add(backButton, Integer.valueOf(2));
+
+        // Decay every 5 seconds (5000 ms)
+        statDecayTimer = new Timer(500, e -> {
+            pet.applyDecline();
+
+            // Update progress bar or any UI components
+            HealthProgressBar.setMaximum(pet.getMaxHealth());
+            HealthProgressBar.setValue(pet.getHealth());
+            updateProgressBarColor(HealthProgressBar, pet.getHealth());
+
+            // Update progress bar or any UI components
+            SleepProgressBar.setMaximum(pet.getMaxSleep());
+            SleepProgressBar.setValue(pet.getSleep());
+            updateProgressBarColor(SleepProgressBar, pet.getSleep());
+
+            // Update progress bar or any UI components
+            FullnessProgressBar.setMaximum(pet.getMaxFullness());
+            FullnessProgressBar.setValue(pet.getFullness());
+            updateProgressBarColor(FullnessProgressBar, pet.getFullness());
+
+            // Update progress bar or any UI components
+            HappinessProgressBar.setMaximum(pet.getMaxHappiness());
+            HappinessProgressBar.setValue(pet.getHappiness());
+            updateProgressBarColor(HappinessProgressBar, pet.getHappiness());
+
+
+            // Optional: print stats to console for debugging
+            pet.printStats();
+
+            // TODO: Update other UI elements like fullness, happiness, etc.
+            // TODO: Show warnings (e.g. red flash if stat < 25%)
+            // TODO: Save to file periodically if desired
+        });
+
+        // Start the timer
+        statDecayTimer.start();
+
+
     }
 
     public static void updateProgressBarColor(JProgressBar progressBar, int health) {

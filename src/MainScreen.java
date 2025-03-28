@@ -18,6 +18,9 @@ public class MainScreen extends JFrame {
     private static TutorialScreen tutorialScreen; // Store the TutorialScreen instance
     private static ParentalControl parentalControl;
 
+    private static InGameScreen inGameScreen;
+
+
 
 
     MainScreen() {
@@ -262,5 +265,17 @@ public class MainScreen extends JFrame {
         parentPane.add(doneButton, Integer.valueOf(4));
         parentPane.repaint();
     }
+
+    public static void showInGameScreen(GameData gameData) {
+        if (inGameScreen != null) {
+            inGameScreen.stopDecayTimer();
+            mainPanel.remove(inGameScreen);
+        }
+
+        inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel, gameData);
+        mainPanel.add(inGameScreen, "InGame");
+        cardLayout.show(mainPanel, "InGame");
+    }
+
 
 }
