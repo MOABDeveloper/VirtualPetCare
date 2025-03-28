@@ -54,7 +54,7 @@ public class MainScreen extends JFrame {
         JLayeredPane loadScreen = new LoadScreen(customFont, mainPanel, cardLayout);
         JLayeredPane creditScreen = new CreditScreen(customFont);
         //InGameScreen inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel);
-        JLayeredPane shopScreen = new Shop(customFont, cardLayout, mainPanel);
+        JLayeredPane shopScreen = new StoreScreen(customFont, cardLayout, mainPanel);
 
         // add screens to the main panel
         mainPanel.add(homeScreen, "Home");

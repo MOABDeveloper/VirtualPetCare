@@ -2,12 +2,10 @@ package src;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Shop extends JLayeredPane {
+public class StoreScreen extends JLayeredPane {
     private Font customFont;
     private CardLayout mainCardLayout;
     private JPanel mainPanel;
@@ -15,7 +13,7 @@ public class Shop extends JLayeredPane {
     private JPanel shopPanel;
     private List<JButton> allButtons = new ArrayList<>(); // track to disable and enable buttons
 
-    public Shop(Font customFont, CardLayout mainCardLayout, JPanel mainPanel) {
+    public StoreScreen(Font customFont, CardLayout mainCardLayout, JPanel mainPanel) {
         this.customFont = customFont;
         this.mainCardLayout = mainCardLayout;
         this.mainPanel = mainPanel;

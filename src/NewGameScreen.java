@@ -3,12 +3,13 @@ package src;
 import javax.swing.*;
 import java.awt.*;
 
+
 public class NewGameScreen extends JLayeredPane {
-    private Font customFont;
+    private static Font customFont;
     private CardLayout petCardLayout;  // For pet selection navigation
     private JPanel petPanel;           // For pet selection screens
-    private CardLayout mainCardLayout; // For main navigation
-    private JPanel mainPanel;          // For main screens
+    private static CardLayout mainCardLayout; // For main navigation
+    private static JPanel mainPanel;          // For main screens
 
     public NewGameScreen(Font customFont, CardLayout mainCardLayout, JPanel mainPanel) {
         this.customFont = customFont;
@@ -124,8 +125,10 @@ public class NewGameScreen extends JLayeredPane {
 
         // Choose button
         JButton chooseButton = MainScreen.buttonCreate(445, 620, 192, 64, "resources/button.png", "resources/button_clicked.png", "Choose");
-        chooseButton.addActionListener(e -> showPopup(firstPet, popupElements[0], popupElements[1]));
+        //chooseButton.addActionListener(e -> showPopup(firstPet, popupElements[0], popupElements[1]));
         firstPet.add(chooseButton, Integer.valueOf(4));
+        chooseButton.addActionListener(e -> showPopup(firstPet, popupElements[0], popupElements[1], "PetOption1"));
+
 
         return firstPet;
     }
@@ -139,7 +142,7 @@ public class NewGameScreen extends JLayeredPane {
 
         // Choose button
         JButton chooseButton = MainScreen.buttonCreate(445, 620, 192, 64, "resources/button.png", "resources/button_clicked.png", "Choose");
-        chooseButton.addActionListener(e -> showPopup(secondPet, popupElements[0], popupElements[1]));
+        chooseButton.addActionListener(e -> showPopup(secondPet, popupElements[0], popupElements[1],"PetOption2"));
         secondPet.add(chooseButton, Integer.valueOf(4));
 
         return secondPet;
@@ -154,47 +157,230 @@ public class NewGameScreen extends JLayeredPane {
 
         // Choose button
         JButton chooseButton = MainScreen.buttonCreate(445, 620, 192, 64, "resources/button.png", "resources/button_clicked.png", "Choose");
-        chooseButton.addActionListener(e -> showPopup(thirdPet, popupElements[0], popupElements[1]));
+        chooseButton.addActionListener(e -> showPopup(thirdPet, popupElements[0], popupElements[1], "PetOption3"));
         thirdPet.add(chooseButton, Integer.valueOf(4));
 
         return thirdPet;
     }
 
-    private void showPopup(JLayeredPane parentPane, JLabel overlayLabel, JLabel popUpLabel) {
-        // Make popup visible
+    private static void showPopup(JLayeredPane parentPane, JLabel overlayLabel, JLabel popUpLabel, String petType) {
+        // Show popup overlay
         overlayLabel.setVisible(true);
-        popUpLabel.setVisible(true);
+
+        // Pet name input field
+        JTextField petNameField = new JTextField();
+        petNameField.setBounds(210, 335, 650, 40);
+        parentPane.add(petNameField, Integer.valueOf(5));
+        petNameField.requestFocusInWindow();
 
         // Back Button (closes popup)
-        JButton backButton = MainScreen.buttonCreate(250, 440, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", ""); // Empty text
-        backButton.setText("BACK"); // Set text explicitly
+        JButton backButton = MainScreen.buttonCreate(250, 440, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "");
+        backButton.setText("BACK");
         backButton.setFont(customFont);
         backButton.setForeground(Color.decode("#7392B2"));
-        backButton.setHorizontalTextPosition(SwingConstants.CENTER);
-        backButton.setVerticalTextPosition(SwingConstants.CENTER);
+        backButton.setHorizontalTextPosition(JButton.CENTER);
+        backButton.setVerticalTextPosition(JButton.CENTER);
 
-        // Enter Button (navigates to InGame screen)
-        JButton enterButton = MainScreen.buttonCreate(600, 440, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", ""); // Empty text
-        enterButton.setText("ENTER"); // Set text explicitly
+        // Enter Button (validates and saves pet name)
+        JButton enterButton = MainScreen.buttonCreate(600, 440, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "");
+        enterButton.setText("ENTER");
         enterButton.setFont(customFont);
         enterButton.setForeground(Color.decode("#7392B2"));
-        enterButton.setHorizontalTextPosition(SwingConstants.CENTER);
-        enterButton.setVerticalTextPosition(SwingConstants.CENTER);
+        enterButton.setHorizontalTextPosition(JButton.CENTER);
+        enterButton.setVerticalTextPosition(JButton.CENTER);
 
         // Add action listeners
         backButton.addActionListener(e -> {
-            hidePopup(parentPane, overlayLabel, popUpLabel, backButton, enterButton);
+            overlayLabel.setVisible(false);
+            parentPane.remove(backButton);
+            parentPane.remove(enterButton);
+            parentPane.remove(petNameField);
+            parentPane.repaint();
         });
 
         enterButton.addActionListener(e -> {
-            hidePopup(parentPane, overlayLabel, popUpLabel, backButton, enterButton);
-            mainCardLayout.show(mainPanel, "InGame");
+            String petName = petNameField.getText().trim();
+
+            if (!petName.isEmpty()) {
+                System.out.println("✅ New Pet Created - Name: " + petName + ", Type: " + petType);
+
+                int maxHealth = 100, maxSleep = 100, maxFullness = 100, maxHappiness = 100;
+
+                Pet newPet = new Pet(
+                        petName, petType,
+                        maxHealth, maxSleep, maxFullness, maxHappiness,
+                        maxHealth, maxSleep, maxFullness, maxHappiness,
+                        5, 5, 5, 5,
+                        false, false, true, false,
+                        0, 30, 0, 20,
+                        null
+                );
+
+                PlayerInventory inventory = new PlayerInventory();
+
+
+                String filename = "saves/" + petName + ".json";
+                GameDataManager.saveGame(filename, newPet, inventory, 0);
+
+                GameData newData = GameDataManager.loadGame(filename);  // Load saved data
+
+                // ✅ Replace or add the InGameScreen dynamically
+                InGameScreen inGameScreen = new InGameScreen(customFont, mainCardLayout, mainPanel, newData);
+                mainPanel.add(inGameScreen, "InGame");
+
+                // Switch to InGame view
+                mainCardLayout.show(mainPanel, "InGame");
+            }
+
+            overlayLabel.setVisible(false);
+            parentPane.remove(backButton);
+            parentPane.remove(enterButton);
+            parentPane.remove(petNameField);
+            parentPane.repaint();
         });
 
-        // Add buttons to parent pane
-        parentPane.add(backButton, Integer.valueOf(7));
-        parentPane.add(enterButton, Integer.valueOf(7));
+
+
+
+//        if (containsProfanity(petName)) {
+//                showErrorPopup(parentPane, "Inappropriate name! Please choose another.");
+//                return;
+//            }
+//
+//            System.out.println("✅ New Pet Created - Name: " + petName + ", Type: " + petType);
+//            // Store the pet name in game logic here
+//
+//            // Cleanup
+//            overlayLabel.setVisible(false);
+//            parentPane.remove(backButton);
+//            parentPane.remove(enterButton);
+//            parentPane.remove(petNameField);
+//            parentPane.repaint();
+//
+//            mainCardLayout.show(mainPanel, "InGame");
+//        });
+
+        parentPane.add(backButton, Integer.valueOf(5));
+        parentPane.add(enterButton, Integer.valueOf(5));
+        parentPane.repaint();
     }
+
+    private static boolean containsProfanity(String text) {
+        String[] blacklist = {"badword1", "badword2", "offensiveword"}; // Add more words as needed
+        String lowercaseText = text.toLowerCase();
+
+        for (String word : blacklist) {
+            if (lowercaseText.contains(word)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    private static void showErrorPopup(JLayeredPane parentPane, String message) {
+        JOptionPane.showMessageDialog(parentPane, message, "Invalid Input", JOptionPane.ERROR_MESSAGE);
+    }
+
+
+
+/**
+//    private static void showPopup(JLayeredPane parentPane, JLabel overlayLabel, JLabel popUpLabel, String petType) {
+//        // Show popup overlay
+//        overlayLabel.setVisible(true);
+//
+//        // Pet name input field
+//        JTextField petNameField = new JTextField();
+//        petNameField.setBounds(210, 335, 650, 40);
+//        parentPane.add(petNameField, Integer.valueOf(5));
+//        petNameField.requestFocusInWindow();
+//
+//        // Back Button (closes popup)
+//        JButton backButton = MainScreen.buttonCreate(250, 440, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", ""); // Empty text
+//        backButton.setText("BACK"); // Set text explicitly
+//        backButton.setFont(customFont);
+//        backButton.setForeground(Color.decode("#7392B2"));
+//        backButton.setHorizontalTextPosition(SwingConstants.CENTER);
+//        backButton.setVerticalTextPosition(SwingConstants.CENTER);
+//
+//        // Enter Button (navigates to InGame screen)
+//        JButton enterButton = MainScreen.buttonCreate(600, 440, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", ""); // Empty text
+//        enterButton.setText("ENTER"); // Set text explicitly
+//        enterButton.setFont(customFont);
+//        enterButton.setForeground(Color.decode("#7392B2"));
+//        enterButton.setHorizontalTextPosition(SwingConstants.CENTER);
+//        enterButton.setVerticalTextPosition(SwingConstants.CENTER);
+//
+//        // Add action listeners
+//        backButton.addActionListener(e -> {
+//            overlayLabel.setVisible(false);
+//            parentPane.remove(backButton);
+//            parentPane.remove(enterButton);
+//            parentPane.remove(petNameField);
+//            parentPane.repaint();
+//        });
+//
+//        enterButton.addActionListener(e -> {
+//            String petName = petNameField.getText().trim();
+//
+//            if (!petName.isEmpty()) {
+//                System.out.println("✅ New Pet Created - Name: " + petName + ", Type: " + petType);
+//                // Store or pass this data to your game logic
+//                // e.g. GameStateManager.setNewPet(new Pet(petName, petType, ...));
+//            }
+//
+//            // Cleanup
+//            overlayLabel.setVisible(false);
+//            parentPane.remove(backButton);
+//            parentPane.remove(enterButton);
+//            parentPane.remove(petNameField);
+//            parentPane.repaint();
+//
+//            mainCardLayout.show(mainPanel, "InGame");
+//        });
+//
+//
+//        parentPane.add(backButton, Integer.valueOf(5));
+//        parentPane.add(enterButton, Integer.valueOf(5));
+//        parentPane.repaint();
+//    }
+**/
+/**
+//    private void showPopup(JLayeredPane parentPane, JLabel overlayLabel, JLabel popUpLabel) {
+//        // Make popup visible
+//        overlayLabel.setVisible(true);
+//        popUpLabel.setVisible(true);
+//
+//        // Back Button (closes popup)
+//        JButton backButton = MainScreen.buttonCreate(250, 440, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", ""); // Empty text
+//        backButton.setText("BACK"); // Set text explicitly
+//        backButton.setFont(customFont);
+//        backButton.setForeground(Color.decode("#7392B2"));
+//        backButton.setHorizontalTextPosition(SwingConstants.CENTER);
+//        backButton.setVerticalTextPosition(SwingConstants.CENTER);
+//
+//        // Enter Button (navigates to InGame screen)
+//        JButton enterButton = MainScreen.buttonCreate(600, 440, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", ""); // Empty text
+//        enterButton.setText("ENTER"); // Set text explicitly
+//        enterButton.setFont(customFont);
+//        enterButton.setForeground(Color.decode("#7392B2"));
+//        enterButton.setHorizontalTextPosition(SwingConstants.CENTER);
+//        enterButton.setVerticalTextPosition(SwingConstants.CENTER);
+//
+//        // Add action listeners
+//        backButton.addActionListener(e -> {
+//            hidePopup(parentPane, overlayLabel, popUpLabel, backButton, enterButton);
+//        });
+//
+//        enterButton.addActionListener(e -> {
+//            hidePopup(parentPane, overlayLabel, popUpLabel, backButton, enterButton);
+//            mainCardLayout.show(mainPanel, "InGame");
+//        });
+//
+//        // Add buttons to parent pane
+//        parentPane.add(backButton, Integer.valueOf(7));
+//        parentPane.add(enterButton, Integer.valueOf(7));
+//    }
+**/
+
 
     private void hidePopup(JLayeredPane parentPane, JLabel overlayLabel, JLabel popUpLabel, JButton backButton, JButton doneButton) {
         // Hide overlay and popup

@@ -10,6 +10,7 @@ public class Pet {
     @SerializedName("name")
     private String name;
     private final Map<String, PetType> petTypeMap;
+    @SerializedName("petType")
     private String petType;
 
     // Current stats
@@ -100,13 +101,14 @@ public class Pet {
 //
 //    }
     // Ensure Gson can access final fields
-    public Pet(String name, int health, int sleep, int fullness, int happiness,
+    public Pet(String name, String petType, int health, int sleep, int fullness, int happiness,
                int maxHealth, int maxSleep, int maxFullness, int maxHappiness,
                int healthDeclineRate, int fullnessDeclineRate, int sleepDeclineRate, int happinessDeclineRate,
                boolean isSleeping, boolean isHungry, boolean isHappy, boolean isDead,
                int lastVetVisitTime, int vetCooldownDuration, int lastPlayTime, int playCooldownDuration,
                String currentOutfit) {
         this.name = name;
+        this.petType = petType;
 
         //SET THE THREE SELECTABLE PET TYPES AND THEIR CHARACTERISTICS
         this.petTypeMap = new HashMap<>();
@@ -137,7 +139,9 @@ public class Pet {
         this.lastPlayTime = lastPlayTime;
         this.playCooldownDuration = playCooldownDuration;
         this.currentOutfit = currentOutfit;
+        setPetType(petType);  // triggers rate update
     }
+
 
     public int getLastVetVisitTime() {
         return lastVetVisitTime;

@@ -126,7 +126,7 @@ public class PetAdapter implements JsonSerializer<Pet>, JsonDeserializer<Pet> {
 
         // ✅ Correctly use the Pet constructor with all values
         Pet pet = new Pet(
-                name, health, sleep, fullness, happiness,
+                name, petType, health, sleep, fullness, happiness,
                 maxHealth, maxSleep, maxFullness, maxHappiness,
                 healthDeclineRate, fullnessDeclineRate, sleepDeclineRate, happinessDeclineRate,
                 isSleeping, isHungry, isHappy, isDead,
@@ -134,7 +134,7 @@ public class PetAdapter implements JsonSerializer<Pet>, JsonDeserializer<Pet> {
                 outfit
         );
 
-        pet.setPetType(petType);
+//        pet.setPetType(petType);
         return pet;
     }
 }

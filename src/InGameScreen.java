@@ -26,7 +26,9 @@ public class InGameScreen extends JLayeredPane {
 
 
 
+
     public InGameScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel, GameData gameData) {
+
         this.customFont = customFont;
         this.cardLayout = cardLayout;
         this.mainPanel = mainPanel;
@@ -273,8 +275,8 @@ public class InGameScreen extends JLayeredPane {
         shopButton.removeActionListener(shopButton.getActionListeners()[0]);
         shopButton.addActionListener(e -> {
             for (Component comp : mainPanel.getComponents()) {
-                if (comp instanceof Shop) {
-                    ((Shop)comp).resetToFirstPage(); // Reset to first page
+                if (comp instanceof StoreScreen) {
+                    ((StoreScreen)comp).resetToFirstPage(); // Reset to first page
                     break;
                 }
             }
