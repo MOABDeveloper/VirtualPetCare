@@ -1,10 +1,10 @@
+package src;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import src.GameData;
-import src.GameDataManager;
 
 
 public class LoadScreen extends JLayeredPane {

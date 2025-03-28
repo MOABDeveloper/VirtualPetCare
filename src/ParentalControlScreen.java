@@ -1,10 +1,7 @@
-import src.ParentalControl;
+package src;
 
 import javax.swing.*;
 import java.awt.*;
-import src.GameData;
-import src.GameDataManager;
-import src.Pet;
 
 
 public class ParentalControlScreen extends JLayeredPane {

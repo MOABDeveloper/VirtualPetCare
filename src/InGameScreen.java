@@ -1,16 +1,10 @@
+package src;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.URL;
-import src.GameData;
-import src.Pet;
 
 
 import javax.swing.Timer;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 
 
 public class InGameScreen extends JLayeredPane {
