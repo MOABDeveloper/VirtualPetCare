@@ -93,24 +93,23 @@ public class PlayerInventory {
     }
 
     public boolean equipOutfit(String outfitName, Pet pet) {
-        // Check if the player owns the outfit
         if (!ownsOutfit(outfitName)) {
-            System.out.println(" ERROR: Player does not own " + outfitName);
-            return false;
+            System.out.println("Player does not own outfit: " + outfitName);
+            return false; // Can't equip if player doesn't own it
         }
 
-        // Ensure the pet is allowed to wear this outfit
-        if (!pet.canWearOutfit(outfitName)) {
-            System.out.println("ERROR: " + pet.getPetType() + " cannot wear " + outfitName);
-            return false;
+        // If the pet is already wearing an outfit, unequip it first
+        if (pet.isWearingOutfit()) {
+            unequipOutfit(pet);
         }
 
-        // Equip the outfit
+        // Equip the new outfit
         pet.setOutfit(outfitName);
-        outfitInventory.put(outfitName, false); // Mark outfit as "in use"
-        System.out.println(pet.getName() + " is now wearing " + outfitName);
+        outfitInventory.put(outfitName, false); // Mark as equipped
+        System.out.println("Equipped outfit: " + outfitName);
         return true;
     }
+
 
 
     public void addOutfit(String outfitName) {
@@ -122,6 +121,18 @@ public class PlayerInventory {
             System.out.println("Player already owns " + outfitName);
         }
     }
+
+    public void unequipOutfit(Pet pet) {
+        String currentOutfit = pet.getCurrentOutfit();
+        if (currentOutfit != null && ownsOutfit(currentOutfit)) {
+            outfitInventory.put(currentOutfit, true);  // Mark outfit as owned again
+            pet.setOutfit(null); // Unequip it
+            System.out.println("Unequipped outfit: " + currentOutfit);
+        } else {
+            System.out.println("No outfit to unequip.");
+        }
+    }
+
 
 
     public boolean ownsOutfit(String outfitName) {

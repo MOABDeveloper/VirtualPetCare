@@ -431,6 +431,13 @@ public class Pet {
         return true;
     }
 
+    public void removeOutfit() {
+        if (this.currentOutfit != null && !this.currentOutfit.isEmpty()) {
+            System.out.println("Removing outfit: " + this.currentOutfit); // Debugging
+            this.currentOutfit = "";  // Set to empty string instead of null
+        }
+    }
+
 
     public void resetState() {
             this.isDead = false;

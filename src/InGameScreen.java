@@ -444,7 +444,7 @@ public class InGameScreen extends JLayeredPane {
             HealthProgressBar.setValue(pet.getHealth());
             FullnessProgressBar.setValue(pet.getFullness());
             SleepProgressBar.setValue(pet.getSleep());
-            updateGif(getGifPath("Exercise"),1500);
+            updateGif(getGifPath("Exercising"),1500);
         });
 
 
@@ -597,6 +597,7 @@ public class InGameScreen extends JLayeredPane {
             }
         }
 
+        //THis is the outfits
         if (inventoryType.equals("Gift")) {
             PlayerInventory inventory = gameData.getInventory();
             int x = 100, y = 120;
@@ -605,13 +606,13 @@ public class InGameScreen extends JLayeredPane {
                 int quantity = inventory.getGiftCount(gifts); // ✅ Correct count method
                 if (quantity <= 0) continue;
 
-                JButton toyButton = new JButton("<html>" + gifts.getName() + "<br>x" + quantity + "</html>");
-                toyButton.setBounds(x, y, 120, 60);
-                toyButton.setFont(customFont.deriveFont(12f));
-                inventoryPane.add(toyButton, JLayeredPane.PALETTE_LAYER);
+                JButton outfitButton = new JButton("<html>" + gifts.getName() + "<br>x" + quantity + "</html>");
+                outfitButton.setBounds(x, y, 120, 60);
+                outfitButton.setFont(customFont.deriveFont(12f));
+                inventoryPane.add(outfitButton, JLayeredPane.PALETTE_LAYER);
 
                 // Toy click action (Play Sound & Increase Happiness)
-                toyButton.addActionListener(e -> {
+                outfitButton.addActionListener(e -> {
                     if (inventory.hasGift(gifts)) {
 
                         pet.increaseHappiness(10);  // Increase happiness
@@ -662,23 +663,25 @@ public class InGameScreen extends JLayeredPane {
 
         String petType = pet.getPetType();
         String petFileName = "";
-        if(petType.equals("PetOption1")) {
+
+        if (petType.equals("PetOption1")) {
             petFileName = "PetOne";
         } else if (petType.equals("PetOption2")) {
             petFileName = "PetTwo";
-        }
-        else if (petType.equals("PetOption3")) {
+        } else if (petType.equals("PetOption3")) {
             petFileName = "PetThree";
         }
 
         String outfit = pet.getCurrentOutfit();
         String spritePath;
 
-        if (outfit != null && !outfit.isEmpty()) {
-            spritePath = "resources/" + petFileName + "Outfit_Idle.GIF";
-        } else {
+        if (outfit == null || outfit.isEmpty()) {
             spritePath = "resources/" + petFileName + "_Idle.gif";
+        } else {
+            spritePath = "resources/" + petFileName + "Outfit_Idle.gif";
         }
+
+        System.out.println("Updating sprite to: " + spritePath); // Debugging
 
         ImageIcon gifIcon = new ImageIcon(spritePath);
         gifLabel = new JLabel(gifIcon);
@@ -688,6 +691,41 @@ public class InGameScreen extends JLayeredPane {
         revalidate();
         repaint();
     }
+
+
+//    private void updateSprite(Pet pet) {
+//        if (gifLabel != null) {
+//            remove(gifLabel); // ✅ Remove old sprite before updating
+//        }
+//
+//        String petType = pet.getPetType();
+//        String petFileName = "";
+//        if(petType.equals("PetOption1")) {
+//            petFileName = "PetOne";
+//        } else if (petType.equals("PetOption2")) {
+//            petFileName = "PetTwo";
+//        }
+//        else if (petType.equals("PetOption3")) {
+//            petFileName = "PetThree";
+//        }
+//
+//        String outfit = pet.getCurrentOutfit();
+//        String spritePath;
+//
+//        if (outfit != null && !outfit.isEmpty()) {
+//            spritePath = "resources/" + petFileName + "Outfit_Idle.GIF";
+//        } else {
+//            spritePath = "resources/" + petFileName + "_Idle.gif";
+//        }
+//
+//        ImageIcon gifIcon = new ImageIcon(spritePath);
+//        gifLabel = new JLabel(gifIcon);
+//        gifLabel.setBounds(300, 30, 622, 632);
+//        add(gifLabel, Integer.valueOf(3));
+//
+//        revalidate();
+//        repaint();
+//    }
 
     private String getGifPath(String action) {
         String petType = pet.getPetType();
