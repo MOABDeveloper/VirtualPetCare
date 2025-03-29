@@ -80,9 +80,9 @@ public class Store {
 
             // if the player has enough coins
             if (inventory.getPlayerCoins() >= cost) {
-                    // Decrease the coins and increase the qty by the amount
-                    inventory.setPlayerCoins(inventory.getPlayerCoins() - cost);
-                    inventory.addFood(food, quantity);
+                // Decrease the coins and increase the qty by the amount
+                inventory.setPlayerCoins(inventory.getPlayerCoins() - cost);
+                inventory.addFood(food, quantity);
 
                 return true;
             }

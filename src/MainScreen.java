@@ -35,8 +35,8 @@ public class MainScreen extends JFrame {
             // if font fails to load, go back to default
             customFont = new Font("Arial", Font.PLAIN, 24);
         }
-        MusicPlayer.playBackgroundMusic("resources/verdanturf.wav");
-        MusicPlayer.setVolume(0.05f);
+//        MusicPlayer.playBackgroundMusic("resources/verdanturf.wav");
+//        MusicPlayer.setVolume(0.05f);
         // actual screen
         this.setTitle("Virtual Pet");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

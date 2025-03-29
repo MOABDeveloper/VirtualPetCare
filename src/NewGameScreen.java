@@ -6,19 +6,18 @@ import java.awt.*;
 
 public class NewGameScreen extends JLayeredPane {
     private static Font customFont;
-    private CardLayout petCardLayout;  // For pet selection navigation
-    private JPanel petPanel;           // For pet selection screens
-    private static CardLayout mainCardLayout; // For main navigation
-    private static JPanel mainPanel;          // For main screens
+    private CardLayout petCardLayout;
+    private JPanel petPanel;
+    private static CardLayout mainCardLayout;
+    private static JPanel mainPanel;
+    private JButton homeButton; // Make homeButton a class field so we can access it in other methods
+    private boolean popupVisible = false; // Track popup visibility
 
     public NewGameScreen(Font customFont, CardLayout mainCardLayout, JPanel mainPanel) {
         this.customFont = customFont;
         this.mainCardLayout = mainCardLayout;
         this.mainPanel = mainPanel;
         setPreferredSize(new Dimension(1080, 750));
-
-
-
 
         // Set up internal pet selection navigation
         this.petCardLayout = new CardLayout();
@@ -38,12 +37,16 @@ public class NewGameScreen extends JLayeredPane {
         petCardLayout.show(petPanel, "First Pet");
 
         // Home button (uses main navigation)
-        JButton homeButton = MainScreen.buttonCreate(20, 10, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
+        homeButton = MainScreen.buttonCreate(20, 10, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
+        homeButton.addActionListener(e -> {
+            if (!popupVisible) {
+                mainCardLayout.show(mainPanel, "Main");
+            }
+        });
         add(homeButton, Integer.valueOf(3));
 
         setVisible(true);
     }
-
     private JLayeredPane backgroundScreen(String idCardPet, JLayeredPane screenSource) {
         ImageIcon background = new ImageIcon("resources/new_game.png");
         Image scaledBG = background.getImage().getScaledInstance(1080, 750, Image.SCALE_SMOOTH);
@@ -165,7 +168,11 @@ public class NewGameScreen extends JLayeredPane {
 
         return thirdPet;
     }
-    private static void showPopup(JLayeredPane parentPane, JLabel overlayLabel, JLabel popUpLabel, String petType) {
+    private void showPopup(JLayeredPane parentPane, JLabel overlayLabel, JLabel popUpLabel, String petType) {
+        // Set popup as visible
+        this.popupVisible = true;
+        this.homeButton.setEnabled(false); // Disable home button
+
         // Show popup overlay AND the popup itself
         overlayLabel.setVisible(true);
         popUpLabel.setVisible(true);
@@ -173,7 +180,7 @@ public class NewGameScreen extends JLayeredPane {
         // Pet name input field
         JTextField petNameField = new JTextField();
         petNameField.setBounds(210, 360, 650, 40);
-        parentPane.add(petNameField, Integer.valueOf(7));  // Higher layer than popup
+        parentPane.add(petNameField, Integer.valueOf(7));
         petNameField.requestFocusInWindow();
 
         // Back Button (closes popup)
@@ -194,13 +201,9 @@ public class NewGameScreen extends JLayeredPane {
 
         // Add action listeners
         backButton.addActionListener(e -> {
-            overlayLabel.setVisible(false);
-            popUpLabel.setVisible(false);
-            parentPane.remove(backButton);
-            parentPane.remove(enterButton);
-            parentPane.remove(petNameField);
-            parentPane.repaint();
+            closePopup(parentPane, overlayLabel, popUpLabel, backButton, enterButton, petNameField);
         });
+
         enterButton.addActionListener(e -> {
             // Check if a new game can be created
             if (!GameDataManager.canCreateNewGame()) {
@@ -208,7 +211,7 @@ public class NewGameScreen extends JLayeredPane {
                         "Maximum save files reached! Delete a save to create a new game.",
                         "Save Limit Reached",
                         JOptionPane.WARNING_MESSAGE);
-                return;  // Stop execution if save limit is reached
+                return;
             }
 
             String petName = petNameField.getText().trim();
@@ -218,7 +221,6 @@ public class NewGameScreen extends JLayeredPane {
 
                 int maxHealth = 100, maxSleep = 100, maxFullness = 100, maxHappiness = 100;
 
-                ///CHANGE COOLDOWNS TO DEFAULT IMPLEMENT DEFAULT GETTERS IN PET
                 Pet newPet = new Pet(
                         petName, petType,
                         maxHealth, maxSleep, maxFullness, maxHappiness,
@@ -234,23 +236,39 @@ public class NewGameScreen extends JLayeredPane {
                 String filename = "saves/" + petName + ".json";
                 GameDataManager.saveGame(filename, newPet, inventory, 0);
 
-                GameData newData = GameDataManager.loadGame(filename);  // Load saved data
+                GameData newData = GameDataManager.loadGame(filename);
 
-                //Replace or add the InGameScreen dynamically
                 InGameScreen inGameScreen = new InGameScreen(customFont, mainCardLayout, mainPanel, newData);
                 mainPanel.add(inGameScreen, "InGame");
 
-                // Switch to InGame view
                 mainCardLayout.show(mainPanel, "InGame");
             }
 
-            overlayLabel.setVisible(false);
-            popUpLabel.setVisible(false);
-            parentPane.remove(backButton);
-            parentPane.remove(enterButton);
-            parentPane.remove(petNameField);
-            parentPane.repaint();
+            closePopup(parentPane, overlayLabel, popUpLabel, backButton, enterButton, petNameField);
         });
+
+        parentPane.add(backButton, Integer.valueOf(8));
+        parentPane.add(enterButton, Integer.valueOf(8));
+        parentPane.repaint();
+    }
+
+    private void closePopup(JLayeredPane parentPane, JLabel overlayLabel, JLabel popUpLabel,
+                            JButton backButton, JButton enterButton, JTextField petNameField) {
+        // Hide popup elements
+        overlayLabel.setVisible(false);
+        popUpLabel.setVisible(false);
+
+        // Remove components
+        parentPane.remove(backButton);
+        parentPane.remove(enterButton);
+        parentPane.remove(petNameField);
+
+        // Update state and enable home button
+        this.popupVisible = false;
+        this.homeButton.setEnabled(true);
+
+        parentPane.repaint();
+    }
 
 //        enterButton.addActionListener(e -> {
 //            String petName = petNameField.getText().trim();
@@ -292,16 +310,6 @@ public class NewGameScreen extends JLayeredPane {
 //            parentPane.remove(petNameField);
 //            parentPane.repaint();
 //        });
-
-        // Add buttons to higher layers to ensure they're on top
-        parentPane.add(backButton, Integer.valueOf(8));  // Higher than popup (6) and overlay (5)
-        parentPane.add(enterButton, Integer.valueOf(8));
-        parentPane.repaint();
-    }
-
-    private static void showErrorPopup(JLayeredPane parentPane, String message) {
-        JOptionPane.showMessageDialog(parentPane, message, "Invalid Input", JOptionPane.ERROR_MESSAGE);
-    }
 
 
 
