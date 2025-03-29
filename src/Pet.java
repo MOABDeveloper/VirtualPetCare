@@ -79,7 +79,15 @@ public class Pet {
 
     private String currentOutfit;
 
-//
+    private static final Map<String, String> allowedOutfits = new HashMap<>();
+
+    //THESE MUST BE LOWERCASE
+    static {
+        allowedOutfits.put("PetOption1", "outfit1");
+        allowedOutfits.put("PetOption2", "outfit2");
+        allowedOutfits.put("PetOption3", "outfit3");
+    }
+    //
 //    public Pet(String name, int maxHealth, int maxSleep, int maxFullness, int maxHappiness) {
 //        this.name = name;
 //
@@ -115,6 +123,8 @@ public class Pet {
         petTypeMap.put("PetOption1", new PetType(1.2F,.5F,.6F,1.3F));
         petTypeMap.put("PetOption2",  new PetType(2F,2F,2F,2F));
         petTypeMap.put("PetOption3",  new PetType(1.2F,.5F,.6F,1.3F));
+
+
 
 
         this.name = name;
@@ -423,9 +433,24 @@ public class Pet {
         return currentOutfit;
     }
 
-    public void setOutfit(String outfitName) {
+    public boolean setOutfit(String outfitName) {
+        String allowedOutfit = allowedOutfits.get(this.petType);
+
+        if (allowedOutfit == null) {
+            System.out.println("ERROR: No outfit restrictions defined for this pet type.");
+            return false;
+        }
+
+        if (!outfitName.equals(allowedOutfit)) {
+            System.out.println("ERROR: " + this.petType + " can only wear " + allowedOutfit + "!");
+            return false;
+        }
+
         this.currentOutfit = outfitName;
+        System.out.println(this.name + " is now wearing " + outfitName);
+        return true;
     }
+
 
     public void resetState() {
             this.isDead = false;
@@ -445,4 +470,55 @@ public class Pet {
                 ", Fullness: " + fullness + "/" + maxFullness +
                 ", Happiness: " + happiness + "/" + maxHappiness);
     }
+
+    private String getAllowedOutfit(Pet pet) {
+        switch (pet.getPetType()) {
+            case "PetOption1":
+                return "Outfit1";
+            case "PetOption2":
+                return "Outfit2";
+            case "PetOption3":
+                return "Outfit3";
+            default:
+                return "None"; // In case of an unknown pet type
+        }
+    }
+    private boolean isOutfit(String itemName) {
+        return itemName.equals("Outfit1") || itemName.equals("Outfit2") || itemName.equals("Outfit3");
+    }
+
+
+//    public boolean setOutfit(String outfitName) {
+//        String allowedOutfit = getAllowedOutfit(pe);
+//
+//        if (allowedOutfit == null) {
+//            System.out.println("ERROR: No outfit restrictions defined for this pet type.");
+//            return false;
+//        }
+//
+//        if (!outfitName.equals(allowedOutfit)) {
+//            System.out.println("ERROR: " + this.petType + " can only wear " + allowedOutfit + "!");
+//            return false;
+//        }
+//
+//        this.currentOutfit = outfitName;
+//        System.out.println(this.name + " is now wearing " + outfitName);
+//        return true;
+//    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
