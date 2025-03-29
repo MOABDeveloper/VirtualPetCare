@@ -15,6 +15,7 @@ public class PlayerInventory {
     public PlayerInventory(Store store) {
         this.playerCoins = 5000; // Set default coins to 500
 
+
         // Retrieve predefined items from Store
         Food apple = store.getFood("Apple");
         Toys bouncyBall = store.getToy("Bouncy Ball");
@@ -92,30 +93,42 @@ public class PlayerInventory {
     }
 
     public boolean equipOutfit(String outfitName, Pet pet) {
-        // If player doesn't own this outfit, they can't equip it
+        // Check if the player owns the outfit
         if (!ownsOutfit(outfitName)) {
+            System.out.println(" ERROR: Player does not own " + outfitName);
             return false;
         }
 
-        // If pet is already wearing something, return it to inventory
-        if (pet.isWearingOutfit()) {
-            outfitInventory.put(pet.getCurrentOutfit(), true); // returned to player
+        // Ensure the pet is allowed to wear this outfit
+        if (!pet.canWearOutfit(outfitName)) {
+            System.out.println("ERROR: " + pet.getPetType() + " cannot wear " + outfitName);
+            return false;
         }
 
-        // Equip the new outfit
+        // Equip the outfit
         pet.setOutfit(outfitName);
-        outfitInventory.put(outfitName, false); // now "in use" by pet
-
+        outfitInventory.put(outfitName, false); // Mark outfit as "in use"
+        System.out.println(pet.getName() + " is now wearing " + outfitName);
         return true;
     }
 
+
     public void addOutfit(String outfitName) {
-        outfitInventory.put(outfitName, true);
+        // If the player doesn't own the outfit, mark it as owned
+        if (!outfitInventory.containsKey(outfitName)) {
+            outfitInventory.put(outfitName, true);  // "true" means the outfit is owned
+            System.out.println("Outfit added: " + outfitName);
+        } else {
+            System.out.println("Player already owns " + outfitName);
+        }
     }
+
 
     public boolean ownsOutfit(String outfitName) {
         return outfitInventory.getOrDefault(outfitName, false);
     }
+
+
 
     // Go to bed — only increases sleep if not already max
     public void putPetToBed(Pet pet) {

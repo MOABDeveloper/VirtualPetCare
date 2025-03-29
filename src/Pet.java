@@ -88,27 +88,8 @@ public class Pet {
         allowedOutfits.put("PetOption3", "outfit3");
     }
     //
-//    public Pet(String name, int maxHealth, int maxSleep, int maxFullness, int maxHappiness) {
-//        this.name = name;
-//
-//        //SET THE THREE SELECTABLE PET TYPES AND THEIR CHARACTERISTICS
-//        this.petTypeMap = new HashMap<>();
-//        petTypeMap.put("PetOption1", new PetType(1.2F,.5F,.6F,1.3F));
-//        petTypeMap.put("PetOption2",  new PetType(2F,2F,2F,2F));
-//        petTypeMap.put("PetOption3",  new PetType(1.2F,.5F,.6F,1.3F));
-//
-//        this.maxHealth = maxHealth;
-//        this.maxSleep = maxSleep;
-//        this.maxFullness = maxFullness;
-//        this.maxHappiness = maxHappiness;
-//
-//        this.health = maxHealth;
-//        this.sleep = maxSleep;
-//        this.fullness = maxFullness;
-//        this.happiness = maxHappiness;
-//
-//    }
-    // Ensure Gson can access final fields
+
+
     public Pet(String name, String petType, int health, int sleep, int fullness, int happiness,
                int maxHealth, int maxSleep, int maxFullness, int maxHappiness,
                int healthDeclineRate, int fullnessDeclineRate, int sleepDeclineRate, int happinessDeclineRate,
@@ -123,8 +104,6 @@ public class Pet {
         petTypeMap.put("PetOption1", new PetType(1.2F,.5F,.6F,1.3F));
         petTypeMap.put("PetOption2",  new PetType(2F,2F,2F,2F));
         petTypeMap.put("PetOption3",  new PetType(1.2F,.5F,.6F,1.3F));
-
-
 
 
         this.name = name;
@@ -483,28 +462,25 @@ public class Pet {
                 return "None"; // In case of an unknown pet type
         }
     }
+
     private boolean isOutfit(String itemName) {
         return itemName.equals("Outfit1") || itemName.equals("Outfit2") || itemName.equals("Outfit3");
     }
 
+    public boolean canWearOutfit(String outfitName) {
+        // Each pet type is restricted to a specific outfit
+        switch (this.petType) {
+            case "PetOption1":
+                return outfitName.equals("Outfit1");
+            case "PetOption2":
+                return outfitName.equals("Outfit2");
+            case "PetOption3":
+                return outfitName.equals("Outfit3");
+            default:
+                return false; // If petType is unknown, deny all outfits
+        }
+    }
 
-//    public boolean setOutfit(String outfitName) {
-//        String allowedOutfit = getAllowedOutfit(pe);
-//
-//        if (allowedOutfit == null) {
-//            System.out.println("ERROR: No outfit restrictions defined for this pet type.");
-//            return false;
-//        }
-//
-//        if (!outfitName.equals(allowedOutfit)) {
-//            System.out.println("ERROR: " + this.petType + " can only wear " + allowedOutfit + "!");
-//            return false;
-//        }
-//
-//        this.currentOutfit = outfitName;
-//        System.out.println(this.name + " is now wearing " + outfitName);
-//        return true;
-//    }
 
 
 
