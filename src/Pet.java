@@ -87,28 +87,9 @@ public class Pet {
         allowedOutfits.put("PetOption2", "outfit2");
         allowedOutfits.put("PetOption3", "outfit3");
     }
-    //
-//    public Pet(String name, int maxHealth, int maxSleep, int maxFullness, int maxHappiness) {
-//        this.name = name;
-//
-//        //SET THE THREE SELECTABLE PET TYPES AND THEIR CHARACTERISTICS
-//        this.petTypeMap = new HashMap<>();
-//        petTypeMap.put("PetOption1", new PetType(1.2F,.5F,.6F,1.3F));
-//        petTypeMap.put("PetOption2",  new PetType(2F,2F,2F,2F));
-//        petTypeMap.put("PetOption3",  new PetType(1.2F,.5F,.6F,1.3F));
-//
-//        this.maxHealth = maxHealth;
-//        this.maxSleep = maxSleep;
-//        this.maxFullness = maxFullness;
-//        this.maxHappiness = maxHappiness;
-//
-//        this.health = maxHealth;
-//        this.sleep = maxSleep;
-//        this.fullness = maxFullness;
-//        this.happiness = maxHappiness;
-//
-//    }
-    // Ensure Gson can access final fields
+
+
+
     public Pet(String name, String petType, int health, int sleep, int fullness, int happiness,
                int maxHealth, int maxSleep, int maxFullness, int maxHappiness,
                int healthDeclineRate, int fullnessDeclineRate, int sleepDeclineRate, int happinessDeclineRate,
@@ -123,8 +104,6 @@ public class Pet {
         petTypeMap.put("PetOption1", new PetType(1.2F,.5F,.6F,1.3F));
         petTypeMap.put("PetOption2",  new PetType(2F,2F,2F,2F));
         petTypeMap.put("PetOption3",  new PetType(1.2F,.5F,.6F,1.3F));
-
-
 
 
         this.name = name;
