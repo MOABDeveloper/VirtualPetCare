@@ -319,6 +319,9 @@ public class StoreScreen extends JLayeredPane {
         } else {
             System.out.println("Player Coins at Store Start: " + this.playerInventory.getPlayerCoins());
         }
+        for (Component comp : mainPanel.getComponents()) {
+            System.out.println("Component: " + comp.getClass().getName());
+        }
 
         setPreferredSize(new Dimension(1080, 750));
 
@@ -348,11 +351,16 @@ public class StoreScreen extends JLayeredPane {
 
         populateStorePages();
 
-        JButton homeButton = MainScreen.buttonCreate(800, 50, 192, 64, "resources/home_button.png", "resources/home_button_clicked.png", "InGame");
+        JButton homeButton = MainScreen.buttonCreate(800, 50, 192, 64,
+                "resources/home_button.png", "resources/home_button_clicked.png", "InGame");
         homeButton.addActionListener(e -> {
-            resetToFirstPage();
-            mainCardLayout.show(mainPanel, "InGame");
+            resetToFirstPage(); // Ensure shop resets
+
+            // Directly switch to InGameScreen
+            mainCardLayout.show(mainPanel, "InGameScreen");
         });
+
+
         add(homeButton, Integer.valueOf(3));
         allButtons.add(homeButton);
     }

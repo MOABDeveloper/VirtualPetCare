@@ -1,7 +1,7 @@
 {
   "pet": {
     "name": "Shadow",
-    "petType": "Dog",
+    "petType": "PetOption1",
     "health": 90,
     "sleep": 99,
     "fullness": 100,

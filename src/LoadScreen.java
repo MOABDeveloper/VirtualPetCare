@@ -94,20 +94,16 @@ public class LoadScreen extends JLayeredPane {
                 // Change button appearance when clicked
                 saveButton.addMouseListener(new MouseAdapter() {
                     @Override
-                    public void mouseReleased(MouseEvent e) {
-                        saveButton.setIcon(defaultIcon);
-                    }
-
-                    @Override
                     public void mouseClicked(MouseEvent e) {
                         // Load game data
                         GameData loadedGame = GameDataManager.loadGame(filePath);
                         if (loadedGame != null) {
-                            // Switch to InGameScreen
-                            switchToInGameScreen(loadedGame);
+                            // Pass the file path to InGameScreen
+                            switchToInGameScreen(loadedGame, filePath);
                         }
                     }
                 });
+
 
                 add(saveButton, Integer.valueOf(2));
             }
@@ -131,10 +127,15 @@ public class LoadScreen extends JLayeredPane {
     }
 
     // Switch to InGameScreen using MainScreen's managed instance
-    private void switchToInGameScreen(GameData gameData) {
-        MainScreen.showInGameScreen(gameData);
-    }
+//    private void switchToInGameScreen(GameData gameData) {
+//        MainScreen.showInGameScreen(gameData);
+//    }
 
+    private void switchToInGameScreen(GameData gameData, String filePath) {
+        InGameScreen inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel, gameData, filePath);
+        mainPanel.add(inGameScreen, "InGameScreen");
+        cardLayout.show(mainPanel, "InGameScreen");
+    }
 
 
 

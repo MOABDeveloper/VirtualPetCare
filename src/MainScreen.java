@@ -53,7 +53,7 @@ public class MainScreen extends JFrame {
         JLayeredPane newGameScreen = new NewGameScreen(customFont, cardLayout, mainPanel);
         JLayeredPane loadScreen = new LoadScreen(customFont, mainPanel, cardLayout);
         JLayeredPane creditScreen = new CreditScreen(customFont);
-        //InGameScreen inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel);
+        //InGameScreen inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel,);
         Store store = new Store(); // Create Store instance
 
 
@@ -284,20 +284,24 @@ public class MainScreen extends JFrame {
         parentPane.repaint();
     }
 
-    public static void showInGameScreen(GameData gameData) {
-        if (inGameScreen != null) {
-            inGameScreen.stopDecayTimer();
-            mainPanel.remove(inGameScreen);
+    public static void showInGameScreen(GameData gameData, String saveFilePath) {
+        // Remove old instance if it exists
+        for (Component comp : mainPanel.getComponents()) {
+            if (comp instanceof InGameScreen) {
+                mainPanel.remove(comp);
+                break;
+            }
         }
 
-        inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel, gameData);
+        // Create new InGameScreen and add it
+        inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel, gameData, saveFilePath);
         mainPanel.add(inGameScreen, "InGame");
 
-        // ✅ Add or replace the store screen with correct gameData
+        // Ensure StoreScreen is properly initialized
         Store store = new Store();
         JLayeredPane shopScreen = new StoreScreen(customFont, cardLayout, mainPanel, store, gameData);
 
-        // Remove existing shop screen if needed (cleaner)
+        // Remove existing shop screen if needed
         for (Component comp : mainPanel.getComponents()) {
             if (comp instanceof StoreScreen) {
                 mainPanel.remove(comp);
@@ -307,8 +311,37 @@ public class MainScreen extends JFrame {
 
         mainPanel.add(shopScreen, "Shop");
 
+        // Switch to InGame screen
         cardLayout.show(mainPanel, "InGame");
     }
+
+
+
+//    public static void showInGameScreen(GameData gameData) {
+//        if (inGameScreen != null) {
+//            inGameScreen.stopDecayTimer();
+//            mainPanel.remove(inGameScreen);
+//        }
+//
+//        inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel, gameData);
+//        mainPanel.add(inGameScreen, "InGame");
+//
+//        // ✅ Add or replace the store screen with correct gameData
+//        Store store = new Store();
+//        JLayeredPane shopScreen = new StoreScreen(customFont, cardLayout, mainPanel, store, gameData);
+//
+//        // Remove existing shop screen if needed (cleaner)
+//        for (Component comp : mainPanel.getComponents()) {
+//            if (comp instanceof StoreScreen) {
+//                mainPanel.remove(comp);
+//                break;
+//            }
+//        }
+//
+//        mainPanel.add(shopScreen, "Shop");
+//
+//        cardLayout.show(mainPanel, "InGame");
+//    }
 
 
 

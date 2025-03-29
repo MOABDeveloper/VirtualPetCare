@@ -21,18 +21,22 @@ public class InGameScreen extends JLayeredPane {
     private static String health_red = "#A94337";
     private Timer statDecayTimer;
     private GameData gameData;
+    private String saveFilePath;  // Store the save file path
 
 
-    public InGameScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel, GameData gameData) {
-
+    public InGameScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel, GameData gameData, String saveFilePath) {
         this.customFont = customFont;
         this.cardLayout = cardLayout;
         this.mainPanel = mainPanel;
-        setPreferredSize(new Dimension(1080, 750));
-        setBackground();
         this.pet = gameData.getPet();
         this.gameData = gameData;
+        this.saveFilePath = saveFilePath;  // Store the file path
 
+        mainPanel.add(this, "InGame");  // ✅ Ensure it exists in mainPanel
+
+
+        setPreferredSize(new Dimension(1080, 750));
+        setBackground();
 
         // Create and position progress bar for health
         HealthProgressBar = new JProgressBar(JProgressBar.VERTICAL, 0,pet.getMaxHealth());
@@ -114,7 +118,16 @@ public class InGameScreen extends JLayeredPane {
 
         healthBars();
         commandButtons();
-        spriteGifs();
+        //spriteGifs();
+        String petType =  GameDataManager.getPetTypeFromSave(saveFilePath);
+        if(petType.equals("PetOption1")) {
+            spriteGifs("resources/sprite1_idle.gif");
+        }
+        else if (petType.equals("PetOption3")) {
+            spriteGifs("resources/sprite_2_test.gif");
+        }
+
+
 
         JButton backButton = MainScreen.buttonCreate(800,70, 70,70, "resources/home_button.png", "resources/home_button_clicked.png", "");
         backButton.setBounds(990, 15, 64, 64);
@@ -317,17 +330,26 @@ public class InGameScreen extends JLayeredPane {
     }
 
     private void commandButtons() {
-        JButton shopButton = MainScreen.buttonCreate(30, 550, 128, 128, "resources/command_button.png", "resources/command_button_clicked.png", "Shop");
-        shopButton.removeActionListener(shopButton.getActionListeners()[0]);
+        JButton shopButton = MainScreen.buttonCreate(30, 550, 128, 128,
+                "resources/command_button.png", "resources/command_button_clicked.png", "Shop");
+
+        // ✅ Ensure existing StoreScreen is refreshed before switching
         shopButton.addActionListener(e -> {
             for (Component comp : mainPanel.getComponents()) {
                 if (comp instanceof StoreScreen) {
-                    ((StoreScreen)comp).resetToFirstPage();
-                    break;
+                    ((StoreScreen) comp).resetToFirstPage();  // Ensure store is refreshed
+                    cardLayout.show(mainPanel, "Shop");  // ✅ Now switch to the Store
+                    return;
                 }
             }
+
+            // ✅ If StoreScreen is missing, create and add it
+            Store store = new Store();
+            StoreScreen storeScreen = new StoreScreen(customFont, cardLayout, mainPanel, store, gameData);
+            mainPanel.add(storeScreen, "Shop");
             cardLayout.show(mainPanel, "Shop");
         });
+
         add(shopButton, Integer.valueOf(2));
 
         // Feed Button with Inventory Popup
@@ -546,18 +568,31 @@ public class InGameScreen extends JLayeredPane {
 
 
     }
-
-    private void spriteGifs() {
-        ImageIcon gifIcon = new ImageIcon("resources/sprite1_idle.gif");
+    private void spriteGifs(String spriteFilePath) {
+        // Dynamic sprite GIF
+        ImageIcon gifIcon = new ImageIcon(spriteFilePath);
         JLabel gifLabel = new JLabel(gifIcon);
         gifLabel.setBounds(300, 30, 622, 632);
         add(gifLabel, Integer.valueOf(3));
 
+        // Hardcoded orange GIF
         ImageIcon orangeGif = new ImageIcon("resources/orange.gif");
         JLabel orangeLabel = new JLabel(orangeGif);
         orangeLabel.setBounds(300, 30, 405, 393);
         add(orangeLabel, Integer.valueOf(3));
     }
+
+//    private void spriteGifs() {
+//        ImageIcon gifIcon = new ImageIcon("resources/sprite1_idle.gif");
+//        JLabel gifLabel = new JLabel(gifIcon);
+//        gifLabel.setBounds(300, 30, 622, 632);
+//        add(gifLabel, Integer.valueOf(3));
+//
+//        ImageIcon orangeGif = new ImageIcon("resources/orange.gif");
+//        JLabel orangeLabel = new JLabel(orangeGif);
+//        orangeLabel.setBounds(300, 30, 405, 393);
+//        add(orangeLabel, Integer.valueOf(3));
+//    }
 
     public void stopDecayTimer() {
         if (statDecayTimer != null) {

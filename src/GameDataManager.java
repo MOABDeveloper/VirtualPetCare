@@ -77,6 +77,37 @@ public class GameDataManager {
         }
         return true; // Allow if the directory doesn't exist
     }
+//    public static String getPetTypeFromSave(String filename) {
+//        GameData data = loadGame(filename);
+//        if (data != null && data.getPet() != null) {
+//            return data.getPet().getPetType(); // ✅ Return the pet type
+//        }
+//        return "Unknown"; // Default value if loading fails
+//    }
+    public static String getPetTypeFromSave(String filePath) {
+        if (filePath == null || filePath.isEmpty()) {
+            System.err.println("Error: Save file path is empty!");
+            return "default";  // Default pet type if no file is provided
+        }
 
+        try {
+            File file = new File(filePath);
+            if (!file.exists()) {
+                System.err.println("Error: Save file does not exist.");
+                return "default";
+            }
+
+            // Load saved game data
+            GameData loadedGame = loadGame(filePath);
+            if (loadedGame != null && loadedGame.getPet() != null) {
+                return loadedGame.getPet().getPetType(); // Retrieve pet type
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "default";  // Return default pet type in case of error
+    }
 
 }
