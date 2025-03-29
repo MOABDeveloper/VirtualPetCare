@@ -82,6 +82,7 @@ public class MainScreen extends JFrame {
         this.setIconImage(iconImage.getImage());
 
 
+
         this.setVisible(true);
     }
 
@@ -167,6 +168,13 @@ public class MainScreen extends JFrame {
         int height = windowsImage.getIconHeight() + 100;
         Image scaledWindow = windowsImage.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
         ImageIcon windowIcon = new ImageIcon(scaledWindow);
+
+        //The main art on the screen
+        ImageIcon main_art = new ImageIcon("resources/MainScreenImg.png");
+        JLabel artLabel = new JLabel(main_art);
+        artLabel.setBounds(512, 127, main_art.getIconWidth(), main_art.getIconHeight()); // Set proper x,y coordinates
+        layeredPane.add(artLabel, Integer.valueOf(6)); // Higher than other elements
+
 
         JLabel windowsLabel = new JLabel(windowIcon);
         windowsLabel.setBounds(-66, -60, width, height);
