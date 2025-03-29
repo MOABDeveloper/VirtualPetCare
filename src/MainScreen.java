@@ -315,6 +315,11 @@ public class MainScreen extends JFrame {
         cardLayout.show(mainPanel, "InGame");
     }
 
+    public static ParentalControl getParentalControl() {
+        return parentalControl;
+    }
+
+
 
 
 //    public static void showInGameScreen(GameData gameData) {

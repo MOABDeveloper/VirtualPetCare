@@ -95,14 +95,25 @@ public class LoadScreen extends JLayeredPane {
                 saveButton.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        // Load game data
+                        // 🚫 Check parental playtime restrictions before loading
+                        if (!MainScreen.getParentalControl().isPlayAllowedNow()) {
+                            JOptionPane.showMessageDialog(
+                                    LoadScreen.this,
+                                    "⏰ Playtime is currently restricted.\nPlease try again during allowed hours.",
+                                    "Playtime Restricted",
+                                    JOptionPane.WARNING_MESSAGE
+                            );
+                            return;
+                        }
+
+                        // ✅ Proceed to load the game if allowed
                         GameData loadedGame = GameDataManager.loadGame(filePath);
                         if (loadedGame != null) {
-                            // Pass the file path to InGameScreen
                             switchToInGameScreen(loadedGame, filePath);
                         }
                     }
                 });
+
 
 
                 add(saveButton, Integer.valueOf(2));

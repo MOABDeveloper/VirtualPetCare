@@ -203,8 +203,17 @@ public class NewGameScreen extends JLayeredPane {
        backButton.addActionListener(e -> {
            closePopup(parentPane, overlayLabel, popUpLabel, backButton, enterButton, petNameField);
        });
-       
+
        enterButton.addActionListener(e -> {
+           // 🚫 Check if playtime is currently allowed
+           if (!MainScreen.getParentalControl().isPlayAllowedNow()) {
+               JOptionPane.showMessageDialog(parentPane,
+                       "⏰ Playtime is currently restricted.\nPlease try again during allowed hours.",
+                       "Playtime Restricted",
+                       JOptionPane.WARNING_MESSAGE);
+               return;
+           }
+
            if (!GameDataManager.canCreateNewGame()) {
                JOptionPane.showMessageDialog(parentPane,
                        "Maximum save files reached! Delete a save to create a new game.",
@@ -236,11 +245,11 @@ public class NewGameScreen extends JLayeredPane {
                GameData newData = new GameData(newPet, inventory, 0);
                MainScreen.showInGameScreen(newData, filename);
                GameDataManager.saveGame(filename, newPet, inventory, 0);  // Save after loading screen
-
            }
 
            closePopup(parentPane, overlayLabel, popUpLabel, backButton, enterButton, petNameField);
        });
+
 
        parentPane.add(backButton, Integer.valueOf(8));
        parentPane.add(enterButton, Integer.valueOf(8));
