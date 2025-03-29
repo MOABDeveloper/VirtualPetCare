@@ -150,7 +150,7 @@ public class StoreScreen extends JLayeredPane {
         for (int i = 0; i < Math.min(6, foodNames.size()); i++) {
             String foodName = foodNames.get(i);
             Food food = store.getFood(foodName);
-            JPanel itemPanel = createShopItem("resources/item_image.png", food.getName(), food.getPrice(), x, y);
+            JPanel itemPanel = createShopItem(food.getName(), food.getPrice(), x, y);
             page.add(itemPanel, Integer.valueOf(2));
 
             x += 250;
@@ -177,7 +177,7 @@ public class StoreScreen extends JLayeredPane {
         for (int i = 0; i < Math.min(6, toyNames.size()); i++) {
             String toyName = toyNames.get(i);
             Toys toy = store.getToy(toyName);
-            JPanel itemPanel = createShopItem("resources/item_image.png", toy.getName(), toy.getPrice(), x, y);
+            JPanel itemPanel = createShopItem(toy.getName(), toy.getPrice(), x, y);
             page.add(itemPanel, Integer.valueOf(2));
 
             x += 250;
@@ -205,7 +205,7 @@ public class StoreScreen extends JLayeredPane {
         for (int i = 0; i < giftNames.size(); i++) {
             String giftName = giftNames.get(i);
             Gifts gift = store.getGift(giftName);
-            JPanel itemPanel = createShopItem("resources/item_image.png", gift.getName(), gift.getPrice(), x, y);
+            JPanel itemPanel = createShopItem(gift.getName(), gift.getPrice(), x, y);
             page.add(itemPanel, Integer.valueOf(2));
 
             x += 250;
@@ -219,46 +219,84 @@ public class StoreScreen extends JLayeredPane {
         shopPanel.add(page, "Page 3");
     }
 
-    private JPanel createShopItem(String imagePath, String itemName, int price, int x, int y) {
+    private JPanel createShopItem(String itemName, int price, int x, int y) {
+        // Display dimensions
+        final int ICON_WIDTH = 70;
+        final int ICON_HEIGHT = 70;
+        final double VERTICAL_POSITION_RATIO = 0.3; // 30% from top
+
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBounds(x, y, 165, 221); // Ensure correct size
+        panel.setLayout(new OverlayLayout(panel));
+        panel.setBounds(x, y, 165, 221);
         panel.setOpaque(false);
 
-        // Load image and scale to 165x221
-        ImageIcon icon = new ImageIcon(imagePath);
-        Image image = icon.getImage().getScaledInstance(165, 221, Image.SCALE_SMOOTH);
-        ImageIcon resizedIcon = new ImageIcon(image);
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setPreferredSize(new Dimension(165, 221));
+        layeredPane.setOpaque(false);
 
-        JLabel imageLabel = new JLabel(resizedIcon);
-        imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // Clickable Button with Proper Image
-        JButton imageButton = new JButton();
-        imageButton.setIcon(resizedIcon);
-        imageButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        imageButton.setOpaque(false);
+        // Base background image
+        ImageIcon baseIcon = loadAndScaleImage("resources/item_image.png", 165, 221);
+        JButton imageButton = new JButton(baseIcon);
+        imageButton.setBounds(0, 0, 165, 221);
         imageButton.setContentAreaFilled(false);
         imageButton.setBorderPainted(false);
         imageButton.setFocusPainted(false);
-        imageButton.setPreferredSize(new Dimension(165, 221));
+        imageButton.addActionListener(e -> showPopup(itemName, price, this.gameData.getPet()));
 
-        // Add Click Event for Popup
-        imageButton.addActionListener(e -> showPopup(itemName, price,this.gameData.getPet()));
+        // Determine item type and load appropriate image
+        String imagePath = getItemImagePath(itemName);
+        if (imagePath != null) {
+            ImageIcon itemIcon = loadAndScaleImage(imagePath, ICON_WIDTH, ICON_HEIGHT);
+            if (itemIcon != null) {
+                JLabel itemImageLabel = new JLabel(itemIcon);
+                int iconX = (165 - ICON_WIDTH) / 2;
+                int iconY = (int)((221 - ICON_HEIGHT) * VERTICAL_POSITION_RATIO);
+                itemImageLabel.setBounds(iconX, iconY, ICON_WIDTH, ICON_HEIGHT);
+                layeredPane.add(itemImageLabel, Integer.valueOf(1));
+            }
+        }
 
-        // Item Name & Price
-        JLabel textLabel = new JLabel("<html><center>" + itemName + "<br>Price: " + price + "</center></html>");
-        textLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        textLabel.setFont(new Font("Arial", Font.BOLD, 12));
+        // Price label
+        JLabel priceLabel = new JLabel(String.valueOf(price), SwingConstants.CENTER);
+        priceLabel.setBounds(5, 175, 165, 30);
+        priceLabel.setFont(customFont.deriveFont(Font.BOLD, 16f));
+        priceLabel.setForeground(Color.BLACK);
+        priceLabel.setOpaque(false);
 
-        // Add Components
-        panel.add(imageButton);
-        panel.add(Box.createRigidArea(new Dimension(0, 5))); // Add spacing
-        panel.add(textLabel);
-
+        // Layer components
+        layeredPane.add(imageButton, Integer.valueOf(0));
+        layeredPane.add(priceLabel, Integer.valueOf(2));
+        panel.add(layeredPane);
         allButtons.add(imageButton);
 
         return panel;
+    }
+
+    private String getItemImagePath(String itemName) {
+        // Check food items first
+        if (store.hasFood(itemName)) {
+            return "resources/food_" + itemName.toLowerCase().replace(" ", "_") + ".png";
+        }
+        // Then check toys
+        else if (store.hasToys(itemName)) {
+            return "resources/toy_" + itemName.toLowerCase().replace(" ", "_") + ".png";
+        }
+        // Then check gifts
+        else if (store.hasGift(itemName)) {
+            return "resources/gift_" + itemName.toLowerCase().replace(" ", "_") + ".png";
+        }
+        return null;
+    }
+
+    private ImageIcon loadAndScaleImage(String path, int width, int height) {
+        try {
+            ImageIcon originalIcon = new ImageIcon(path);
+            Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            return new ImageIcon(scaledImage);
+        } catch (Exception e) {
+            System.out.println("Error loading image: " + path);
+            return null;
+        }
     }
 
 
@@ -387,6 +425,4 @@ public class StoreScreen extends JLayeredPane {
             default: return "None"; // In case of an unknown pet type
         }
     }
-
-
 }

@@ -429,7 +429,6 @@ public class InGameScreen extends JLayeredPane {
 
         // Gift Button with Inventory Popup
         JButton giveGift = MainScreen.buttonCreate(560, 550, 128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
-        giveGift.addActionListener(e -> showInventoryPopup(giveGift, "Gift"));
         ImageIcon giftIcon = new ImageIcon("resources/gift_icon.png");
         JLabel giftIconLabel = new JLabel(giftIcon);
         giftIconLabel.setBounds(560 + (128 - 45)/2, 545 + (128 - 40)/2, 45, 40);
@@ -597,42 +596,7 @@ public class InGameScreen extends JLayeredPane {
             }
         }
 
-        //THis is the outfits
-        if (inventoryType.equals("Gift")) {
-            PlayerInventory inventory = gameData.getInventory();
-            int x = 100, y = 120;
 
-            for (Gifts gifts : inventory.getGiftInventory().keySet()) { // ✅ Correct inventory
-                int quantity = inventory.getGiftCount(gifts); // ✅ Correct count method
-                if (quantity <= 0) continue;
-
-                JButton outfitButton = new JButton("<html>" + gifts.getName() + "<br>x" + quantity + "</html>");
-                outfitButton.setBounds(x, y, 120, 60);
-                outfitButton.setFont(customFont.deriveFont(12f));
-                inventoryPane.add(outfitButton, JLayeredPane.PALETTE_LAYER);
-
-                // Toy click action (Play Sound & Increase Happiness)
-                outfitButton.addActionListener(e -> {
-                    if (inventory.hasGift(gifts)) {
-
-                        pet.increaseHappiness(10);  // Increase happiness
-                        HappinessProgressBar.setValue(pet.getHappiness()); // Update UI
-                        updateSprite(pet);
-
-                        playSound("resources/play_sound.wav"); // Add a play sound effect
-                        System.out.println("🎾 " + pet.getName() + "is now wearing " + gifts.getName());
-
-                        remove(inventoryPane);
-                        revalidate();
-                        repaint();
-                    } else {
-                        JOptionPane.showMessageDialog(this, "You don't have " + gifts.getName() + "!", "No Toy", JOptionPane.WARNING_MESSAGE);
-                    }
-                });
-
-                y += 70;
-            }
-        }
 
         // Close button logic
         closeButton.addActionListener(e -> {
