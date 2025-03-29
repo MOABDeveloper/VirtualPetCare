@@ -124,6 +124,9 @@ public class InGameScreen extends JLayeredPane {
             spriteGifs("resources/sprite1_idle.gif");
         }
         else if (petType.equals("PetOption3")) {
+            spriteGifs("resources/sprite_3_test.gif");
+        }
+        else if(petType.equals("PetOption2")) {
             spriteGifs("resources/sprite_2_test.gif");
         }
 
@@ -465,6 +468,7 @@ public class InGameScreen extends JLayeredPane {
                     if (fed) {
                         FullnessProgressBar.setValue(pet.getFullness());
                         playSound("resources/eating_sound.wav");
+
                         System.out.println("🍊 " + pet.getName() + " ate " + food.getName());
 
                         remove(inventoryPane);
