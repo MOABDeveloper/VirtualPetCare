@@ -136,9 +136,6 @@ public class InGameScreen extends JLayeredPane {
             spriteGifs("resources/sprite_2_test.gif");
         }
 
-
-
-
         JButton backButton = MainScreen.buttonCreate(800,70, 70,70, "resources/home_button.png", "resources/home_button_clicked.png", "");
         backButton.setBounds(990, 15, 64, 64);
 
@@ -385,8 +382,7 @@ public class InGameScreen extends JLayeredPane {
     }
 
     private void commandButtons() {
-        JButton shopButton = MainScreen.buttonCreate(30, 550, 128, 128,
-                "resources/command_button.png", "resources/command_button_clicked.png", "Shop");
+        JButton shopButton = MainScreen.buttonCreate(30, 550, 128, 128, "resources/command_button.png", "resources/command_button_clicked.png", "Shop");
 
         // ✅ Ensure existing StoreScreen is refreshed before switching
         shopButton.addActionListener(e -> {
@@ -405,21 +401,39 @@ public class InGameScreen extends JLayeredPane {
             cardLayout.show(mainPanel, "Shop");
         });
 
+
+        ImageIcon shopIcon = new ImageIcon("resources/store_icon.png");
+        JLabel shopIconLabel = new JLabel(shopIcon);
+        shopIconLabel.setBounds(30 + (128 - 44)/2, 545 + (128 - 38)/2, 44, 38);
+        add(shopIconLabel, Integer.valueOf(3));
         add(shopButton, Integer.valueOf(2));
+
 
         // Feed Button with Inventory Popup
         JButton feedButton = MainScreen.buttonCreate(210,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
         feedButton.addActionListener(e -> showInventoryPopup(feedButton, "Feed"));
+        ImageIcon feedIcon = new ImageIcon("resources/feed_icon.png");
+        JLabel feedIconLabel = new JLabel(feedIcon);
+        feedIconLabel.setBounds(210 + (128 - 39)/2, 545 + (128 - 38)/2, 39, 38);
+        add(feedIconLabel, Integer.valueOf(3));
         add(feedButton, Integer.valueOf(2));
 
         // Play Button with Inventory Popup
         JButton playButton = MainScreen.buttonCreate(390,550, 128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
         playButton.addActionListener(e -> showInventoryPopup(playButton, "Play"));
+        ImageIcon playIcon = new ImageIcon("resources/play_icon.png");
+        JLabel playIconLabel = new JLabel(playIcon);
+        playIconLabel.setBounds(390 + (128 - 47)/2, 545 + (128 - 58)/2, 47, 58);
+        add(playIconLabel, Integer.valueOf(3));
         add(playButton, Integer.valueOf(2));
 
         // Gift Button with Inventory Popup
         JButton giveGift = MainScreen.buttonCreate(560, 550, 128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
         giveGift.addActionListener(e -> showInventoryPopup(giveGift, "Gift"));
+        ImageIcon giftIcon = new ImageIcon("resources/gift_icon.png");
+        JLabel giftIconLabel = new JLabel(giftIcon);
+        giftIconLabel.setBounds(560 + (128 - 45)/2, 545 + (128 - 40)/2, 45, 40);
+        add(giftIconLabel, Integer.valueOf(3));
         add(giveGift, Integer.valueOf(2));
 
         JButton exerciseButton = MainScreen.buttonCreate(730,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
@@ -432,6 +446,12 @@ public class InGameScreen extends JLayeredPane {
             SleepProgressBar.setValue(pet.getSleep());
             updateGif(getGifPath("Exercise"),1500);
         });
+
+
+        ImageIcon exerciseIcon = new ImageIcon("resources/exercise_icon.png");
+        JLabel exerciseIconLabel = new JLabel(exerciseIcon);
+        exerciseIconLabel.setBounds(730 + (128 - 50)/2, 545 + (128 - 47)/2, 50, 47);
+        add(exerciseIconLabel, Integer.valueOf(3));
         add(exerciseButton, Integer.valueOf(2));
 
         JButton vetButton = MainScreen.buttonCreate(900,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
@@ -456,6 +476,10 @@ public class InGameScreen extends JLayeredPane {
                 );
             }
         });
+        ImageIcon vetIcon = new ImageIcon("resources/vet_icon.png");
+        JLabel vetIconLabel = new JLabel(vetIcon);
+        vetIconLabel.setBounds(900 + (128 - 47)/2, 545 + (128 - 47)/2, 47, 44);
+        add(vetIconLabel, Integer.valueOf(3));
         add(vetButton, Integer.valueOf(2));
     }
 

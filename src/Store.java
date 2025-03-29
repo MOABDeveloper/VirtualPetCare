@@ -11,22 +11,20 @@ public class Store {
 
         //Load in Default food items
         foodMap = new HashMap<>();
-        foodMap.put("Apple", new Food("Apple", 50, 5, "Fresh red apple"));
-        foodMap.put("Strawberry", new Food("Strawberry", 60, 6, ""));
-        foodMap.put("Birria-Taco", new Food("Birria-Taco", 200, 20, ""));
-        foodMap.put("Burger", new Food("Burger", 500, 50, "Grilled beef burger"));
-        foodMap.put("Salad", new Food("Salad", 350, 35, "Green salad"));
-        foodMap.put("Steak", new Food("Steak", 1100, 100, "Sizzling and seared to perfection"));
+        foodMap.put("Orange", new Food("Orange", 50, 5, "Fresh oranges!"));
+        foodMap.put("Bunny Cookie", new Food("Bunny Cookie", 60, 6, ""));
+        foodMap.put("Swiss Roll", new Food("Swiss Roll", 200, 20, ""));
+        foodMap.put("Carrot Cake", new Food("Carrot Cake", 350, 35, "Green salad"));
+        foodMap.put("Lamb Chop", new Food("Lamb Chop", 1100, 100, "Sizzling and seared to perfection"));
         foodMap.put("Chicken", new Food("Chicken",  650,65, "Tender and golden"));
-        foodMap.put("Salmon", new Food("Salmon" ,850, 85, "Fancy but friendly"));
 
         //Load in Default toy items
         toysMap = new HashMap<>();
-        toysMap.put("Bouncy Ball", new Toys("Bouncy Ball",199, "Perfect for endless tail-chasing fun"));
-        toysMap.put("Flying Frisbee", new Toys("Flying Frisbee",299, "Catch it mid-air — doggo approved"));
-        toysMap.put("Tug Rope", new Toys("Tug Rope",349, "Strong enough for serious tug-of-war sessions"));
-        toysMap.put("Squeaky Bone", new Toys("Squeaky Bone",249, "Annoyingly squeaky, irresistibly fun"));
-        toysMap.put("Catnip Mouse", new Toys("Catnip Mouse",199, "Sneaky, squeaky, and stuffed with catnip"));
+        toysMap.put("Wand", new Toys("Wand",199, "Perfect for endless tail-chasing fun"));
+        toysMap.put("Stuffed Animal", new Toys("Stuffed Animal",299, "Catch it mid-air — doggo approved"));
+        toysMap.put("Unicorn Balloon", new Toys("Unicorn Balloon",349, "Strong enough for serious tug-of-war sessions"));
+        toysMap.put("Fan", new Toys("Fan",249, "Annoyingly squeaky, irresistibly fun"));
+        toysMap.put("Basketball", new Toys("Basketball",199, "Sneaky, squeaky, and stuffed with catnip"));
         toysMap.put("Guitar", new Toys("Guitar",299,"Rock out!"));
 
         //Load in default gifts

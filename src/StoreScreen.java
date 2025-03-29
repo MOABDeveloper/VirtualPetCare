@@ -136,116 +136,32 @@ public class StoreScreen extends JLayeredPane {
         createPage3();
     }
 
-//    private void createPage1() {
-//        JLayeredPane page = new JLayeredPane();
-//        page.setPreferredSize(new Dimension(1080, 750));
-//        page.setOpaque(false);
-//
-//        int x = 200, y = 130;
-//        int itemsPerRow = 3;
-//        int count = 0;
-//
-//        // Add first 3 food items
-//        List<String> foodNames = new ArrayList<>(store.getAllFood().keySet());
-//        for (int i = 0; i < Math.min(3, foodNames.size()); i++) {
-//            String foodName = foodNames.get(i);
-//            Food food = store.getFood(foodName);
-//            JPanel itemPanel = createShopItem("resources/item_image.png", food.getName(), food.getPrice(), x, y);
-//            page.add(itemPanel, Integer.valueOf(2));
-//
-//            x += 250;
-//            count++;
-//            if (count % itemsPerRow == 0) {
-//                x = 200;
-//                y += 130;
-//            }
-//        }
-//
-//        shopPanel.add(page, "Page 1");
-//    }
-//
-//    private void createPage2() {
-//        JLayeredPane page = new JLayeredPane();
-//        page.setPreferredSize(new Dimension(1080, 750));
-//        page.setOpaque(false);
-//
-//        int x = 200, y = 130;  // Changed from 150 to 200
-//        int itemsPerRow = 3;
-//        int count = 0;
-//
-//        // Rest of the method remains the same...
-//        List<String> foodNames = new ArrayList<>(store.getAllFood().keySet());
-//        for (int i = 3; i < Math.min(9, foodNames.size()); i++) {
-//            String foodName = foodNames.get(i);
-//            Food food = store.getFood(foodName);
-//            JPanel itemPanel = createShopItem("resources/item_image.png", food.getName(), food.getPrice(), x, y);
-//            page.add(itemPanel, Integer.valueOf(2));
-//
-//            x += 250;
-//            count++;
-//            if (count % itemsPerRow == 0) {
-//                x = 200;  // Also changed this reset value to 200
-//                y += 240;
-//            }
-//        }
-//
-//        shopPanel.add(page, "Page 2");
-//    }
-//
-//    private void createPage3() {
-//        JLayeredPane page = new JLayeredPane();
-//        page.setPreferredSize(new Dimension(1080, 750));
-//        page.setOpaque(false);
-//
-//        int x = 150, y = 130;
-//        int itemsPerRow = 3;
-//        int count = 0;
-//
-//        // Add next 6 items (or all remaining if less than 6)
-//        List<String> foodNames = new ArrayList<>(store.getAllFood().keySet());
-//        for (int i = 9; i < Math.min(15, foodNames.size()); i++) {
-//            String foodName = foodNames.get(i);
-//            Food food = store.getFood(foodName);
-//            JPanel itemPanel = createShopItem("resources/item_image.png", food.getName(), food.getPrice(), x, y);
-//            page.add(itemPanel, Integer.valueOf(2));
-//
-//            x += 250;
-//            count++;
-//            if (count % itemsPerRow == 0) {
-//                x = 150;
-//                y += 130;
-//            }
-//        }
-//
-//        shopPanel.add(page, "Page 3");
-//    }
-private void createPage1() {
-    JLayeredPane page = new JLayeredPane();
-    page.setPreferredSize(new Dimension(1080, 750));
-    page.setOpaque(false);
+    private void createPage1() {
+        JLayeredPane page = new JLayeredPane();
+        page.setPreferredSize(new Dimension(1080, 750));
+        page.setOpaque(false);
 
-    int x = 200, y = 130;
-    int itemsPerRow = 3;
-    int count = 0;
+        int x = 200, y = 130;
+        int itemsPerRow = 3;
+        int count = 0;
 
-    // Add first 6 food items
-    List<String> foodNames = new ArrayList<>(store.getAllFood().keySet());
-    for (int i = 0; i < Math.min(6, foodNames.size()); i++) {
-        String foodName = foodNames.get(i);
-        Food food = store.getFood(foodName);
-        JPanel itemPanel = createShopItem("resources/item_image.png", food.getName(), food.getPrice(), x, y);
-        page.add(itemPanel, Integer.valueOf(2));
+        // Add first 6 food items
+        List<String> foodNames = new ArrayList<>(store.getAllFood().keySet());
+        for (int i = 0; i < Math.min(6, foodNames.size()); i++) {
+            String foodName = foodNames.get(i);
+            Food food = store.getFood(foodName);
+            JPanel itemPanel = createShopItem("resources/item_image.png", food.getName(), food.getPrice(), x, y);
+            page.add(itemPanel, Integer.valueOf(2));
 
-        x += 250;
-        count++;
-        if (count % itemsPerRow == 0) {
-            x = 200;
-            y += 240;
+            x += 250;
+            count++;
+            if (count % itemsPerRow == 0) {
+                x = 200;
+                y += 240;
+            }
         }
+        shopPanel.add(page, "Page 1");
     }
-
-    shopPanel.add(page, "Page 1");
-}
 
     private void createPage2() {
         JLayeredPane page = new JLayeredPane();

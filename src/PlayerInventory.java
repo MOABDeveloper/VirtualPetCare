@@ -17,18 +17,18 @@ public class PlayerInventory {
 
 
         // Retrieve predefined items from Store
-        Food apple = store.getFood("Apple");
-        Toys bouncyBall = store.getToy("Bouncy Ball");
+        Food orange = store.getFood("Orange");
+        Toys wand = store.getToy("Wand");
 
         // Ensure these items exist before adding them
-        if (apple != null) {
-            addFood(apple, 5);
+        if (orange != null) {
+            addFood(orange, 5);
         } else {
-            System.err.println("Error: Apple not found in store.");
+            System.err.println("Error: Orange not found in store.");
         }
 
-        if (bouncyBall != null) {
-            addToy(bouncyBall, 1);
+        if (wand != null) {
+            addToy(wand, 1);
         } else {
             System.err.println("Error: Bouncy Ball not found in store.");
         }
