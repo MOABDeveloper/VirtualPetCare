@@ -62,8 +62,22 @@ public class ParentalControl {
         }
     }
 
+    public void resetPlayTimeRestrictions() {
+        this.limitationsEnabled = false;
+        this.allowedStartHour = 0;
+        this.allowedEndHour = 24;
+    }
 
+    public boolean isLimitationsEnabled() {
+        return limitationsEnabled;
+    }
 
+    public int getAllowedStartHour() {
+        return allowedStartHour;
+    }
 
+    public int getAllowedEndHour() {
+        return allowedEndHour;
+    }
 
 }

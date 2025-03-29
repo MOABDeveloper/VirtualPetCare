@@ -82,7 +82,6 @@ public class ParentalControlScreen extends JLayeredPane {
             JOptionPane.showMessageDialog(this, "Play time statistics have been reset.");
         });
 
-        // SET PLAY TIME button → shows dialog to get start/end hour and enables limit
         setPlayTimeButton.addActionListener(e -> {
             try {
                 String startStr = JOptionPane.showInputDialog(this, "Enter allowed start hour (0–23):");
@@ -94,11 +93,39 @@ public class ParentalControlScreen extends JLayeredPane {
                 parentalControl.setPlayTimeWindow(startHour, endHour);
                 parentalControl.setLimitationsEnabled(true);
 
-                JOptionPane.showMessageDialog(this, "Play time window set from " + startHour + ":00 to " + endHour + ":00.");
+                // ✅ Save it
+                GameDataManager.saveParentalControlSettings(parentalControl);
+
+                JOptionPane.showMessageDialog(this,
+                        "Play time window set from " + startHour + ":00 to " + endHour + ":00.",
+                        "Play Time Set",
+                        JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Invalid input. Please enter valid hours (0–23).", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
+
+
+        JButton resetPlayTimeButton = MainScreen.buttonCreate(620, 610, 192, 64,
+                "resources/white_button.png", "resources/white_button_clicked.png", "");
+
+        // SET PLAY TIME button → shows dialog to get start/end hour and enables limit
+        resetPlayTimeButton.addActionListener(e -> {
+            parentalControl.resetPlayTimeRestrictions();
+
+            // 🔥 Save updated settings
+            GameDataManager.saveParentalControlSettings(parentalControl);
+
+            JOptionPane.showMessageDialog(this,
+                    "Play time restrictions have been reset.\nPlay is now allowed at any time.",
+                    "Reset Successful",
+                    JOptionPane.INFORMATION_MESSAGE);
+        });
+
+
+        add(resetPlayTimeButton, Integer.valueOf(2));
+
+
         revivePetButton.addActionListener(e -> {
             // Step 1: Let the user select a save file
             String saveFile = selectSaveFile();
@@ -132,9 +159,7 @@ public class ParentalControlScreen extends JLayeredPane {
                 JOptionPane.showMessageDialog(null, "The pet is not dead and doesn't need revival.", "Info", JOptionPane.INFORMATION_MESSAGE);
             }
         });
-
         setVisible(true);
-
     }
 
     private JLabel createLabel(String text, int x, int y, int width, int height) {
@@ -155,5 +180,4 @@ public class ParentalControlScreen extends JLayeredPane {
         }
         return null; // No file selected
     }
-
 }

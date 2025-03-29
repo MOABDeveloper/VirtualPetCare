@@ -70,6 +70,45 @@ public class GameDataManager {
         }
     }
 
+    private static final String PARENTAL_CONTROL_FILE = "config/parental_control.json";
+
+    public static void saveParentalControlSettings(ParentalControl parentalControl) {
+        ParentalControlData data = new ParentalControlData(
+                parentalControl.isLimitationsEnabled(),
+                parentalControl.getAllowedStartHour(),
+                parentalControl.getAllowedEndHour()
+        );
+
+        try (FileWriter writer = new FileWriter(PARENTAL_CONTROL_FILE)) {
+            gson.toJson(data, writer);
+            System.out.println("✅ Parental control settings saved.");
+        } catch (IOException e) {
+            System.out.println("❌ Failed to save parental settings: " + e.getMessage());
+        }
+    }
+
+    public static ParentalControl loadParentalControlSettings() {
+        File file = new File(PARENTAL_CONTROL_FILE);
+        if (!file.exists()) {
+            System.out.println("ℹ️ No parental config found. Using default settings.");
+            return new ParentalControl();
+        }
+
+        try (FileReader reader = new FileReader(file)) {
+            ParentalControlData data = gson.fromJson(reader, ParentalControlData.class);
+            ParentalControl parentalControl = new ParentalControl();
+            parentalControl.setLimitationsEnabled(data.limitationsEnabled);
+            parentalControl.setPlayTimeWindow(data.allowedStartHour, data.allowedEndHour);
+            System.out.println("✅ Parental control settings loaded.");
+            return parentalControl;
+        } catch (IOException e) {
+            System.out.println("❌ Failed to load parental settings: " + e.getMessage());
+            return new ParentalControl();
+        }
+    }
+
+
+
     public static boolean canCreateNewGame() {
         File dir = new File("saves/");
         if (dir.exists() && dir.isDirectory()) {
@@ -109,5 +148,4 @@ public class GameDataManager {
 
         return "default";  // Return default pet type in case of error
     }
-
 }

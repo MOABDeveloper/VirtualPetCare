@@ -67,7 +67,7 @@ public class MainScreen extends JFrame {
         //mainPanel.add(inGameScreen, "InGame");
 
         //ATTEMPTED TO ADD MOHAMMED-KAM
-        parentalControl = new ParentalControl();
+        parentalControl = GameDataManager.loadParentalControlSettings();
         JLayeredPane parentalControlScreen = new ParentalControlScreen(customFont, cardLayout, mainPanel,parentalControl);
         mainPanel.add(parentalControlScreen, "ParentalControlScreen");
 
