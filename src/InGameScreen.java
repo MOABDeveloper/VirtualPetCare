@@ -22,6 +22,8 @@ public class InGameScreen extends JLayeredPane {
     private Timer statDecayTimer;
     private GameData gameData;
     private String saveFilePath;  // Store the save file path
+    private JLabel gifLabel;
+
 
 
     public InGameScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel, GameData gameData, String saveFilePath) {
@@ -121,7 +123,7 @@ public class InGameScreen extends JLayeredPane {
         //spriteGifs();
         String petType =  GameDataManager.getPetTypeFromSave(saveFilePath);
         if(petType.equals("PetOption1")) {
-            spriteGifs("resources/sprite1_idle.gif");
+            spriteGifs("resources/PetOne_Idle.gif");
         }
         else if (petType.equals("PetOption3")) {
             spriteGifs("resources/sprite_3_test.gif");
@@ -183,10 +185,52 @@ public class InGameScreen extends JLayeredPane {
             // TODO: Save to file periodically if desired
         });
 
-// Start the timer
+        // Start the timer
         statDecayTimer.start();
 
 
+    }
+    private void updateGif(String gifPath, int duration) {
+        System.out.println("Updating GIF to: " + gifPath);
+
+        // Ensure the old GIF is removed properly
+        if (gifLabel != null) {
+            remove(gifLabel);
+            gifLabel = null; // Reset to avoid referencing a removed label
+        }
+
+        // Load new GIF and update the global gifLabel
+        ImageIcon newGif = new ImageIcon(gifPath);
+        gifLabel = new JLabel(newGif);
+        gifLabel.setBounds(300, 30, 622, 632);
+        add(gifLabel, Integer.valueOf(3));
+
+        revalidate();
+        repaint();
+
+        // Reset back to idle animation after a delay
+        Timer revertTimer = new Timer(duration, e -> {
+            if (gifLabel != null) {
+                remove(gifLabel);
+                gifLabel = null;
+            }
+
+            // Restore the correct idle animation based on pet type
+            String petType = GameDataManager.getPetTypeFromSave(saveFilePath);
+            if (petType.equals("PetOption1")) {
+                spriteGifs("resources/PetOne_Idle.gif");
+            } else if (petType.equals("PetOption3")) {
+                spriteGifs("resources/sprite_3_test.gif");
+            } else if (petType.equals("PetOption2")) {
+                spriteGifs("resources/sprite_2_test.gif");
+            }
+
+            revalidate();
+            repaint();
+        });
+
+        revertTimer.setRepeats(false);
+        revertTimer.start();
     }
 
     public static void updateProgressBarColor(JProgressBar progressBar, int health) {
@@ -468,6 +512,9 @@ public class InGameScreen extends JLayeredPane {
                     if (fed) {
                         FullnessProgressBar.setValue(pet.getFullness());
                         playSound("resources/eating_sound.wav");
+                        String petType = GameDataManager.getPetTypeFromSave(saveFilePath);
+
+                        updateGif(getGifPath("Eating"),1500);
 
                         System.out.println("🍊 " + pet.getName() + " ate " + food.getName());
 
@@ -572,31 +619,42 @@ public class InGameScreen extends JLayeredPane {
 
 
     }
+
+    private String getGifPath(String action) {
+        String petType = GameDataManager.getPetTypeFromSave(saveFilePath);
+        String baseName = "";
+
+        // Determine the base name for the pet type
+        if (petType.equals("PetOption1")) {
+            baseName = "PetOne";
+        } else if (petType.equals("PetOption2")) {
+            baseName = "PetTwo";
+        } else {
+            baseName = "PetThree";
+        }
+
+        // Append outfit status and action
+        if (pet.isWearingOutfit()) {
+            return "resources/" + baseName + "Outfit_" + action + ".gif";
+        } else {
+            return "resources/" + baseName + "_" + action + ".gif";
+        }
+    }
+
+
     private void spriteGifs(String spriteFilePath) {
-        // Dynamic sprite GIF
+        if (gifLabel != null) {
+            remove(gifLabel); // Remove existing GIF before adding a new one
+        }
+
         ImageIcon gifIcon = new ImageIcon(spriteFilePath);
-        JLabel gifLabel = new JLabel(gifIcon);
+        gifLabel = new JLabel(gifIcon);
         gifLabel.setBounds(300, 30, 622, 632);
         add(gifLabel, Integer.valueOf(3));
 
-        // Hardcoded orange GIF
-        ImageIcon orangeGif = new ImageIcon("resources/orange.gif");
-        JLabel orangeLabel = new JLabel(orangeGif);
-        orangeLabel.setBounds(300, 30, 405, 393);
-        add(orangeLabel, Integer.valueOf(3));
+        revalidate();
+        repaint();
     }
-
-//    private void spriteGifs() {
-//        ImageIcon gifIcon = new ImageIcon("resources/sprite1_idle.gif");
-//        JLabel gifLabel = new JLabel(gifIcon);
-//        gifLabel.setBounds(300, 30, 622, 632);
-//        add(gifLabel, Integer.valueOf(3));
-//
-//        ImageIcon orangeGif = new ImageIcon("resources/orange.gif");
-//        JLabel orangeLabel = new JLabel(orangeGif);
-//        orangeLabel.setBounds(300, 30, 405, 393);
-//        add(orangeLabel, Integer.valueOf(3));
-//    }
 
     public void stopDecayTimer() {
         if (statDecayTimer != null) {
