@@ -69,6 +69,9 @@ public class PlayerInventory {
     public boolean hasToy(Toys toy) {
         return getToyCount(toy) > 0;
     }
+    public boolean hasGift(Gifts gift) {
+        return getGiftCount(gift) > 0;
+    }
 
     public boolean equipOutfit(String outfitName, Pet pet) {
         // If player doesn't own this outfit, they can't equip it
@@ -155,6 +158,10 @@ public class PlayerInventory {
 
     public Map<Toys, Integer> getToyInventory() {
         return toyInventory;
+    }
+
+    public Map<Gifts, Integer> getGiftInventory() {
+        return giftInventory;
     }
 
 }

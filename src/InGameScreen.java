@@ -463,6 +463,40 @@ public class InGameScreen extends JLayeredPane {
             }
         }
 
+        if (inventoryType.equals("Gift")) {
+            PlayerInventory inventory = gameData.getInventory();
+            int x = 100, y = 120;
+
+            for (Gifts gifts : inventory.getGiftInventory().keySet()) { // ✅ Correct inventory
+                int quantity = inventory.getGiftCount(gifts); // ✅ Correct count method
+                if (quantity <= 0) continue;
+
+                JButton toyButton = new JButton("<html>" + gifts.getName() + "<br>x" + quantity + "</html>");
+                toyButton.setBounds(x, y, 120, 60);
+                toyButton.setFont(customFont.deriveFont(12f));
+                inventoryPane.add(toyButton, JLayeredPane.PALETTE_LAYER);
+
+                // Toy click action (Play Sound & Increase Happiness)
+                toyButton.addActionListener(e -> {
+                    if (inventory.hasGift(gifts)) {
+                        pet.increaseHappiness(10);  // Increase happiness
+                        HappinessProgressBar.setValue(pet.getHappiness()); // Update UI
+
+                        playSound("resources/play_sound.wav"); // Add a play sound effect
+                        System.out.println("🎾 " + pet.getName() + " played with " + gifts.getName());
+
+                        remove(inventoryPane);
+                        revalidate();
+                        repaint();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "You don't have " + gifts.getName() + "!", "No Toy", JOptionPane.WARNING_MESSAGE);
+                    }
+                });
+
+                y += 70;
+            }
+        }
+
         // Close button logic
         closeButton.addActionListener(e -> {
             remove(inventoryPane);
