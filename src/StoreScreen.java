@@ -2,6 +2,8 @@ package src;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,12 +13,15 @@ public class StoreScreen extends JLayeredPane {
     private JPanel mainPanel;
     private CardLayout shopCardLayout;
     private JPanel shopPanel;
-    private List<JButton> allButtons = new ArrayList<>(); // track to disable and enable buttons
+    private List<JButton> allButtons = new ArrayList<>(); // Track to disable and enable buttons
+    private Store store; // Store instance
 
-    public StoreScreen(Font customFont, CardLayout mainCardLayout, JPanel mainPanel) {
+    public StoreScreen(Font customFont, CardLayout mainCardLayout, JPanel mainPanel, Store store) {
         this.customFont = customFont;
         this.mainCardLayout = mainCardLayout;
         this.mainPanel = mainPanel;
+        this.store = store; // Initialize store
+
         setPreferredSize(new Dimension(1080, 750));
 
         setupBackground();
@@ -27,12 +32,7 @@ public class StoreScreen extends JLayeredPane {
         shopPanel.setBounds(0, 0, 1080, 750);
         add(shopPanel, Integer.valueOf(2));
 
-        JLayeredPane page1 = createShopPage1();
-        JLayeredPane page2 = createShopPage2();
-
-        shopPanel.add(page1, "Page 1");
-        shopPanel.add(page2, "Page 2");
-        shopCardLayout.show(shopPanel, "Page 1");
+        populateStore(); // Load items dynamically
 
         JButton homeButton = MainScreen.buttonCreate(800, 50, 192, 64, "resources/home_button.png", "resources/home_button_clicked.png", "InGame");
         homeButton.addActionListener(e -> {
@@ -40,7 +40,7 @@ public class StoreScreen extends JLayeredPane {
             mainCardLayout.show(mainPanel, "InGame");
         });
         add(homeButton, Integer.valueOf(3));
-        allButtons.add(homeButton); // Add to buttons list
+        allButtons.add(homeButton);
     }
 
     private void setupBackground() {
@@ -55,50 +55,112 @@ public class StoreScreen extends JLayeredPane {
         add(bgLabel, Integer.valueOf(1));
     }
 
-    private JLayeredPane createShopPage1() {
+    private void populateStore() {
         JLayeredPane page = new JLayeredPane();
         page.setPreferredSize(new Dimension(1080, 750));
         page.setOpaque(false);
 
-        JButton item1 = createShopItem("resources/item_image.png", 200, 130);
-        item1.addActionListener(e -> showPopup("resources/store_popup.png"));
-        page.add(item1, Integer.valueOf(2));
-        allButtons.add(item1);
+        int x = 200, y = 130;  // Adjust starting position
+        int itemsPerRow = 3;
+        int count = 0;
 
-        JButton item2 = createShopItem("resources/item_image.png", 460, 130);
-        item2.addActionListener(e -> showPopup("resources/store_popup.png"));
-        page.add(item2, Integer.valueOf(2));
-        allButtons.add(item2);
+        // Load Food Items Dynamically
+        for (String foodName : store.getAllFood().keySet()) {
+            Food food = store.getFood(foodName);
+            JPanel itemPanel = createShopItem("resources/item_image.png", food.getName(), food.getPrice(), x, y);
+            page.add(itemPanel, Integer.valueOf(2));
 
-        JButton item3 = createShopItem("resources/item_image.png", 720, 130);
-        item3.addActionListener(e -> showPopup("resources/store_popup.png"));
-        page.add(item3, Integer.valueOf(2));
-        allButtons.add(item3);
+            x += 250;  // Adjust spacing between items
+            count++;
+            if (count % itemsPerRow == 0) {
+                x = 200;
+                y += 130;  // Move to next row after 3 items
+            }
+        }
 
-        JButton item4 = createShopItem("resources/item_image.png", 200, 370);
-        item4.addActionListener(e -> showPopup("resources/store_popup.png"));
-        page.add(item4, Integer.valueOf(2));
-        allButtons.add(item4);
-
-        JButton item5 = createShopItem("resources/item_image.png", 460, 370);
-        item5.addActionListener(e -> showPopup("resources/store_popup.png"));
-        page.add(item5, Integer.valueOf(2));
-        allButtons.add(item5);
-
-        JButton item6 = createShopItem("resources/item_image.png", 720, 370);
-        item6.addActionListener(e -> showPopup("resources/store_popup.png"));
-        page.add(item6, Integer.valueOf(2));
-        allButtons.add(item6);
-
-        JButton nextPage = MainScreen.buttonCreate(700, 620, 28, 28, "resources/next_page.png", "resources/next_page.png", "");
-        nextPage.addActionListener(e -> shopCardLayout.show(shopPanel, "Page 2"));
-        page.add(nextPage, Integer.valueOf(2));
-        allButtons.add(nextPage);
-
-        return page;
+        shopPanel.add(page, "Page 1");
+        shopCardLayout.show(shopPanel, "Page 1");
     }
 
-    private void showPopup(String imagePath) {
+
+    private JPanel createShopItem(String imagePath, String itemName, int price, int x, int y) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS)); // Stack Image & Text
+        panel.setBounds(x, y, 150, 200); // Ensure enough space
+        panel.setOpaque(false);
+
+        // Load and Scale Image
+        ImageIcon icon = new ImageIcon(imagePath);
+        Image scaledImage = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+        ImageIcon resizedIcon = new ImageIcon(scaledImage);
+
+        // Make Image a Clickable Button
+        JButton imageButton = new JButton(resizedIcon);
+        imageButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        imageButton.setOpaque(false);
+        imageButton.setContentAreaFilled(false);
+        imageButton.setBorderPainted(false);
+        imageButton.setFocusPainted(false);
+        imageButton.setPreferredSize(new Dimension(120, 120));
+
+        // Add Click Event for Popup
+        imageButton.addActionListener(e -> showPopup(itemName, price));
+
+        // Item Name & Price
+        JLabel textLabel = new JLabel("<html><center>" + itemName + "<br>Price: " + price + "</center></html>");
+        textLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        textLabel.setFont(new Font("Arial", Font.BOLD, 12));
+
+        // Add Components
+        panel.add(imageButton); // Clickable Image Button
+        panel.add(textLabel);   // Show Name & Price
+
+        allButtons.add(imageButton); // Track interactive buttons
+
+        return panel;
+    }
+
+
+
+
+
+//    private JPanel createShopItem(String imagePath, String itemName, int price, int x, int y) {
+//        JPanel panel = new JPanel();
+//        panel.setLayout(new BorderLayout());
+//        panel.setBounds(x, y, 150, 180);
+//        panel.setOpaque(false);
+//
+//        // Item Image
+//        ImageIcon icon = new ImageIcon(imagePath);
+//        JLabel imageLabel = new JLabel(icon);
+//        imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+//
+//        // Item Name & Price
+//        JLabel textLabel = new JLabel("<html><center>" + itemName + "<br>Price: " + price + "</center></html>");
+//        textLabel.setHorizontalAlignment(SwingConstants.CENTER);
+//        textLabel.setFont(new Font("Arial", Font.BOLD, 12));
+//
+//        // Invisible Button for Interaction
+//        JButton button = new JButton();
+//        button.setOpaque(false);
+//        button.setContentAreaFilled(false);
+//        button.setBorderPainted(false);
+//        button.setFocusPainted(false);
+//        button.setPreferredSize(new Dimension(150, 180));
+//
+//        // Click Event for Popup
+//        button.addActionListener(e -> showPopup(itemName, price));
+//
+//        panel.add(imageLabel, BorderLayout.CENTER);
+//        panel.add(textLabel, BorderLayout.SOUTH);
+//        panel.add(button, BorderLayout.CENTER); // Overlay button
+//
+//        allButtons.add(button); // Track interactive buttons
+//
+//        return panel;
+//    }
+
+    private void showPopup(String itemName, int price) {
         for (JButton button : allButtons) {
             button.setEnabled(false);
         }
@@ -107,9 +169,13 @@ public class StoreScreen extends JLayeredPane {
         popup.setBounds(372, 86, 336, 579);
         popup.setOpaque(false);
 
-        JLabel popupImage = new JLabel(new ImageIcon(imagePath));
+        JLabel popupImage = new JLabel(new ImageIcon("resources/store_popup.png"));
         popupImage.setBounds(0, 0, 336, 579);
         popup.add(popupImage, Integer.valueOf(1));
+
+        JLabel textLabel = new JLabel("<html><center>" + itemName + "<br>Price: " + price + "</center></html>");
+        textLabel.setBounds(50, 200, 236, 50);
+        popup.add(textLabel, Integer.valueOf(2));
 
         JButton closeButton = new JButton("Close");
         closeButton.setBounds(128, 540, 80, 30);
@@ -126,39 +192,6 @@ public class StoreScreen extends JLayeredPane {
         add(popup, Integer.valueOf(5));
         revalidate();
         repaint();
-    }
-
-    private JLayeredPane createShopPage2() {
-        JLayeredPane page = new JLayeredPane();
-        page.setPreferredSize(new Dimension(1080, 750));
-
-        JButton item7 = createShopItem("resources/item_image.png", 200, 130);
-        page.add(item7, Integer.valueOf(1));
-        allButtons.add(item7);
-
-        JButton item8 = createShopItem("resources/item_image.png", 460, 130);
-        page.add(item8, Integer.valueOf(1));
-        allButtons.add(item8);
-
-        JButton item9 = createShopItem("resources/item_image.png", 720, 130);
-        page.add(item9, Integer.valueOf(1));
-        allButtons.add(item9);
-
-        JButton prevPage = MainScreen.buttonCreate(100, 650, 28, 28, "resources/prev_page.png", "resources/prev_page.png", "");
-        prevPage.addActionListener(e -> shopCardLayout.show(shopPanel, "Page 1"));
-        page.add(prevPage, Integer.valueOf(1));
-        allButtons.add(prevPage);
-
-        return page;
-    }
-
-    private JButton createShopItem(String imagePath, int x, int y) {
-        ImageIcon icon = new ImageIcon(imagePath);
-        JButton button = new JButton(icon);
-        button.setBounds(x, y, icon.getIconWidth(), icon.getIconHeight());
-        button.setBorderPainted(false);
-        button.setContentAreaFilled(false);
-        return button;
     }
 
     public void resetToFirstPage() {
