@@ -414,6 +414,7 @@ public class Pet {
 
     public boolean setOutfit(String outfitName) {
         String allowedOutfit = allowedOutfits.get(this.petType);
+        System.out.println("Setting outfit: " + outfitName);
 
         if (allowedOutfit == null) {
             System.out.println("ERROR: No outfit restrictions defined for this pet type.");

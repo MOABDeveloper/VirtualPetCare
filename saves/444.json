@@ -3,9 +3,9 @@
     "name": "444",
     "petType": "PetOption1",
     "health": 100,
-    "sleep": 100,
-    "fullness": 100,
-    "happiness": 100,
+    "sleep": 76,
+    "fullness": 97,
+    "happiness": 54,
     "maxHealth": 100,
     "maxSleep": 100,
     "maxFullness": 100,
@@ -21,18 +21,22 @@
     "lastVetVisitTime": 0,
     "vetCooldownDuration": 30,
     "lastPlayTime": 0,
-    "playCooldownDuration": 20
+    "playCooldownDuration": 20,
+    "currentOutfit": "outfit1"
   },
   "inventory": {
-    "playerCoins": 5000,
+    "playerCoins": 3862,
     "foodInventory": {
-      "Orange": 5
+      "Swiss Roll": 0,
+      "Orange": 4
     },
-    "giftInventory": {},
+    "giftInventory": {
+      "outfit1": 1
+    },
     "toyInventory": {
       "Wand": 1
     },
     "outfitInventory": {}
   },
-  "totalPlayTime": 4836
+  "totalPlayTime": 34906
 }

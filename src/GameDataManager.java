@@ -46,9 +46,10 @@ public class GameDataManager {
         GameData data = new GameData(pet, inventory, updatedPlayTime);
         try (FileWriter writer = new FileWriter(filename)) {
             gson.toJson(data, writer);
-            System.out.println("✅ Game saved to '" + filename + "' with total play time: " + (updatedPlayTime / 1000) + "s");
+            //.out.println("✅ Game saved to '" + filename + "' with total play time: " + (updatedPlayTime / 1000) + "s");
+
         } catch (IOException e) {
-            System.out.println("❌ Failed to save game: " + e.getMessage());
+            //System.out.println("❌ Failed to save game: " + e.getMessage());
         }
 
         // Reset session start time
@@ -61,11 +62,12 @@ public class GameDataManager {
     public static GameData loadGame(String filename) {
         try (FileReader reader = new FileReader(filename)) {
             GameData data = gson.fromJson(reader, GameData.class);
-            System.out.println("✅ Game loaded from '" + filename + "'");
+            //System.out.println("✅ Game loaded from '" + filename + "'");
             sessionStartTime = System.currentTimeMillis();
+
             return data;
         } catch (IOException e) {
-            System.out.println("❌ Failed to load game from '" + filename + "': " + e.getMessage());
+            //System.out.println("❌ Failed to load game from '" + filename + "': " + e.getMessage());
             return null;
         }
     }
@@ -81,16 +83,16 @@ public class GameDataManager {
 
         try (FileWriter writer = new FileWriter(PARENTAL_CONTROL_FILE)) {
             gson.toJson(data, writer);
-            System.out.println("✅ Parental control settings saved.");
+            //System.out.println("✅ Parental control settings saved.");
         } catch (IOException e) {
-            System.out.println("❌ Failed to save parental settings: " + e.getMessage());
+            //System.out.println("❌ Failed to save parental settings: " + e.getMessage());
         }
     }
 
     public static ParentalControl loadParentalControlSettings() {
         File file = new File(PARENTAL_CONTROL_FILE);
         if (!file.exists()) {
-            System.out.println("ℹ️ No parental config found. Using default settings.");
+            //System.out.println("ℹ️ No parental config found. Using default settings.");
             return new ParentalControl();
         }
 
@@ -99,10 +101,10 @@ public class GameDataManager {
             ParentalControl parentalControl = new ParentalControl();
             parentalControl.setLimitationsEnabled(data.limitationsEnabled);
             parentalControl.setPlayTimeWindow(data.allowedStartHour, data.allowedEndHour);
-            System.out.println("✅ Parental control settings loaded.");
+            //System.out.println("✅ Parental control settings loaded.");
             return parentalControl;
         } catch (IOException e) {
-            System.out.println("❌ Failed to load parental settings: " + e.getMessage());
+           // System.out.println("❌ Failed to load parental settings: " + e.getMessage());
             return new ParentalControl();
         }
     }
