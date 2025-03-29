@@ -13,20 +13,14 @@ public class InGameScreen extends JLayeredPane {
     private Font customFont;
     private CardLayout cardLayout;  // Remove static
     private JPanel mainPanel;
-
     private JProgressBar HealthProgressBar;
     private JProgressBar SleepProgressBar;
     private JProgressBar HappinessProgressBar;
     private JProgressBar FullnessProgressBar;
-
     private Pet pet;
     private static String health_red = "#A94337";
-
     private Timer statDecayTimer;
-
     private GameData gameData;
-
-
 
 
     public InGameScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel, GameData gameData) {
@@ -428,6 +422,40 @@ public class InGameScreen extends JLayeredPane {
                         repaint();
                     } else {
                         JOptionPane.showMessageDialog(this, "Out of " + food.getName() + "!", "No Food", JOptionPane.WARNING_MESSAGE);
+                    }
+                });
+
+                y += 70;
+            }
+        }
+
+        if (inventoryType.equals("Play")) {
+            PlayerInventory inventory = gameData.getInventory();
+            int x = 100, y = 120;
+
+            for (Toys toy : inventory.getToyInventory().keySet()) { // ✅ Correct inventory
+                int quantity = inventory.getToyCount(toy); // ✅ Correct count method
+                if (quantity <= 0) continue;
+
+                JButton toyButton = new JButton("<html>" + toy.getName() + "<br>x" + quantity + "</html>");
+                toyButton.setBounds(x, y, 120, 60);
+                toyButton.setFont(customFont.deriveFont(12f));
+                inventoryPane.add(toyButton, JLayeredPane.PALETTE_LAYER);
+
+                // Toy click action (Play Sound & Increase Happiness)
+                toyButton.addActionListener(e -> {
+                    if (inventory.hasToy(toy)) {
+                        pet.increaseHappiness(10);  // Increase happiness
+                        HappinessProgressBar.setValue(pet.getHappiness()); // Update UI
+
+                        playSound("resources/play_sound.wav"); // Add a play sound effect
+                        System.out.println("🎾 " + pet.getName() + " played with " + toy.getName());
+
+                        remove(inventoryPane);
+                        revalidate();
+                        repaint();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "You don't have " + toy.getName() + "!", "No Toy", JOptionPane.WARNING_MESSAGE);
                     }
                 });
 

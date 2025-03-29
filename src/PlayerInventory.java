@@ -153,4 +153,8 @@ public class PlayerInventory {
         return foodInventory;
     }
 
+    public Map<Toys, Integer> getToyInventory() {
+        return toyInventory;
+    }
+
 }
