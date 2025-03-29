@@ -320,11 +320,10 @@ public class NewGameScreen extends JLayeredPane {
                PlayerInventory inventory = new PlayerInventory(store); // Pass store to inventory
 
                String filename = "saves/" + petName + ".json";
-               GameDataManager.saveGame(filename, newPet, inventory, 0);
-               GameData newData = GameDataManager.loadGame(filename);
-
-               // ✅ Use `MainScreen.showInGameScreen()` to transition to the game
+               GameData newData = new GameData(newPet, inventory, 0);
                MainScreen.showInGameScreen(newData, filename);
+               GameDataManager.saveGame(filename, newPet, inventory, 0);  // Save after loading screen
+
            }
 
            closePopup(parentPane, overlayLabel, popUpLabel, backButton, enterButton, petNameField);
