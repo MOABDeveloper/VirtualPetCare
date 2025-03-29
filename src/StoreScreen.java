@@ -459,7 +459,7 @@ private void createPage1() {
 
     // Check if the item is an outfit
     private boolean isOutfit(String itemName) {
-        return itemName.equals("Outfit1") || itemName.equals("Outfit2") || itemName.equals("outfit3");
+        return itemName.equals("outfit1") || itemName.equals("outfit2") || itemName.equals("outfit3");
     }
 
     // Get the allowed outfit for the pet
