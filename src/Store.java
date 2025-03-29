@@ -27,6 +27,7 @@ public class Store {
         toysMap.put("Tug Rope", new Toys("Tug Rope",349, "Strong enough for serious tug-of-war sessions"));
         toysMap.put("Squeaky Bone", new Toys("Squeaky Bone",249, "Annoyingly squeaky, irresistibly fun"));
         toysMap.put("Catnip Mouse", new Toys("Catnip Mouse",199, "Sneaky, squeaky, and stuffed with catnip"));
+        toysMap.put("Guitar", new Toys("Guitar",299,"Rock out!"));
 
         //Load in default gifts
         giftsMap = new HashMap<>();

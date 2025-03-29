@@ -2,10 +2,10 @@
   "pet": {
     "name": "Shadow",
     "petType": "Dog",
-    "health": 0,
-    "sleep": 61,
+    "health": 100,
+    "sleep": 100,
     "fullness": 100,
-    "happiness": 0,
+    "happiness": 100,
     "maxHealth": 100,
     "maxSleep": 100,
     "maxFullness": 100,
@@ -15,9 +15,9 @@
     "sleepDeclineRate": 1,
     "happinessDeclineRate": 5,
     "isSleeping": false,
-    "isHungry": true,
-    "isHappy": false,
-    "isDead": true,
+    "isHungry": false,
+    "isHappy": true,
+    "isDead": false,
     "lastVetVisitTime": 0,
     "vetCooldownDuration": 30,
     "lastPlayTime": 0,
@@ -37,12 +37,12 @@
       "outfit1": 1
     },
     "toyInventory": {
-      "Bouncy Ball": 1,
-      "Tug Rope": 3
+      "Tug Rope": 3,
+      "Bouncy Ball": 1
     },
     "outfitInventory": {
       "outfit1": true
     }
   },
-  "totalPlayTime": 228732
+  "totalPlayTime": 229547
 }

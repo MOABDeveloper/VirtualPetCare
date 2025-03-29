@@ -539,7 +539,7 @@ private void createPage1() {
 
         // Add all 5 toys
         List<String> toyNames = new ArrayList<>(store.getAllToys().keySet());
-        for (int i = 0; i < Math.min(5, toyNames.size()); i++) {
+        for (int i = 0; i < Math.min(6, toyNames.size()); i++) {
             String toyName = toyNames.get(i);
             Toys toy = store.getToy(toyName);
             JPanel itemPanel = createShopItem("resources/item_image.png", toy.getName(), toy.getPrice(), x, y);
