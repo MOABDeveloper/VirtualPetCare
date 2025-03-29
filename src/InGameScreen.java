@@ -121,24 +121,21 @@ public class InGameScreen extends JLayeredPane {
         healthBars();
         commandButtons();
         //spriteGifs();
-        String petType =  GameDataManager.getPetTypeFromSave(saveFilePath);
-        if(petType.equals("PetOption1"))
-        {
-           if(pet.isWearingOutfit())
-           {
-               spriteGifs("resources/PetOneOutfit_Idle.gif");
-           }
-           else
-           {
-               spriteGifs("resources/PetOne_Idle.gif");
-           }
-        }
-        else if (petType.equals("PetOption3")) {
+//        String petType =  GameDataManager.getPetTypeFromSave(saveFilePath);
+        String petType = pet.getPetType(); // ✅ Use the object already in memory
+
+        if (petType.equals("PetOption1")) {
+            if (pet.isWearingOutfit()) {
+                spriteGifs("resources/PetOneOutfit_Idle.gif");
+            } else {
+                spriteGifs("resources/PetOne_Idle.gif");
+            }
+        } else if (petType.equals("PetOption3")) {
             spriteGifs("resources/sprite_3_test.gif");
-        }
-        else if(petType.equals("PetOption2")) {
+        } else if (petType.equals("PetOption2")) {
             spriteGifs("resources/sprite_2_test.gif");
         }
+
 
 
 
@@ -224,15 +221,11 @@ public class InGameScreen extends JLayeredPane {
             }
 
             // Restore the correct idle animation based on pet type
-            String petType = GameDataManager.getPetTypeFromSave(saveFilePath);
-            if(petType.equals("PetOption1"))
-            {
-                if(pet.isWearingOutfit())
-                {
+            String petType = pet.getPetType();
+            if (petType.equals("PetOption1")) {
+                if (pet.isWearingOutfit()) {
                     spriteGifs("resources/PetOneOutfit_Idle.gif");
-                }
-                else
-                {
+                } else {
                     spriteGifs("resources/PetOne_Idle.gif");
                 }
             } else if (petType.equals("PetOption3")) {
@@ -240,7 +233,6 @@ public class InGameScreen extends JLayeredPane {
             } else if (petType.equals("PetOption2")) {
                 spriteGifs("resources/sprite_2_test.gif");
             }
-
             revalidate();
             repaint();
         });
@@ -638,7 +630,7 @@ public class InGameScreen extends JLayeredPane {
     }
 
     private String getGifPath(String action) {
-        String petType = GameDataManager.getPetTypeFromSave(saveFilePath);
+        String petType = pet.getPetType();
         String baseName = "";
 
         // Determine the base name for the pet type
