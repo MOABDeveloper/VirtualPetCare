@@ -13,7 +13,7 @@ public class PlayerInventory {
     private final Map<String, Boolean> outfitInventory = new HashMap<>();
 
     public PlayerInventory(Store store) {
-        this.playerCoins = 500; // Set default coins to 500
+        this.playerCoins = 5000; // Set default coins to 500
 
         // Retrieve predefined items from Store
         Food apple = store.getFood("Apple");

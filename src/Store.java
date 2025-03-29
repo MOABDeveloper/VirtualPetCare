@@ -4,7 +4,7 @@ import java.util.Map;
 
 public class Store {
     private final Map<String, Food> foodMap;
-    private final Map<String, Gifts> giftsMap;
+    private final Map<String, Gifts> outfitMap;
     private final Map<String, Toys> toysMap;
 
     public Store() {
@@ -30,10 +30,10 @@ public class Store {
         toysMap.put("Guitar", new Toys("Guitar",299,"Rock out!"));
 
         //Load in default gifts
-        giftsMap = new HashMap<>();
-        giftsMap.put("outfit1", new Gifts("outfit1", 1000));
-        giftsMap.put("outfit2", new Gifts("outfit2", 1500));
-        giftsMap.put("outfit3", new Gifts("outfit3", 3000));
+        outfitMap = new HashMap<>();
+        outfitMap.put("outfit1", new Gifts("outfit1", 1000));
+        outfitMap.put("outfit2", new Gifts("outfit2", 1500));
+        outfitMap.put("outfit3", new Gifts("outfit3", 3000));
 
     }
 
@@ -46,7 +46,7 @@ public class Store {
     }
 
     public Map<String, Gifts> getAllGifts() {
-        return giftsMap;
+        return outfitMap;
     }
 
     public Food getFood(String name) {
@@ -58,11 +58,11 @@ public class Store {
     }
 
     public Gifts getGift(String name) {
-        return giftsMap.get(name);
+        return outfitMap.get(name);
     }
 
     public boolean hasGift(String name) {
-        return giftsMap.containsKey(name);
+        return outfitMap.containsKey(name);
     }
 
     public Toys getToy(String name) {

@@ -328,7 +328,7 @@ private void createPage1() {
         imageButton.setPreferredSize(new Dimension(165, 221));
 
         // Add Click Event for Popup
-        imageButton.addActionListener(e -> showPopup(itemName, price));
+        imageButton.addActionListener(e -> showPopup(itemName, price,this.gameData.getPet()));
 
         // Item Name & Price
         JLabel textLabel = new JLabel("<html><center>" + itemName + "<br>Price: " + price + "</center></html>");
@@ -345,53 +345,6 @@ private void createPage1() {
         return panel;
     }
 
-
-    private void showPopup(String itemName, int price) {
-        // Disable all buttons first
-        setAllButtonsEnabled(false);
-
-        JLayeredPane popup = new JLayeredPane();
-        popup.setBounds(372, 86, 336, 579);
-        popup.setOpaque(false);
-
-        JLabel popupImage = new JLabel(new ImageIcon("resources/store_popup.png"));
-        popupImage.setBounds(0, 0, 336, 579);
-        popup.add(popupImage, Integer.valueOf(1));
-
-        JLabel textLabel = new JLabel("<html><center>" + itemName + "<br>Price: " + price + "</center></html>");
-        textLabel.setBounds(50, 200, 236, 50);
-        popup.add(textLabel, Integer.valueOf(2));
-
-        JButton buyButton = new JButton("Buy");
-        buyButton.setBounds(90, 540, 80, 30);
-        buyButton.addActionListener(e -> {
-            boolean purchaseSuccess = attemptPurchase(itemName, price);
-            if (purchaseSuccess) {
-                JOptionPane.showMessageDialog(this, "You bought " + itemName + "!", "Purchase Successful", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, "Not enough coins!", "Purchase Failed", JOptionPane.ERROR_MESSAGE);
-            }
-            remove(popup);
-            setAllButtonsEnabled(true); // Re-enable buttons
-            revalidate();
-            repaint();
-        });
-        popup.add(buyButton, Integer.valueOf(2));
-
-        JButton closeButton = new JButton("Close");
-        closeButton.setBounds(190, 540, 80, 30);
-        closeButton.addActionListener(e -> {
-            remove(popup);
-            setAllButtonsEnabled(true); // Re-enable buttons
-            revalidate();
-            repaint();
-        });
-        popup.add(closeButton, Integer.valueOf(2));
-
-        add(popup, Integer.valueOf(5));
-        revalidate();
-        repaint();
-    }
 
     private boolean attemptPurchase(String itemName, int price) {
         PlayerInventory inventory = gameData.getInventory();
@@ -416,4 +369,108 @@ private void createPage1() {
         nextButton.setEnabled(enabled);
         prevButton.setEnabled(enabled);
     }
+
+
+
+    private void showPopup(String itemName, int price, Pet pet) {
+        // Disable all buttons first
+        setAllButtonsEnabled(false);
+
+        JLayeredPane popup = new JLayeredPane();
+        popup.setBounds(372, 86, 336, 579);
+        popup.setOpaque(false);
+
+        JLabel popupImage = new JLabel(new ImageIcon("resources/store_popup.png"));
+        popupImage.setBounds(0, 0, 336, 579);
+        popup.add(popupImage, Integer.valueOf(1));
+
+        JLabel textLabel = new JLabel("<html><center>" + itemName + "<br>Price: " + price + "</center></html>");
+        textLabel.setBounds(50, 200, 236, 50);
+        popup.add(textLabel, Integer.valueOf(2));
+
+        JButton buyButton = new JButton("Buy");
+        buyButton.setBounds(90, 540, 80, 30);
+        buyButton.addActionListener(e -> {
+            System.out.println("Buy button clicked, Outfit clicked is: "+ itemName);
+
+            // Check if the item is an outfit
+            if (isOutfit(itemName)) {
+                String allowedOutfit = getAllowedOutfit(pet);
+
+                System.out.println("You are trying to buy" + itemName);
+                System.out.println("Pet can only wear" + allowedOutfit);
+
+                // If the pet is not allowed to wear this outfit, show an error message
+                if (!itemName.equals(allowedOutfit)) {
+                    System.out.println("Should have failed");
+                    JOptionPane.showMessageDialog(this,
+                            "This pet cannot wear " + itemName + "! It can only wear " + allowedOutfit,
+                            "Purchase Failed",
+                            JOptionPane.ERROR_MESSAGE);
+                    return; // Stop the purchase
+                }
+            }
+
+            // Process the purchase
+            boolean purchaseSuccess = attemptPurchase(itemName, price);
+            if (purchaseSuccess) {
+                if (isOutfit(itemName)) {
+                    pet.setOutfit(itemName); // Equip the outfit
+                    JOptionPane.showMessageDialog(this,
+                            "You bought " + itemName + "! Your pet is now wearing it!",
+                            "Purchase Successful",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "You bought " + itemName + "!",
+                            "Purchase Successful",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Not enough coins!",
+                        "Purchase Failed",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
+            remove(popup);
+            setAllButtonsEnabled(true); // Re-enable buttons
+            revalidate();
+            repaint();
+        });
+
+        popup.add(buyButton, Integer.valueOf(2));
+
+        JButton closeButton = new JButton("Close");
+        closeButton.setBounds(190, 540, 80, 30);
+        closeButton.addActionListener(e -> {
+            remove(popup);
+            setAllButtonsEnabled(true);
+            revalidate();
+            repaint();
+        });
+
+        popup.add(closeButton, Integer.valueOf(2));
+        add(popup, Integer.valueOf(5));
+
+        revalidate();
+        repaint();
+    }
+
+    // Check if the item is an outfit
+    private boolean isOutfit(String itemName) {
+        return itemName.equals("Outfit1") || itemName.equals("Outfit2") || itemName.equals("outfit3");
+    }
+
+    // Get the allowed outfit for the pet
+    private String getAllowedOutfit(Pet pet) {
+        switch (pet.getPetType()) {
+            case "PetOption1": return "outfit1";
+            case "PetOption2": return "outfit2";
+            case "PetOption3": return "outfit3";
+            default: return "None"; // In case of an unknown pet type
+        }
+    }
+
+
 }
