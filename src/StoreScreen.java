@@ -17,12 +17,16 @@ public class StoreScreen extends JLayeredPane {
     private Store store; // Store instance
     private PlayerInventory playerInventory;
 
-    public StoreScreen(Font customFont, CardLayout mainCardLayout, JPanel mainPanel, Store store, PlayerInventory playerInventory) {
+
+    private GameData gameData; // 👈 Add this line
+
+    public StoreScreen(Font customFont, CardLayout mainCardLayout, JPanel mainPanel, Store store, GameData gameData) {
         this.customFont = customFont;
         this.mainCardLayout = mainCardLayout;
         this.mainPanel = mainPanel;
-        this.store = store; // Initialize store
-        this.playerInventory = playerInventory; // Assign player inventory
+        this.store = store;
+        this.gameData = gameData; // ✅ Save the real game data
+
 
         if (this.playerInventory == null) {
             System.out.println("ERROR: PlayerInventory is NULL in StoreScreen!");
@@ -224,26 +228,23 @@ public class StoreScreen extends JLayeredPane {
     }
 
     private boolean attemptPurchase(String itemName, int price) {
-        System.out.println("Checking purchase for: " + itemName);
-        System.out.println("Current Player Coins: " + playerInventory.getPlayerCoins());
+        PlayerInventory inventory = gameData.getInventory(); // ✅ get actual player inventory
 
-        // Check if item is a Food
+        // Print for debugging
+        System.out.println("Player coins before purchase: " + inventory.getPlayerCoins());
+
+        // Try to buy from all categories (safe because only one will succeed)
         if (store.hasFood(itemName)) {
-            return store.buyFood(itemName, playerInventory, 1); // Buy 1 quantity
+            return store.buyFood(itemName, inventory, 1);
+        } else if (store.hasToys(itemName)) {
+            return store.buyToy(itemName, inventory, 1);
+        } else if (store.hasGift(itemName)) {
+            return store.buyGift(itemName, inventory, 1);
         }
 
-        // Check if item is a Toy
-        if (store.hasToys(itemName)) {
-            return store.buyToy(itemName, playerInventory, 1);
-        }
-
-        // Check if item is a Gift
-        if (store.hasGift(itemName)) {
-            return store.buyGift(itemName, playerInventory, 1);
-        }
-
-        return false; // Item not found
+        return false; // Not found in store
     }
+
 
 
 

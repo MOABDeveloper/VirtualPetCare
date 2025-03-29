@@ -56,13 +56,6 @@ public class MainScreen extends JFrame {
         //InGameScreen inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel);
         Store store = new Store(); // Create Store instance
 
-        PlayerInventory playerInventory = new PlayerInventory();
-        JLayeredPane shopScreen = new StoreScreen(customFont, cardLayout, mainPanel, store, playerInventory);
-
-
-
-
-
 
 
         // add screens to the main panel
@@ -72,7 +65,6 @@ public class MainScreen extends JFrame {
 //      mainPanel.add(loadScreen, "Load");
         mainPanel.add(creditScreen, "Credit");
         //mainPanel.add(inGameScreen, "InGame");
-        mainPanel.add(shopScreen, "Shop");
 
         //ATTEMPTED TO ADD MOHAMMED-KAM
         parentalControl = new ParentalControl();
@@ -300,8 +292,24 @@ public class MainScreen extends JFrame {
 
         inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel, gameData);
         mainPanel.add(inGameScreen, "InGame");
+
+        // ✅ Add or replace the store screen with correct gameData
+        Store store = new Store();
+        JLayeredPane shopScreen = new StoreScreen(customFont, cardLayout, mainPanel, store, gameData);
+
+        // Remove existing shop screen if needed (cleaner)
+        for (Component comp : mainPanel.getComponents()) {
+            if (comp instanceof StoreScreen) {
+                mainPanel.remove(comp);
+                break;
+            }
+        }
+
+        mainPanel.add(shopScreen, "Shop");
+
         cardLayout.show(mainPanel, "InGame");
     }
+
 
 
 }
