@@ -19,6 +19,8 @@ public class MainScreen extends JFrame {
     private static ParentalControl parentalControl;
 
     private static InGameScreen inGameScreen;
+    private static PlayerInventory playerInventory;
+
     MainScreen() {
         // Load custom font
         try {
@@ -53,13 +55,21 @@ public class MainScreen extends JFrame {
         JLayeredPane creditScreen = new CreditScreen(customFont);
         //InGameScreen inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel);
         Store store = new Store(); // Create Store instance
-        JLayeredPane shopScreen = new StoreScreen(customFont, cardLayout, mainPanel, store);
+
+        PlayerInventory playerInventory = new PlayerInventory();
+        JLayeredPane shopScreen = new StoreScreen(customFont, cardLayout, mainPanel, store, playerInventory);
+
+
+
+
+
+
 
         // add screens to the main panel
         mainPanel.add(homeScreen, "Home");
         mainPanel.add(tutorialScreen, "Tutorial");
         mainPanel.add(newGameScreen, "New Game");
-//        mainPanel.add(loadScreen, "Load");
+//      mainPanel.add(loadScreen, "Load");
         mainPanel.add(creditScreen, "Credit");
         //mainPanel.add(inGameScreen, "InGame");
         mainPanel.add(shopScreen, "Shop");

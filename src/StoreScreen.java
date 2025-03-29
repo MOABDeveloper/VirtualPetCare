@@ -15,12 +15,20 @@ public class StoreScreen extends JLayeredPane {
     private JPanel shopPanel;
     private List<JButton> allButtons = new ArrayList<>(); // Track to disable and enable buttons
     private Store store; // Store instance
+    private PlayerInventory playerInventory;
 
-    public StoreScreen(Font customFont, CardLayout mainCardLayout, JPanel mainPanel, Store store) {
+    public StoreScreen(Font customFont, CardLayout mainCardLayout, JPanel mainPanel, Store store, PlayerInventory playerInventory) {
         this.customFont = customFont;
         this.mainCardLayout = mainCardLayout;
         this.mainPanel = mainPanel;
         this.store = store; // Initialize store
+        this.playerInventory = playerInventory; // Assign player inventory
+
+        if (this.playerInventory == null) {
+            System.out.println("ERROR: PlayerInventory is NULL in StoreScreen!");
+        } else {
+            System.out.println("Player Coins at Store Start: " + this.playerInventory.getPlayerCoins());
+        }
 
         setPreferredSize(new Dimension(1080, 750));
 
@@ -36,12 +44,26 @@ public class StoreScreen extends JLayeredPane {
 
         JButton homeButton = MainScreen.buttonCreate(800, 50, 192, 64, "resources/home_button.png", "resources/home_button_clicked.png", "InGame");
         homeButton.addActionListener(e -> {
-            resetToFirstPage();
+            resetToFirstPage(); // Now this method exists
             mainCardLayout.show(mainPanel, "InGame");
         });
         add(homeButton, Integer.valueOf(3));
         allButtons.add(homeButton);
+
+//        JButton homeButton = MainScreen.buttonCreate(800, 50, 192, 64, "resources/home_button.png", "resources/home_button_clicked.png", "InGame");
+//        homeButton.addActionListener(e -> {
+//            resetToFirstPage();
+//            mainCardLayout.show(mainPanel, "InGame");
+//        });
+//        add(homeButton, Integer.valueOf(3));
+//        allButtons.add(homeButton);
     }
+    public void resetToFirstPage() {
+        if (shopCardLayout != null && shopPanel != null) {
+            shopCardLayout.show(shopPanel, "Page 1"); // Switch back to first shop page
+        }
+    }
+
 
     private void setupBackground() {
         ImageIcon background = new ImageIcon("resources/grid.png");
@@ -159,12 +181,7 @@ public class StoreScreen extends JLayeredPane {
 //
 //        return panel;
 //    }
-
     private void showPopup(String itemName, int price) {
-        for (JButton button : allButtons) {
-            button.setEnabled(false);
-        }
-
         JLayeredPane popup = new JLayeredPane();
         popup.setBounds(372, 86, 336, 579);
         popup.setOpaque(false);
@@ -177,13 +194,25 @@ public class StoreScreen extends JLayeredPane {
         textLabel.setBounds(50, 200, 236, 50);
         popup.add(textLabel, Integer.valueOf(2));
 
+        JButton buyButton = new JButton("Buy");
+        buyButton.setBounds(90, 540, 80, 30);
+        buyButton.addActionListener(e -> {
+            boolean purchaseSuccess = attemptPurchase(itemName, price);
+            if (purchaseSuccess) {
+                JOptionPane.showMessageDialog(this, "You bought " + itemName + "!", "Purchase Successful", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Not enough coins!", "Purchase Failed", JOptionPane.ERROR_MESSAGE);
+            }
+            remove(popup);
+            revalidate();
+            repaint();
+        });
+        popup.add(buyButton, Integer.valueOf(2));
+
         JButton closeButton = new JButton("Close");
-        closeButton.setBounds(128, 540, 80, 30);
+        closeButton.setBounds(190, 540, 80, 30);
         closeButton.addActionListener(e -> {
             remove(popup);
-            for (JButton button : allButtons) {
-                button.setEnabled(true);
-            }
             revalidate();
             repaint();
         });
@@ -194,7 +223,65 @@ public class StoreScreen extends JLayeredPane {
         repaint();
     }
 
-    public void resetToFirstPage() {
-        shopCardLayout.show(shopPanel, "Page 1");
+    private boolean attemptPurchase(String itemName, int price) {
+        System.out.println("Checking purchase for: " + itemName);
+        System.out.println("Current Player Coins: " + playerInventory.getPlayerCoins());
+
+        // Check if item is a Food
+        if (store.hasFood(itemName)) {
+            return store.buyFood(itemName, playerInventory, 1); // Buy 1 quantity
+        }
+
+        // Check if item is a Toy
+        if (store.hasToys(itemName)) {
+            return store.buyToy(itemName, playerInventory, 1);
+        }
+
+        // Check if item is a Gift
+        if (store.hasGift(itemName)) {
+            return store.buyGift(itemName, playerInventory, 1);
+        }
+
+        return false; // Item not found
     }
+
+
+
+//    private void showPopup(String itemName, int price) {
+//        for (JButton button : allButtons) {
+//            button.setEnabled(false);
+//        }
+//
+//        JLayeredPane popup = new JLayeredPane();
+//        popup.setBounds(372, 86, 336, 579);
+//        popup.setOpaque(false);
+//
+//        JLabel popupImage = new JLabel(new ImageIcon("resources/store_popup.png"));
+//        popupImage.setBounds(0, 0, 336, 579);
+//        popup.add(popupImage, Integer.valueOf(1));
+//
+//        JLabel textLabel = new JLabel("<html><center>" + itemName + "<br>Price: " + price + "</center></html>");
+//        textLabel.setBounds(50, 200, 236, 50);
+//        popup.add(textLabel, Integer.valueOf(2));
+//
+//        JButton closeButton = new JButton("Close");
+//        closeButton.setBounds(128, 540, 80, 30);
+//        closeButton.addActionListener(e -> {
+//            remove(popup);
+//            for (JButton button : allButtons) {
+//                button.setEnabled(true);
+//            }
+//            revalidate();
+//            repaint();
+//        });
+//        popup.add(closeButton, Integer.valueOf(2));
+//
+//        add(popup, Integer.valueOf(5));
+//        revalidate();
+//        repaint();
+//    }
+//
+//    public void resetToFirstPage() {
+//        shopCardLayout.show(shopPanel, "Page 1");
+//    }
 }
