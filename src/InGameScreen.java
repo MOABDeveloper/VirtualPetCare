@@ -135,7 +135,7 @@ public class InGameScreen extends JLayeredPane {
         add(backButton, Integer.valueOf(2));
 
         // Decay every 5 seconds (5000 ms)
-        statDecayTimer = new Timer(500, e -> {
+        statDecayTimer = new Timer(5000, e -> {
             pet.applyDecline();
 
             // Update progress bar or any UI components
@@ -347,9 +347,37 @@ public class InGameScreen extends JLayeredPane {
 
         JButton exerciseButton = MainScreen.buttonCreate(730,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
         add(exerciseButton, Integer.valueOf(2));
+        exerciseButton.addActionListener(e -> {
+            PlayerInventory inventory = gameData.getInventory(); // Get PlayerInventory
+            inventory.exercisePet(pet);
+            HealthProgressBar.setValue(pet.getHealth());
+            FullnessProgressBar.setValue(pet.getFullness());
+            SleepProgressBar.setValue(pet.getSleep());
+        });
+        add(exerciseButton, Integer.valueOf(2));
 
         JButton vetButton = MainScreen.buttonCreate(900,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
         vetButton.addActionListener(e -> playSound("resources/heal_sound.wav"));
+        add(vetButton, Integer.valueOf(2));
+        vetButton.addActionListener(e -> {
+            PlayerInventory inventory = gameData.getInventory(); // Get PlayerInventory
+            int currentTime = (int) (System.currentTimeMillis() / 1000); // Current time in seconds
+
+            if (inventory.takePetToVet(pet, currentTime)) {
+                HealthProgressBar.setValue(pet.getHealth()); // Update UI
+                System.out.println(pet.getName() + " went to the vet and gained health!");
+            } else {
+                int remainingCooldown = pet.getVetCooldownDuration() - (currentTime - pet.getLastVetVisitTime());
+                remainingCooldown = Math.max(remainingCooldown, 0); // Ensure it doesn't go negative
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        pet.getName() + " must wait " + remainingCooldown + " seconds before visiting the vet again.",
+                        "Vet Cooldown",
+                        JOptionPane.WARNING_MESSAGE
+                );
+            }
+        });
         add(vetButton, Integer.valueOf(2));
     }
 

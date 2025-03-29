@@ -26,7 +26,10 @@ public class GameDataTest {
         pet.setOutfit("outfit1");
 
         // === Inventory Setup ===
-        PlayerInventory inventory = new PlayerInventory();
+        Store store = new Store();  // Create store instance
+        PlayerInventory inventory = new PlayerInventory(store); // Pass store to inventory
+
+        //PlayerInventory inventory = new PlayerInventory();
         inventory.setPlayerCoins(2000);
 
         Food apple = new Food("Apple", 100, 8, "Fresh red apple");

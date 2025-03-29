@@ -17,7 +17,10 @@ public class PlayerInventoryTest {
         pet.setVetCooldownDuration(5); // seconds
         pet.setPlayCooldownDuration(5); // seconds
 
-        PlayerInventory inventory = new PlayerInventory();
+        Store store = new Store();  // Create store instance
+        PlayerInventory  inventory = new PlayerInventory(store); // Pass store to inventory
+
+        //PlayerInventory  = new PlayerInventory();
         inventory.setPlayerCoins(1000);
 
         // Add items to inventory

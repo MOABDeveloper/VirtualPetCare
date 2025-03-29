@@ -2,10 +2,10 @@
   "pet": {
     "name": "Shadow",
     "petType": "Dog",
-    "health": 100,
-    "sleep": 100,
+    "health": 90,
+    "sleep": 99,
     "fullness": 100,
-    "happiness": 100,
+    "happiness": 95,
     "maxHealth": 100,
     "maxSleep": 100,
     "maxFullness": 100,
@@ -25,7 +25,7 @@
     "currentOutfit": "outfit1"
   },
   "inventory": {
-    "playerCoins": 650,
+    "playerCoins": 612,
     "foodInventory": {
       "Burger": 0,
       "Apple": 2,
@@ -44,5 +44,5 @@
       "outfit1": true
     }
   },
-  "totalPlayTime": 229547
+  "totalPlayTime": 239462
 }

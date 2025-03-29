@@ -231,7 +231,10 @@ public class NewGameScreen extends JLayeredPane {
                         null
                 );
 
-                PlayerInventory inventory = new PlayerInventory();
+                Store store = new Store();  // Create store instance
+                PlayerInventory inventory = new PlayerInventory(store); // Pass store to inventory
+
+                //PlayerInventory inventory = new PlayerInventory();
 
                 String filename = "saves/" + petName + ".json";
                 GameDataManager.saveGame(filename, newPet, inventory, 0);

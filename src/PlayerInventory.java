@@ -12,9 +12,27 @@ public class PlayerInventory {
     private final Map<Toys, Integer> toyInventory = new HashMap<>();
     private final Map<String, Boolean> outfitInventory = new HashMap<>();
 
-    public PlayerInventory() {
-        this.playerCoins = 0;
+    public PlayerInventory(Store store) {
+        this.playerCoins = 1000; // Set default coins to 1000
+
+        // Retrieve predefined items from Store
+        Food apple = store.getFood("Apple");
+        Toys bouncyBall = store.getToy("Bouncy Ball");
+
+        // Ensure these items exist before adding them
+        if (apple != null) {
+            addFood(apple, 5);
+        } else {
+            System.err.println("Error: Apple not found in store.");
+        }
+
+        if (bouncyBall != null) {
+            addToy(bouncyBall, 1);
+        } else {
+            System.err.println("Error: Bouncy Ball not found in store.");
+        }
     }
+
 
     public int getPlayerCoins() {
         return playerCoins;
@@ -110,6 +128,9 @@ public class PlayerInventory {
     public boolean feedPet(Pet pet, Food food) {
         if (consumeFood(food)) {
             pet.increaseFullness(food.getFullness());
+            // Give the player back 25% of the food price back when feeding.
+            int returnOnFeeding = (int) (food.getPrice() * 0.25);
+            setPlayerCoins(getPlayerCoins()+ returnOnFeeding);
             return true;
         }
         return false;
@@ -129,16 +150,20 @@ public class PlayerInventory {
         if (currentTime - pet.getLastVetVisitTime() >= pet.getVetCooldownDuration()) {
             pet.increaseHealth(30); // or tunable
             pet.setLastVetVisitTime(currentTime);
+            //Give 500 when taking to the vet
+            setPlayerCoins(getPlayerCoins()+500);
             return true;
         }
         return false;
     }
 
-    // Play — apply happiness if cooldown allows
+    // Play toys — apply happiness if cooldown allows
     public boolean playWithPet(Pet pet, int currentTime) {
         if (currentTime - pet.getLastPlayTime() >= pet.getPlayCooldownDuration()) {
             pet.increaseHappiness(15);
             pet.setLastPlayTime(currentTime);
+            //Give 750 coins when playing with the pet.
+            setPlayerCoins(getPlayerCoins()+750);
             return true;
         }
         return false;
@@ -149,6 +174,8 @@ public class PlayerInventory {
         pet.decreaseSleep(10);
         pet.decreaseFullness(10);
         pet.increaseHealth(15);
+        //Give 500 when exercising
+        setPlayerCoins(getPlayerCoins()+500);
     }
 
 
