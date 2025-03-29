@@ -21,7 +21,8 @@
     "lastVetVisitTime": 0,
     "vetCooldownDuration": 30,
     "lastPlayTime": 0,
-    "playCooldownDuration": 20
+    "playCooldownDuration": 20,
+    "currentOutfit": 1
   },
   "inventory": {
     "playerCoins": 612,
@@ -33,14 +34,14 @@
       "Steak": 5
     },
     "giftInventory": {
-      "outfit1": 0
+      "outfit1": 1
     },
     "toyInventory": {
       "Tug Rope": 3,
       "Bouncy Ball": 1
     },
     "outfitInventory": {
-      "outfit1": false
+      "outfit1": true
     }
   },
   "totalPlayTime": 239462

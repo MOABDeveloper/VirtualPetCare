@@ -122,8 +122,16 @@ public class InGameScreen extends JLayeredPane {
         commandButtons();
         //spriteGifs();
         String petType =  GameDataManager.getPetTypeFromSave(saveFilePath);
-        if(petType.equals("PetOption1")) {
-            spriteGifs("resources/PetOne_Idle.gif");
+        if(petType.equals("PetOption1"))
+        {
+           if(pet.isWearingOutfit())
+           {
+               spriteGifs("resources/PetOneOutfit_Idle.gif");
+           }
+           else
+           {
+               spriteGifs("resources/PetOne_Idle.gif");
+           }
         }
         else if (petType.equals("PetOption3")) {
             spriteGifs("resources/sprite_3_test.gif");
@@ -217,8 +225,16 @@ public class InGameScreen extends JLayeredPane {
 
             // Restore the correct idle animation based on pet type
             String petType = GameDataManager.getPetTypeFromSave(saveFilePath);
-            if (petType.equals("PetOption1")) {
-                spriteGifs("resources/PetOne_Idle.gif");
+            if(petType.equals("PetOption1"))
+            {
+                if(pet.isWearingOutfit())
+                {
+                    spriteGifs("resources/PetOneOutfit_Idle.gif");
+                }
+                else
+                {
+                    spriteGifs("resources/PetOne_Idle.gif");
+                }
             } else if (petType.equals("PetOption3")) {
                 spriteGifs("resources/sprite_3_test.gif");
             } else if (petType.equals("PetOption2")) {
@@ -422,6 +438,7 @@ public class InGameScreen extends JLayeredPane {
             HealthProgressBar.setValue(pet.getHealth());
             FullnessProgressBar.setValue(pet.getFullness());
             SleepProgressBar.setValue(pet.getSleep());
+            updateGif(getGifPath("Exercise"),1500);
         });
         add(exerciseButton, Integer.valueOf(2));
 
@@ -512,8 +529,7 @@ public class InGameScreen extends JLayeredPane {
                     if (fed) {
                         FullnessProgressBar.setValue(pet.getFullness());
                         playSound("resources/eating_sound.wav");
-                        String petType = GameDataManager.getPetTypeFromSave(saveFilePath);
-
+                        //String petType = GameDataManager.getPetTypeFromSave(saveFilePath);
                         updateGif(getGifPath("Eating"),1500);
 
                         System.out.println("🍊 " + pet.getName() + " ate " + food.getName());
@@ -550,6 +566,7 @@ public class InGameScreen extends JLayeredPane {
                         HappinessProgressBar.setValue(pet.getHappiness()); // Update UI
 
                         playSound("resources/play_sound.wav"); // Add a play sound effect
+                        updateGif(getGifPath("Playing"),1500);
                         System.out.println("🎾 " + pet.getName() + " played with " + toy.getName());
 
                         remove(inventoryPane);
