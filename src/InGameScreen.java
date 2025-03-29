@@ -613,11 +613,13 @@ public class InGameScreen extends JLayeredPane {
                 // Toy click action (Play Sound & Increase Happiness)
                 toyButton.addActionListener(e -> {
                     if (inventory.hasGift(gifts)) {
+
                         pet.increaseHappiness(10);  // Increase happiness
                         HappinessProgressBar.setValue(pet.getHappiness()); // Update UI
+                        updateSprite(pet);
 
                         playSound("resources/play_sound.wav"); // Add a play sound effect
-                        System.out.println("🎾 " + pet.getName() + " played with " + gifts.getName());
+                        System.out.println("🎾 " + pet.getName() + "is now wearing " + gifts.getName());
 
                         remove(inventoryPane);
                         revalidate();
@@ -651,6 +653,40 @@ public class InGameScreen extends JLayeredPane {
         repaint();
 
 
+    }
+
+    private void updateSprite(Pet pet) {
+        if (gifLabel != null) {
+            remove(gifLabel); // ✅ Remove old sprite before updating
+        }
+
+        String petType = pet.getPetType();
+        String petFileName = "";
+        if(petType.equals("PetOption1")) {
+            petFileName = "PetOne";
+        } else if (petType.equals("PetOption2")) {
+            petFileName = "PetTwo";
+        }
+        else if (petType.equals("PetOption3")) {
+            petFileName = "PetThree";
+        }
+
+        String outfit = pet.getCurrentOutfit();
+        String spritePath;
+
+        if (outfit != null && !outfit.isEmpty()) {
+            spritePath = "resources/" + petFileName + "Outfit_Idle.GIF";
+        } else {
+            spritePath = "resources/" + petFileName + "_Idle.gif";
+        }
+
+        ImageIcon gifIcon = new ImageIcon(spritePath);
+        gifLabel = new JLabel(gifIcon);
+        gifLabel.setBounds(300, 30, 622, 632);
+        add(gifLabel, Integer.valueOf(3));
+
+        revalidate();
+        repaint();
     }
 
     private String getGifPath(String action) {

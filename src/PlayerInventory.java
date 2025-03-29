@@ -204,4 +204,8 @@ public class PlayerInventory {
         return giftInventory;
     }
 
+    public Map<String, Boolean> getOutfitInventory() {
+        return outfitInventory;
+    }
+
 }

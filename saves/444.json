@@ -26,11 +26,11 @@
   "inventory": {
     "playerCoins": 5000,
     "foodInventory": {
-      "Apple": 5
+      "Orange": 5
     },
     "giftInventory": {},
     "toyInventory": {
-      "Bouncy Ball": 1
+      "Wand": 1
     },
     "outfitInventory": {}
   },
