@@ -93,14 +93,17 @@ public class LoadScreen extends JLayeredPane {
                 String petIconLocation = "";
 
                 if(gameData.getPet().getPetType().equals("PetOption1")) {
-                    //petIconLocation = ""
+                    petIconLocation = "resources/PetOption1Icon.PNG";
                 } else if (gameData.getPet().getPetType().equals("PetOption2")) {
-                    //Load the icon here from resources/whatever
+                    petIconLocation = "resources/PetOption2Icon.PNG";
                 } else if (gameData.getPet().getPetType().equals("PetOption3")) {
-                    //Load the icon here from resources/whatever
+                    petIconLocation = "resources/PetOption3Icon.PNG";
                 }
 
                 ImageIcon petIcon = scaleImageIcon(petIconLocation, 798 ,  138 );
+                JLabel petIconLabel= new JLabel(petIcon);
+                petIconLabel.setBounds(141, 174 + (i * 170), 798, 138);
+                add(petIconLabel, Integer.valueOf(3));
 
 
 
