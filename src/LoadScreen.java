@@ -34,6 +34,7 @@ public class LoadScreen extends JLayeredPane {
         ImageIcon scaledLoadIcon = new ImageIcon(scaledLoad);
         JLabel loadLabel = new JLabel(scaledLoadIcon);
         loadLabel.setBounds(0, 0, 1080, 750);
+        add(loadLabel, Integer.valueOf(1));
 
         JLabel loadText = new JLabel("LOAD");
         loadText.setForeground(Color.WHITE);
