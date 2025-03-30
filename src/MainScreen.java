@@ -52,7 +52,7 @@ public class MainScreen extends JFrame {
         tutorialScreen = new TutorialScreen(customFont);
         JLayeredPane newGameScreen = new NewGameScreen(customFont, cardLayout, mainPanel);
         JLayeredPane loadScreen = new LoadScreen(customFont, mainPanel, cardLayout);
-        JLayeredPane creditScreen = new CreditScreen(customFont);
+        JLayeredPane creditScreen = new CreditScreen(customFont, cardLayout, mainPanel);
         //InGameScreen inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel,);
         Store store = new Store(); // Create Store instance
 

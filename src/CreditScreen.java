@@ -4,11 +4,13 @@ import java.awt.*;
 
 public class CreditScreen extends JLayeredPane {
     private Font customFont;
-    private static CardLayout cardLayout;
-    private static JPanel mainPanel;
+    private CardLayout cardLayout;  // Changed from static
+    private JPanel mainPanel;      // Changed from static
 
-    public CreditScreen(Font customFont) {
+    public CreditScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel) {
         this.customFont = customFont;
+        this.cardLayout = cardLayout;
+        this.mainPanel = mainPanel;
         setPreferredSize(new Dimension(1080, 750));
 
         // background
@@ -17,19 +19,33 @@ public class CreditScreen extends JLayeredPane {
         backgroundLabel.setBounds(0, 0, 1080, 750);
         add(backgroundLabel, Integer.valueOf(0));
 
+        ImageIcon creditImage = new ImageIcon("resources/credit_screen.png");
+
+        // Scale down the image if needed (same scaling code as before)
+        JLabel creditLabel = new JLabel(creditImage);
+        creditLabel.setBounds(0, 0, creditImage.getIconWidth(), creditImage.getIconHeight());
+        add(creditLabel, Integer.valueOf(1));
+
         // Game screen content
-        JLabel label = new JLabel("Welcome to the credit screen!");
-        label.setFont(new Font("Arial", Font.BOLD, 24));
-        label.setForeground(Color.WHITE);
-        label.setBounds(200, 200, 500, 50);
-        add(label, Integer.valueOf(1));
+        JLabel titleLabel = new JLabel("Credits - Group 19");
+        titleLabel.setFont(customFont.deriveFont(28f));
+        titleLabel.setForeground(Color.decode("#987e78"));
+        titleLabel.setBounds(315, 30, 1000, 50);
+        add(titleLabel, Integer.valueOf(2));
 
-        // Button to switch back to the home screen
-        JButton backButton = new JButton("HOME");
-        backButton.setBounds(800, 70, 200, 50);
-        backButton.addActionListener(e -> cardLayout.show(mainPanel, "Home"));
-        add(backButton, Integer.valueOf(2));
+        JLabel subLabel = new JLabel("\"Virtual Pet\" is a project created for COMPSCI 2212 Winter 2025 at Western University");
+        subLabel.setFont(customFont.deriveFont(12f));
+        subLabel.setForeground(Color.decode("#d09b62"));
+        subLabel.setBounds(70, 70, 1000, 50);
+        add(subLabel, Integer.valueOf(4));
 
-        add(backButton, Integer.valueOf(1));
+        // Fixed Home Button - uses the MainScreen.buttonCreate method
+        JButton homeButton = MainScreen.buttonCreate(20, 10, 192, 64,
+                "resources/white_button.png",
+                "resources/white_button_clicked.png",
+                "Home");  // Changed to "Home" to match your main screen's name
+
+        homeButton.addActionListener(e -> cardLayout.show(mainPanel, "Home"));
+        add(homeButton, Integer.valueOf(4));
     }
 }

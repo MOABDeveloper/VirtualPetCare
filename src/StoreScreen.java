@@ -209,7 +209,7 @@ public class StoreScreen extends JLayeredPane {
         int itemsPerRow = 3;
         int count = 0;
 
-        // Add all gifts
+        // Add all gifts (outfits)
         List<String> giftNames = new ArrayList<>(store.getAllGifts().keySet());
         for (int i = 0; i < giftNames.size(); i++) {
             String giftName = giftNames.get(i);
@@ -290,8 +290,12 @@ public class StoreScreen extends JLayeredPane {
         else if (store.hasToys(itemName)) {
             return "resources/toy_" + itemName.toLowerCase().replace(" ", "_") + ".png";
         }
-        // Then check gifts
+        // Then check gifts (outfits)
         else if (store.hasGift(itemName)) {
+            // Special case for outfit images
+            if (itemName.equals("outfit1") || itemName.equals("outfit2") || itemName.equals("outfit3")) {
+                return "resources/" + itemName + ".png";
+            }
             return "resources/gift_" + itemName.toLowerCase().replace(" ", "_") + ".png";
         }
         return null;
@@ -380,8 +384,8 @@ public class StoreScreen extends JLayeredPane {
 
         // Description with word wrap
         JTextArea descArea = new JTextArea(description);
-        descArea.setBounds(40, 400, 276, 40);
-        descArea.setFont(customFont.deriveFont(Font.PLAIN, 14f));
+        descArea.setBounds(40, 360, 275, 70);
+        descArea.setFont(customFont.deriveFont(Font.PLAIN, 15f));
         descArea.setLineWrap(true);
         descArea.setWrapStyleWord(true);
         descArea.setOpaque(false);
