@@ -24,6 +24,9 @@ public class InGameScreen extends JLayeredPane {
     private String saveFilePath;  // Store the save file path
     private JLabel gifLabel;
 
+    private long sessionStartTime;
+
+
 
     public InGameScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel, GameData gameData, String saveFilePath) {
         this.customFont = customFont;
@@ -32,6 +35,8 @@ public class InGameScreen extends JLayeredPane {
         this.pet = gameData.getPet();
         this.gameData = gameData;
         this.saveFilePath = saveFilePath;  // Store the file path
+        this.sessionStartTime = System.currentTimeMillis();
+
 
         mainPanel.add(this, "InGame");  // ✅ Ensure it exists in mainPanel
 
@@ -163,8 +168,26 @@ public class InGameScreen extends JLayeredPane {
 
         backButton.addActionListener(e -> {
             stopDecayTimer();
+
+            long sessionEndTime = System.currentTimeMillis();
+            long sessionDuration = sessionEndTime - sessionStartTime;
+
+            // Update parental control stats
+            ParentalControl pc = MainScreen.getParentalControl();
+            pc.updateAfterSession(sessionDuration);
+
+            // Debug print: Total and average play time
+            System.out.println("Session Duration: " + sessionDuration + " ms");
+            System.out.println("Total Play Time: " + pc.getTotalPlayTime() + " ms");
+            System.out.println("Average Play Time: " + pc.getAveragePlayTime() + " ms");
+
+            // Save the updated parental control stats (if you persist them)
+            GameDataManager.saveParentalControlSettings(pc);
+
             cardLayout.show(mainPanel, "Home");
         });
+
+
 
         add(backButton, Integer.valueOf(2));
 

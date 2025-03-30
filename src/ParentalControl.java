@@ -7,8 +7,8 @@ public class ParentalControl {
     private int allowedStartHour; // 24-hr format (e.g. 9 for 9am)
     private int allowedEndHour;   // e.g. 21 for 9pm
 
-    private long totalPlayTime = 999;  // milliseconds
-    private int sessionCount = 10;
+    private long totalPlayTime = 0;  // milliseconds
+    private int sessionCount = 0;
 
 
 
@@ -79,5 +79,10 @@ public class ParentalControl {
     public int getAllowedEndHour() {
         return allowedEndHour;
     }
+
+    public int getSessionCount() {
+        return sessionCount;
+    }
+
 
 }

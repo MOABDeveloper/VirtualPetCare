@@ -75,40 +75,28 @@ public class GameDataManager {
     private static final String PARENTAL_CONTROL_FILE = "config/parental_control.json";
 
     public static void saveParentalControlSettings(ParentalControl parentalControl) {
-        ParentalControlData data = new ParentalControlData(
-                parentalControl.isLimitationsEnabled(),
-                parentalControl.getAllowedStartHour(),
-                parentalControl.getAllowedEndHour()
-        );
-
         try (FileWriter writer = new FileWriter(PARENTAL_CONTROL_FILE)) {
-            gson.toJson(data, writer);
-            //System.out.println("✅ Parental control settings saved.");
+            gson.toJson(parentalControl, writer);
         } catch (IOException e) {
-            //System.out.println("❌ Failed to save parental settings: " + e.getMessage());
+            e.printStackTrace();
         }
     }
+
 
     public static ParentalControl loadParentalControlSettings() {
         File file = new File(PARENTAL_CONTROL_FILE);
         if (!file.exists()) {
-            //System.out.println("ℹ️ No parental config found. Using default settings.");
-            return new ParentalControl();
+            return new ParentalControl(); // Return default if no file
         }
 
         try (FileReader reader = new FileReader(file)) {
-            ParentalControlData data = gson.fromJson(reader, ParentalControlData.class);
-            ParentalControl parentalControl = new ParentalControl();
-            parentalControl.setLimitationsEnabled(data.limitationsEnabled);
-            parentalControl.setPlayTimeWindow(data.allowedStartHour, data.allowedEndHour);
-            //System.out.println("✅ Parental control settings loaded.");
-            return parentalControl;
+            ParentalControl parentalControl = gson.fromJson(reader, ParentalControl.class);
+            return parentalControl != null ? parentalControl : new ParentalControl();
         } catch (IOException e) {
-           // System.out.println("❌ Failed to load parental settings: " + e.getMessage());
+            e.printStackTrace();
             return new ParentalControl();
         }
     }
-
 
 
     public static boolean canCreateNewGame() {

@@ -3,9 +3,9 @@
     "name": "h",
     "petType": "PetOption3",
     "health": 100,
-    "sleep": 64,
-    "fullness": 96,
-    "happiness": 89,
+    "sleep": 12,
+    "fullness": 56,
+    "happiness": 0,
     "maxHealth": 100,
     "maxSleep": 100,
     "maxFullness": 100,
@@ -14,18 +14,21 @@
     "fullnessDeclineRate": 3,
     "sleepDeclineRate": 12,
     "happinessDeclineRate": 7,
-    "isSleeping": false,
+    "isSleeping": true,
     "isHungry": false,
-    "isHappy": true,
+    "isHappy": false,
     "isDead": false,
-    "lastVetVisitTime": 0,
+    "lastVetVisitTime": 1743367486,
     "vetCooldownDuration": 30,
     "lastPlayTime": 0,
-    "playCooldownDuration": 20
+    "playCooldownDuration": 20,
+    "currentOutfit": "outfit3"
   },
   "inventory": {
-    "playerCoins": 2012,
+    "playerCoins": 1437,
     "foodInventory": {
+      "Lamb Chop": 1,
+      "Chicken": 1,
       "Orange": 4
     },
     "giftInventory": {
@@ -35,8 +38,8 @@
       "Wand": 1
     },
     "outfitInventory": {
-      "outfit3": true
+      "outfit3": false
     }
   },
-  "totalPlayTime": 28960
+  "totalPlayTime": 256470
 }

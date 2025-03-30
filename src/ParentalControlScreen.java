@@ -8,6 +8,9 @@ public class ParentalControlScreen extends JLayeredPane {
     private Font customFont;
     private ParentalControl parentalControl;
 
+    private JLabel totalPlayValue;
+    private JLabel avgPlayValue;
+
 
     public ParentalControlScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel, ParentalControl parentalControl) {
         this.customFont = customFont;
@@ -35,17 +38,19 @@ public class ParentalControlScreen extends JLayeredPane {
 
         // Labels
         JLabel totalPlayLabel = createLabel("TOTAL PLAY TIME:", 240, 245, 300, 40);
-        JLabel totalPlayValue = createLabel(String.valueOf(parentalControl.getTotalPlayTime()), 300, 328, 150, 40);
+        totalPlayValue = createLabel(formatMillis(parentalControl.getTotalPlayTime()), 250, 328, 400, 40);
         totalPlayValue.setFont(customFont.deriveFont(40f));
 
         JLabel avgPlayLabel = createLabel("AVERAGE PLAY TIME", 220, 419, 300, 40);
-        JLabel avgPlayValue = createLabel(String.valueOf(parentalControl.getAveragePlayTime()), 300, 498, 500, 40);
+        avgPlayValue = createLabel(formatMillis(parentalControl.getAveragePlayTime()), 250, 498, 500, 40);
         avgPlayValue.setFont(customFont.deriveFont(40f));
 
         add(totalPlayLabel, Integer.valueOf(2));
         add(totalPlayValue, Integer.valueOf(2));
         add(avgPlayLabel, Integer.valueOf(2));
         add(avgPlayValue, Integer.valueOf(2));
+
+        updateStatLabels();
 
         // Buttons
         JButton resetStatsButton = MainScreen.buttonCreate(620,240, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "");
@@ -77,10 +82,14 @@ public class ParentalControlScreen extends JLayeredPane {
         // RESET STATS button Logic
         resetStatsButton.addActionListener(e -> {
             parentalControl.resetStats();
-            totalPlayValue.setText(String.valueOf(parentalControl.getTotalPlayTime()));
-            avgPlayValue.setText(String.valueOf(parentalControl.getAveragePlayTime()));
+            GameDataManager.saveParentalControlSettings(parentalControl);
+
+            updateStatLabels();
+
             JOptionPane.showMessageDialog(this, "Play time statistics have been reset.");
         });
+
+
 
         setPlayTimeButton.addActionListener(e -> {
             try {
@@ -145,7 +154,7 @@ public class ParentalControlScreen extends JLayeredPane {
 
             System.out.println("Pet loaded from save file: " + pet.getName());
             System.out.println("Pet health: " + pet.getHealth());
-            System.out.println("Pet isDead: " + pet.isDead());  // <-- Check if it's actually true
+            System.out.println("Pet isDead: " + pet.isDead());  
 
 
             // Step 3: Try reviving the pet using parental controls
@@ -159,6 +168,7 @@ public class ParentalControlScreen extends JLayeredPane {
                 JOptionPane.showMessageDialog(null, "The pet is not dead and doesn't need revival.", "Info", JOptionPane.INFORMATION_MESSAGE);
             }
         });
+
         setVisible(true);
     }
 
@@ -180,4 +190,21 @@ public class ParentalControlScreen extends JLayeredPane {
         }
         return null; // No file selected
     }
+
+    private String formatMillis(long millis) {
+        long seconds = millis / 1000;
+        long minutes = seconds / 60;
+        long remainingSeconds = seconds % 60;
+        return minutes + "m " + remainingSeconds + "s";
+    }
+
+    public void updateStatLabels() {
+        totalPlayValue.setText(formatMillis(parentalControl.getTotalPlayTime()));
+        avgPlayValue.setText(formatMillis(parentalControl.getAveragePlayTime()));
+    }
+
+
+
+
+
 }

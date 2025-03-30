@@ -18,6 +18,7 @@ public class MainScreen extends JFrame {
     private static JLabel overlayLabel;
     private static TutorialScreen tutorialScreen; // Store the TutorialScreen instance
     private static ParentalControl parentalControl;
+    private static ParentalControlScreen parentalControlScreen;
     private static Clip buttonClickSound;
 
     private static InGameScreen inGameScreen;
@@ -82,7 +83,8 @@ public class MainScreen extends JFrame {
 
         //ATTEMPTED TO ADD MOHAMMED-KAM
         parentalControl = GameDataManager.loadParentalControlSettings();
-        JLayeredPane parentalControlScreen = new ParentalControlScreen(customFont, cardLayout, mainPanel,parentalControl);
+        parentalControlScreen = new ParentalControlScreen(customFont, cardLayout, mainPanel, parentalControl);
+        mainPanel.add(parentalControlScreen, "ParentalControlScreen");
         mainPanel.add(parentalControlScreen, "ParentalControlScreen");
 
         // add main panel to the frame
@@ -140,6 +142,8 @@ public class MainScreen extends JFrame {
                             break;
                         }
                     }
+
+
 
                     // Rebuild LoadScreen with updated data
                     JLayeredPane refreshedLoadScreen = new LoadScreen(customFont, mainPanel, cardLayout);
@@ -293,7 +297,9 @@ public class MainScreen extends JFrame {
         doneButton.addActionListener(e -> {
             String enteredPassword = passwordField.getText();
 
-            if (parentalControl.authenticate(enteredPassword)) { // Replace with your secure password
+            if (parentalControl.authenticate(enteredPassword)) {
+                MainScreen.updateParentalStatLabels();
+
                 cardLayout.show(mainPanel, "ParentalControlScreen");
             } else {
                 JOptionPane.showMessageDialog(parentPane, "Incorrect password!", "Access Denied", JOptionPane.ERROR_MESSAGE);
@@ -311,6 +317,13 @@ public class MainScreen extends JFrame {
         parentPane.add(doneButton, Integer.valueOf(4));
         parentPane.repaint();
     }
+
+    public static void updateParentalStatLabels() {
+        if (parentalControlScreen != null) {
+            parentalControlScreen.updateStatLabels();
+        }
+    }
+
 
     public static void showInGameScreen(GameData gameData, String saveFilePath) {
         // Remove old instance if it exists
