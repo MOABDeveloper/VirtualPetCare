@@ -124,16 +124,14 @@ public class PlayerInventory {
 
     public void unequipOutfit(Pet pet) {
         String currentOutfit = pet.getCurrentOutfit();
-        if (currentOutfit != null && ownsOutfit(currentOutfit)) {
-            outfitInventory.put(currentOutfit, true);  // Mark outfit as owned again
-            pet.setOutfit(null); // Unequip it
-            System.out.println("Unequipped outfit: " + currentOutfit);
+        if (currentOutfit != null && !currentOutfit.isEmpty()) {
+            pet.setOutfit(null); // This removes the outfit
+            outfitInventory.put(currentOutfit, true); // Mark it as owned again
+            System.out.println("Unequipped: " + currentOutfit);
         } else {
             System.out.println("No outfit to unequip.");
         }
     }
-
-
 
     public boolean ownsOutfit(String outfitName) {
         return outfitInventory.getOrDefault(outfitName, false);

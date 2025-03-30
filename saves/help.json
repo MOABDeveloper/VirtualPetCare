@@ -1,7 +1,7 @@
 {
   "pet": {
-    "name": "aaaa",
-    "petType": "PetOption1",
+    "name": "help",
+    "petType": "PetOption2",
     "health": 100,
     "sleep": 100,
     "fullness": 100,
@@ -10,10 +10,10 @@
     "maxSleep": 100,
     "maxFullness": 100,
     "maxHappiness": 100,
-    "healthDeclineRate": 6,
-    "fullnessDeclineRate": 3,
-    "sleepDeclineRate": 3,
-    "happinessDeclineRate": 7,
+    "healthDeclineRate": 10,
+    "fullnessDeclineRate": 10,
+    "sleepDeclineRate": 10,
+    "happinessDeclineRate": 15,
     "isSleeping": false,
     "isHungry": false,
     "isHappy": true,
@@ -34,5 +34,5 @@
     },
     "outfitInventory": {}
   },
-  "totalPlayTime": 5450
+  "totalPlayTime": 9596
 }

@@ -389,8 +389,9 @@ public class Pet {
     }
 
     public boolean isWearingOutfit() {
-        return currentOutfit != null;
+        return currentOutfit != null && !currentOutfit.isEmpty();
     }
+
 
     public boolean isWarningHealth() {
         return health <= (maxHealth / 4);
@@ -413,6 +414,12 @@ public class Pet {
     }
 
     public boolean setOutfit(String outfitName) {
+        if (outfitName == null || outfitName.isEmpty()) {
+            this.currentOutfit = null;
+            System.out.println("Outfit removed.");
+            return true;
+        }
+
         String allowedOutfit = allowedOutfits.get(this.petType);
         System.out.println("Setting outfit: " + outfitName);
 
@@ -421,7 +428,7 @@ public class Pet {
             return false;
         }
 
-        if (!outfitName.equals(allowedOutfit)) {
+        if (!outfitName.equalsIgnoreCase(allowedOutfit)) {
             System.out.println("ERROR: " + this.petType + " can only wear " + allowedOutfit + "!");
             return false;
         }
@@ -431,12 +438,14 @@ public class Pet {
         return true;
     }
 
+
     public void removeOutfit() {
         if (this.currentOutfit != null && !this.currentOutfit.isEmpty()) {
-            System.out.println("Removing outfit: " + this.currentOutfit); // Debugging
-            this.currentOutfit = "";  // Set to empty string instead of null
+            System.out.println("Removing outfit: " + this.currentOutfit);
+            this.currentOutfit = null;
         }
     }
+
 
 
     public void resetState() {
@@ -461,29 +470,29 @@ public class Pet {
     private String getAllowedOutfit(Pet pet) {
         switch (pet.getPetType()) {
             case "PetOption1":
-                return "Outfit1";
+                return "outfit1";
             case "PetOption2":
-                return "Outfit2";
+                return "outfit2";
             case "PetOption3":
-                return "Outfit3";
+                return "outfit3";
             default:
                 return "None"; // In case of an unknown pet type
         }
     }
 
     private boolean isOutfit(String itemName) {
-        return itemName.equals("Outfit1") || itemName.equals("Outfit2") || itemName.equals("Outfit3");
+        return itemName.equals("outfit1") || itemName.equals("outfit2") || itemName.equals("outfit3");
     }
 
     public boolean canWearOutfit(String outfitName) {
         // Each pet type is restricted to a specific outfit
         switch (this.petType) {
             case "PetOption1":
-                return outfitName.equals("Outfit1");
+                return outfitName.equals("outfit1");
             case "PetOption2":
-                return outfitName.equals("Outfit2");
+                return outfitName.equals("outfit2");
             case "PetOption3":
-                return outfitName.equals("Outfit3");
+                return outfitName.equals("outfit3");
             default:
                 return false; // If petType is unknown, deny all outfits
         }

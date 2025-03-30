@@ -426,7 +426,8 @@ public class StoreScreen extends JLayeredPane {
             if (purchaseSuccess) {
                 updateCoinDisplay();
                 if (isOutfit(itemName)) {
-                    pet.setOutfit(itemName); // Equip the outfit
+                    gameData.getInventory().addOutfit(itemName);
+
                     JOptionPane.showMessageDialog(this,
                             "You bought " + itemName + "! Your pet is now wearing it!",
                             "Purchase Successful",

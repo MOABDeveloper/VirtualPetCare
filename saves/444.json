@@ -3,15 +3,15 @@
     "name": "444",
     "petType": "PetOption1",
     "health": 100,
-    "sleep": 76,
-    "fullness": 97,
-    "happiness": 54,
+    "sleep": 70,
+    "fullness": 71,
+    "happiness": 40,
     "maxHealth": 100,
     "maxSleep": 100,
     "maxFullness": 100,
     "maxHappiness": 100,
     "healthDeclineRate": 6,
-    "fullnessDeclineRate": 3,
+    "fullnessDeclineRate": 13,
     "sleepDeclineRate": 3,
     "happinessDeclineRate": 7,
     "isSleeping": false,
@@ -36,7 +36,9 @@
     "toyInventory": {
       "Wand": 1
     },
-    "outfitInventory": {}
+    "outfitInventory": {
+      "outfit1": false
+    }
   },
-  "totalPlayTime": 34906
+  "totalPlayTime": 50284
 }
