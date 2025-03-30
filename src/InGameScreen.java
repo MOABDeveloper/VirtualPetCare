@@ -25,7 +25,6 @@ public class InGameScreen extends JLayeredPane {
     private JLabel gifLabel;
 
 
-
     public InGameScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel, GameData gameData, String saveFilePath) {
         this.customFont = customFont;
         this.cardLayout = cardLayout;
@@ -115,9 +114,8 @@ public class InGameScreen extends JLayeredPane {
 
         //Place bar below the graphics
         add(HappinessProgressBar, Integer.valueOf(1));
+
         //Finished Health Progress bar
-
-
         healthBars();
         commandButtons();
         //spriteGifs();
@@ -431,7 +429,7 @@ public class InGameScreen extends JLayeredPane {
         JButton giveGift = MainScreen.buttonCreate(560, 550, 128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
         ImageIcon giftIcon = new ImageIcon("resources/gift_icon.png");
         JLabel giftIconLabel = new JLabel(giftIcon);
-        giftIconLabel.setBounds(560 + (128 - 45)/2, 545 + (128 - 40)/2, 45, 40);
+        giftIconLabel.setBounds(560 + (128 - 50)/2, 545 + (128 - 47)/2, 50, 47);
         add(giftIconLabel, Integer.valueOf(3));
         add(giveGift, Integer.valueOf(2));
 
@@ -485,6 +483,7 @@ public class InGameScreen extends JLayeredPane {
         add(sleepButton, Integer.valueOf(2));
     }
 
+
     private void showInventoryPopup(JButton sourceButton, String inventoryType) {
         // inventory popup
         ImageIcon originalIcon = new ImageIcon("resources/inventory_popup.png");
@@ -505,10 +504,36 @@ public class InGameScreen extends JLayeredPane {
         JLayeredPane inventoryPane = new JLayeredPane();
         inventoryPane.setPreferredSize(new Dimension(popupIcon.getIconWidth(), popupIcon.getIconHeight()));
 
-        // add components to inventoryPane
+        // add components to inventoryPane - background first
         popupLabel.setBounds(0, 30, popupIcon.getIconWidth(), popupIcon.getIconHeight());
-        inventoryPane.add(popupLabel, JLayeredPane.DEFAULT_LAYER);
-        inventoryPane.add(closeButton, JLayeredPane.PALETTE_LAYER);
+        inventoryPane.add(popupLabel, JLayeredPane.DEFAULT_LAYER); // Bottom layer
+
+        // Add inventory squares (169x172) in a 3x2 grid
+        ImageIcon squareIcon = new ImageIcon("resources/inventory_item_square_1.png");
+        int startX = 100;
+        int startY = 140;
+        int squareWidth = 90;
+        int squareHeight = 90;
+        int horizontalGap = 20;
+        int verticalGap = 15;
+
+        // Create squares array to reference later
+        JLabel[] squares = new JLabel[6];
+        for (int i = 0; i < 6; i++) {
+            int row = i / 3;
+            int col = i % 3;
+            squares[i] = new JLabel(squareIcon);
+            squares[i].setBounds(
+                    startX + col * (squareWidth + horizontalGap),
+                    startY + row * (squareHeight + verticalGap),
+                    squareWidth,
+                    squareHeight
+            );
+            inventoryPane.add(squares[i], JLayeredPane.PALETTE_LAYER); // Above background
+        }
+
+        // Add other UI elements
+        inventoryPane.add(closeButton, JLayeredPane.MODAL_LAYER);
         inventoryPane.add(xLabel, JLayeredPane.POPUP_LAYER);
 
         // positioning of the popup
@@ -522,36 +547,36 @@ public class InGameScreen extends JLayeredPane {
         inventoryPane.setBounds(popupX, popupY, popupIcon.getIconWidth(), popupIcon.getIconHeight());
         add(inventoryPane, JLayeredPane.POPUP_LAYER);
 
-
         if (inventoryType.equals("Feed")) {
             PlayerInventory inventory = gameData.getInventory();
-            int x = 100, y = 120;
-
-            for (Component c : inventoryPane.getComponents()) {
-                if (c != popupLabel && c != closeButton && c != xLabel) {
-                    inventoryPane.remove(c);
-                }
-            }
+            int itemIndex = 0;
 
             for (Food food : inventory.getFoodInventory().keySet()) {
                 int quantity = inventory.getFoodCount(food);
-                if (quantity <= 0) continue;
+                if (quantity <= 0 || itemIndex >= 6) continue;
 
-                JButton foodButton = new JButton("<html>" + food.getName() + "<br>x" + quantity + "</html>");
-                foodButton.setBounds(x, y, 120, 60);
+                // Position button over corresponding square
+                JLabel square = squares[itemIndex];
+                JButton foodButton = new JButton("<html><center>" + food.getName() + "<br>x" + quantity + "</center></html>");
+                foodButton.setBounds(
+                        square.getX() + 20,
+                        square.getY() + 20,
+                        square.getWidth() - 40,
+                        square.getHeight() - 40
+                );
                 foodButton.setFont(customFont.deriveFont(12f));
-                inventoryPane.add(foodButton, JLayeredPane.PALETTE_LAYER);
+                foodButton.setOpaque(false);
+                foodButton.setContentAreaFilled(false);
+                foodButton.setBorderPainted(false);
+                inventoryPane.add(foodButton, JLayeredPane.MODAL_LAYER); // Above squares
 
                 foodButton.addActionListener(e -> {
                     boolean fed = inventory.feedPet(pet, food);
                     if (fed) {
                         FullnessProgressBar.setValue(pet.getFullness());
                         playSound("resources/eating_sound.wav");
-                        //String petType = GameDataManager.getPetTypeFromSave(saveFilePath);
                         updateGif(getGifPath("Eating"),1500);
-
                         System.out.println("🍊 " + pet.getName() + " ate " + food.getName());
-
                         remove(inventoryPane);
                         revalidate();
                         repaint();
@@ -559,34 +584,39 @@ public class InGameScreen extends JLayeredPane {
                         JOptionPane.showMessageDialog(this, "Out of " + food.getName() + "!", "No Food", JOptionPane.WARNING_MESSAGE);
                     }
                 });
-
-                y += 70;
+                itemIndex++;
             }
         }
 
         if (inventoryType.equals("Play")) {
             PlayerInventory inventory = gameData.getInventory();
-            int x = 100, y = 120;
+            int itemIndex = 0;
 
-            for (Toys toy : inventory.getToyInventory().keySet()) { // ✅ Correct inventory
-                int quantity = inventory.getToyCount(toy); // ✅ Correct count method
-                if (quantity <= 0) continue;
+            for (Toys toy : inventory.getToyInventory().keySet()) {
+                int quantity = inventory.getToyCount(toy);
+                if (quantity <= 0 || itemIndex >= 6) continue;
 
-                JButton toyButton = new JButton("<html>" + toy.getName() + "<br>x" + quantity + "</html>");
-                toyButton.setBounds(x, y, 120, 60);
+                JLabel square = squares[itemIndex];
+                JButton toyButton = new JButton("<html><center>" + toy.getName() + "<br>x" + quantity + "</center></html>");
+                toyButton.setBounds(
+                        square.getX() + 20,
+                        square.getY() + 20,
+                        square.getWidth() - 40,
+                        square.getHeight() - 40
+                );
                 toyButton.setFont(customFont.deriveFont(12f));
-                inventoryPane.add(toyButton, JLayeredPane.PALETTE_LAYER);
+                toyButton.setOpaque(false);
+                toyButton.setContentAreaFilled(false);
+                toyButton.setBorderPainted(false);
+                inventoryPane.add(toyButton, JLayeredPane.MODAL_LAYER); // Above squares
 
-                // Toy click action (Play Sound & Increase Happiness)
                 toyButton.addActionListener(e -> {
                     if (inventory.hasToy(toy)) {
-                        pet.increaseHappiness(10);  // Increase happiness
-                        HappinessProgressBar.setValue(pet.getHappiness()); // Update UI
-
-                        playSound("resources/play_sound.wav"); // Add a play sound effect
+                        pet.increaseHappiness(10);
+                        HappinessProgressBar.setValue(pet.getHappiness());
+                        playSound("resources/play_sound.wav");
                         updateGif(getGifPath("Playing"),1500);
                         System.out.println("🎾 " + pet.getName() + " played with " + toy.getName());
-
                         remove(inventoryPane);
                         revalidate();
                         repaint();
@@ -594,23 +624,10 @@ public class InGameScreen extends JLayeredPane {
                         JOptionPane.showMessageDialog(this, "You don't have " + toy.getName() + "!", "No Toy", JOptionPane.WARNING_MESSAGE);
                     }
                 });
-
-                y += 70;
+                itemIndex++;
             }
         }
 
-
-
-        // Close button logic
-        closeButton.addActionListener(e -> {
-            remove(inventoryPane);
-            revalidate();
-            repaint();
-        });
-
-
-
-        // close
         closeButton.addActionListener(e -> {
             remove(inventoryPane);
             revalidate();
@@ -619,8 +636,6 @@ public class InGameScreen extends JLayeredPane {
 
         revalidate();
         repaint();
-
-
     }
 
     private void updateSprite(Pet pet) {
