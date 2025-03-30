@@ -2,6 +2,7 @@ package src;
 import javax.swing.*;
 import java.awt.*;
 
+// credit scrren
 public class CreditScreen extends JLayeredPane {
     private Font customFont;
     private CardLayout cardLayout;  // Changed from static
