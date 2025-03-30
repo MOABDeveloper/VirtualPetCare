@@ -129,9 +129,9 @@ public class InGameScreen extends JLayeredPane {
                 spriteGifs("resources/PetOne_Idle.gif");
             }
         } else if (petType.equals("PetOption3")) {
-            spriteGifs("resources/sprite_3_test.gif");
+            spriteGifs("resources/PetThree_Idle.gif");
         } else if (petType.equals("PetOption2")) {
-            spriteGifs("resources/sprite_2_test.gif");
+            spriteGifs("resources/PetTwo_Idle.gif");
         }
 
         JButton backButton = MainScreen.buttonCreate(800,70, 70,70, "resources/home_button.png", "resources/home_button_clicked.png", "");
@@ -224,9 +224,9 @@ public class InGameScreen extends JLayeredPane {
                     spriteGifs("resources/PetOne_Idle.gif");
                 }
             } else if (petType.equals("PetOption3")) {
-                spriteGifs("resources/sprite_3_test.gif");
+                spriteGifs("resources/PetThree_Idle.gif");
             } else if (petType.equals("PetOption2")) {
-                spriteGifs("resources/sprite_2_test.gif");
+                spriteGifs("resources/PetTwo_Idle.gif");
             }
             revalidate();
             repaint();

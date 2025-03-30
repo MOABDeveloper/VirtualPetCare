@@ -1,5 +1,6 @@
 package src;
 
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,6 +18,7 @@ public class MainScreen extends JFrame {
     private static JLabel overlayLabel;
     private static TutorialScreen tutorialScreen; // Store the TutorialScreen instance
     private static ParentalControl parentalControl;
+    private static Clip buttonClickSound;
 
     private static InGameScreen inGameScreen;
     private static PlayerInventory playerInventory;
@@ -35,6 +37,18 @@ public class MainScreen extends JFrame {
             // if font fails to load, go back to default
             customFont = new Font("Arial", Font.PLAIN, 24);
         }
+        try {
+            InputStream soundStream = getClass().getResourceAsStream("/resources/button_clicked.wav");
+            if (soundStream != null) {
+                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundStream);
+                buttonClickSound = AudioSystem.getClip();
+                buttonClickSound.open(audioInputStream);
+            }
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+            System.out.println("Could not load button click sound");
+        }
+
 //        MusicPlayer.playBackgroundMusic("resources/verdanturf.wav");
 //        MusicPlayer.setVolume(0.05f);
         // actual screen
@@ -116,6 +130,8 @@ public class MainScreen extends JFrame {
         buttonLabel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                playButtonClickSound(); // Moved this to be the first thing that happens
+
                 if (location.equals("Load")) {
                     // Remove old LoadScreen if it exists (optional but clean)
                     for (Component comp : mainPanel.getComponents()) {
@@ -134,8 +150,14 @@ public class MainScreen extends JFrame {
             }
         });
 
-
         return buttonLabel;
+    }
+
+    private static void playButtonClickSound() {
+        if (buttonClickSound != null) {
+            buttonClickSound.setFramePosition(0); // Rewind to the beginning
+            buttonClickSound.start();
+        }
     }
 
     private static JLabel buttonText(String text, int x, int y, int width, int height) {
@@ -171,7 +193,7 @@ public class MainScreen extends JFrame {
         ImageIcon main_art = new ImageIcon("resources/MainScreenImg.png");
         JLabel artLabel = new JLabel(main_art);
         artLabel.setBounds(512, 127, main_art.getIconWidth(), main_art.getIconHeight()); // Set proper x,y coordinates
-        layeredPane.add(artLabel, Integer.valueOf(6)); // Higher than other elements
+        layeredPane.add(artLabel, Integer.valueOf(2));
 
 
         JLabel windowsLabel = new JLabel(windowIcon);

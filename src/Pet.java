@@ -101,9 +101,9 @@ public class Pet {
 
         //SET THE THREE SELECTABLE PET TYPES AND THEIR CHARACTERISTICS
         this.petTypeMap = new HashMap<>();
-        petTypeMap.put("PetOption1", new PetType(1.2F,.5F,.6F,1.3F));
-        petTypeMap.put("PetOption2",  new PetType(2F,2F,2F,2F));
-        petTypeMap.put("PetOption3",  new PetType(1.2F,.5F,.6F,1.3F));
+        petTypeMap.put("PetOption1", new PetType(1.2F,2.5F,.6F,1.3F));
+        petTypeMap.put("PetOption2",  new PetType(2F,2F,2F,3F));
+        petTypeMap.put("PetOption3",  new PetType(1.2F,.5F,2.4F,1.3F));
 
 
         this.name = name;
