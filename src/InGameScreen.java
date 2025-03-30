@@ -26,6 +26,14 @@ public class InGameScreen extends JLayeredPane {
 
     private long sessionStartTime;
 
+    private JButton feedButton;
+    private JButton playButton;
+    private JButton sleepButton;
+    private JButton giveGiftButton;
+    private JButton exerciseButton;
+    private JButton vetButton;
+    private JButton shopButton;
+
 
 
     public InGameScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel, GameData gameData, String saveFilePath) {
@@ -36,6 +44,7 @@ public class InGameScreen extends JLayeredPane {
         this.gameData = gameData;
         this.saveFilePath = saveFilePath;  // Store the file path
         this.sessionStartTime = System.currentTimeMillis();
+
 
 
         mainPanel.add(this, "InGame");  // ✅ Ensure it exists in mainPanel
@@ -123,8 +132,9 @@ public class InGameScreen extends JLayeredPane {
         //Finished Health Progress bar
         healthBars();
         commandButtons();
-        //spriteGifs();
-        //String petType =  GameDataManager.getPetTypeFromSave(saveFilePath);
+
+
+
         String petType = pet.getPetType();
 
         if (petType.equals("PetOption1")) {
@@ -192,7 +202,7 @@ public class InGameScreen extends JLayeredPane {
         add(backButton, Integer.valueOf(2));
 
         // Decay every 5 seconds (5000 ms)
-        statDecayTimer = new Timer(5000, e -> {
+        statDecayTimer = new Timer(500, e -> {
             pet.applyDecline();
 
             // Update progress bar or any UI components
@@ -219,17 +229,99 @@ public class InGameScreen extends JLayeredPane {
             // Optional: print stats to console for debugging
             pet.printStats();
 
-            // TODO: Update other UI elements like fullness, happiness, etc.
-            // TODO: Show warnings (e.g. red flash if stat < 25%)
-            // TODO: Save to file periodically if desired
+            String base;
+            switch (pet.getPetType()) {
+                case "PetOption1":
+                    base = "PetOne";
+                    break;
+                case "PetOption2":
+                    base = "PetTwo";
+                    break;
+                case "PetOption3":
+                    base = "PetThree";
+                    break;
+                default:
+                    base = "Pet";
+                    break;
+            }
+
+            boolean hasOutfit = pet.isWearingOutfit();
+            String state = null;
+
+            if (pet.isDead()) {
+                state = "Dead";
+                feedButton.setEnabled(false);
+                playButton.setEnabled(false);
+                sleepButton.setEnabled(false);
+                giveGiftButton.setEnabled(false);
+                vetButton.setEnabled(false);
+                shopButton.setEnabled(false);
+
+            } else if (pet.isSleeping()) {
+                state = "Sleep";
+                feedButton.setEnabled(false);
+                playButton.setEnabled(false);
+                sleepButton.setEnabled(false);
+                giveGiftButton.setEnabled(false);
+                vetButton.setEnabled(false);
+            } else if (pet.isAngry()) {
+                state = "Angry";
+                feedButton.setEnabled(false);
+                sleepButton.setEnabled(false);
+                vetButton.setEnabled(false);
+            } else if (pet.isHungry()) {
+                state = "Hungry";
+            } else {
+                state = "Idle";
+                feedButton.setEnabled(true);
+                playButton.setEnabled(true);
+                sleepButton.setEnabled(true);
+                giveGiftButton.setEnabled(true);
+                vetButton.setEnabled(true);
+            }
+
+            String spritePath;
+            if (hasOutfit) {
+                spritePath = "resources/" + base + "Outfit_" + state + ".gif";
+            } else {
+                spritePath = "resources/" + base + "_" + state + ".gif";
+            }
+
+
+            // Only change sprite if different
+            if (gifLabel == null ||
+                    !((ImageIcon) gifLabel.getIcon()).getDescription().equals(spritePath)) {
+                spriteGifs(spritePath);
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         });
 
         // Start the timer
-        statDecayTimer.start();
+        //statDecayTimer.start();
+        SwingUtilities.invokeLater(() -> statDecayTimer.start());
 
         new KeyboardShortcuts(this, mainPanel, cardLayout, customFont, gameData).setupKeyBindings();
 
     }
+
+
+
     private void updateGif(String gifPath, int duration) {
         System.out.println("Updating GIF to: " + gifPath);
 
@@ -436,9 +528,9 @@ public class InGameScreen extends JLayeredPane {
     }
 
     private void commandButtons() {
-        JButton shopButton = MainScreen.buttonCreate(30, 550, 128, 128, "resources/command_button.png", "resources/command_button_clicked.png", "Shop");
+        shopButton = MainScreen.buttonCreate(30, 550, 128, 128, "resources/command_button.png", "resources/command_button_clicked.png", "Shop");
 
-        // ✅ Ensure existing StoreScreen is refreshed before switching
+        // Ensure existing StoreScreen is refreshed before switching
         shopButton.addActionListener(e -> {
             for (Component comp : mainPanel.getComponents()) {
                 if (comp instanceof StoreScreen) {
@@ -448,7 +540,7 @@ public class InGameScreen extends JLayeredPane {
                 }
             }
 
-            // ✅ If StoreScreen is missing, create and add it
+            // If StoreScreen is missing, create and add it
             Store store = new Store();
             StoreScreen storeScreen = new StoreScreen(customFont, cardLayout, mainPanel, store, gameData);
             mainPanel.add(storeScreen, "Shop");
@@ -464,7 +556,7 @@ public class InGameScreen extends JLayeredPane {
 
 
         // Feed Button with Inventory Popup
-        JButton feedButton = MainScreen.buttonCreate(210,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
+        feedButton = MainScreen.buttonCreate(210,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
         feedButton.addActionListener(e -> showInventoryPopup(feedButton, "Feed"));
         ImageIcon feedIcon = new ImageIcon("resources/feed_icon.png");
         JLabel feedIconLabel = new JLabel(feedIcon);
@@ -473,7 +565,7 @@ public class InGameScreen extends JLayeredPane {
         add(feedButton, Integer.valueOf(2));
 
         // Play Button with Inventory Popup
-        JButton playButton = MainScreen.buttonCreate(390,550, 128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
+        playButton = MainScreen.buttonCreate(390,550, 128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
         playButton.addActionListener(e -> showInventoryPopup(playButton, "Play"));
         ImageIcon playIcon = new ImageIcon("resources/play_icon.png");
         JLabel playIconLabel = new JLabel(playIcon);
@@ -482,13 +574,13 @@ public class InGameScreen extends JLayeredPane {
         add(playButton, Integer.valueOf(2));
 
         // Gift Button without Inventory Popup
-        JButton giveGift = MainScreen.buttonCreate(560, 550, 128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
+        giveGiftButton = MainScreen.buttonCreate(560, 550, 128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
         ImageIcon giftIcon = new ImageIcon("resources/gift_icon.png");
         JLabel giftIconLabel = new JLabel(giftIcon);
         giftIconLabel.setBounds(560 + (128 - 50)/2, 545 + (128 - 47)/2, 50, 47);
         add(giftIconLabel, Integer.valueOf(3));
-        add(giveGift, Integer.valueOf(2));
-        giveGift.addActionListener(e -> {
+        add(giveGiftButton, Integer.valueOf(2));
+        giveGiftButton.addActionListener(e -> {
             PlayerInventory inventory = gameData.getInventory();
             Pet pet = gameData.getPet();
 
@@ -500,11 +592,12 @@ public class InGameScreen extends JLayeredPane {
         });
 
 
-        JButton exerciseButton = MainScreen.buttonCreate(730,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
+        exerciseButton = MainScreen.buttonCreate(730,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
         add(exerciseButton, Integer.valueOf(2));
         exerciseButton.addActionListener(e -> {
             PlayerInventory inventory = gameData.getInventory(); // Get PlayerInventory
             inventory.exercisePet(pet);
+            playSound("resources/exercise_sound.wav");
             HealthProgressBar.setValue(pet.getHealth());
             FullnessProgressBar.setValue(pet.getFullness());
             SleepProgressBar.setValue(pet.getSleep());
@@ -518,7 +611,7 @@ public class InGameScreen extends JLayeredPane {
         add(exerciseIconLabel, Integer.valueOf(3));
         add(exerciseButton, Integer.valueOf(2));
 
-        JButton vetButton = MainScreen.buttonCreate(900,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
+        vetButton = MainScreen.buttonCreate(900,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
         vetButton.addActionListener(e -> playSound("resources/heal_sound.wav"));
         add(vetButton, Integer.valueOf(2));
         vetButton.addActionListener(e -> {
@@ -546,7 +639,7 @@ public class InGameScreen extends JLayeredPane {
         add(vetIconLabel, Integer.valueOf(3));
         add(vetButton, Integer.valueOf(2));
 
-        JButton sleepButton = MainScreen.buttonCreate(150, 500, 56,47, "resources/sleep_button.png", "resources/sleep_button.png", "");
+        sleepButton = MainScreen.buttonCreate(150, 500, 56,47, "resources/sleep_button.png", "resources/sleep_button.png", "");
         add(sleepButton, Integer.valueOf(2));
     }
 
