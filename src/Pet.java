@@ -282,7 +282,11 @@ public class Pet {
     }
 
     public boolean isAngry() {
-        return !isHappy && !isDead;
+        if(getHappiness() == 0)
+        {
+            return true;
+        }
+        return false;
     }
 
     public boolean isDead() {
