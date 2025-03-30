@@ -41,11 +41,18 @@ public class CreditScreen extends JLayeredPane {
         add(subLabel, Integer.valueOf(4));
 
         // Fixed Home Button - uses the MainScreen.buttonCreate method
-        JButton homeButton = MainScreen.buttonCreate(20, 10, 192, 64,
+        JButton homeButton = MainScreen.buttonCreate(20, 20, 192, 64,
                 "resources/white_button.png",
                 "resources/white_button_clicked.png",
                 "Home");  // Changed to "Home" to match your main screen's name
 
+        JLabel homeText = new JLabel("< HOME");
+        homeText.setFont(customFont);
+        homeText.setForeground(Color.BLACK);
+        homeText.setBounds(20,20,192,64);
+        homeText.setHorizontalAlignment(SwingConstants.CENTER);
+        homeText.setVerticalAlignment(SwingConstants.CENTER);
+        add(homeText, Integer.valueOf(4));
         homeButton.addActionListener(e -> cardLayout.show(mainPanel, "Home"));
         add(homeButton, Integer.valueOf(4));
     }

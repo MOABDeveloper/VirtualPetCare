@@ -40,7 +40,14 @@ public class TutorialScreen extends JLayeredPane {
         mainPanel.setBounds(0, 0, 1080, 750); // Set bounds for the mainPanel
         add(mainPanel, Integer.valueOf(1)); // Add mainPanel to the layered pane
 
-        JButton homeButton = MainScreen.buttonCreate(20, 10, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
+        JButton homeButton = MainScreen.buttonCreate(20, 20, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
+        JLabel homeText = new JLabel("< HOME");
+        homeText.setFont(customFont);
+        homeText.setForeground(Color.BLACK);
+        homeText.setBounds(20,20,192,64);
+        homeText.setHorizontalAlignment(SwingConstants.CENTER);
+        homeText.setVerticalAlignment(SwingConstants.CENTER);
+        add(homeText, Integer.valueOf(3));
         add(homeButton, Integer.valueOf(2));
 
         resetToGiveGift();

@@ -26,15 +26,22 @@ public class ParentalControlScreen extends JLayeredPane {
 
         // Add parental control window on top of grid
         ImageIcon windowBg = new ImageIcon("resources/parentalcontrol_background.png");
-        Image scaledWindowBg = windowBg.getImage().getScaledInstance(1011, 720, Image.SCALE_SMOOTH); // Adjust size as needed
+        Image scaledWindowBg = windowBg.getImage().getScaledInstance(1011, 600, Image.SCALE_SMOOTH); // Adjust size as needed
         JLabel windowLabel = new JLabel(new ImageIcon(scaledWindowBg));
-        windowLabel.setBounds(0, 0, 1080, 750); // Centered-ish, tweak this if needed
+        windowLabel.setBounds(0, 60, 1080, 750); // Centered-ish, tweak this if needed
         add(windowLabel, Integer.valueOf(1));
 
 
         // Back button
-        JButton backButton = MainScreen.buttonCreate(20, 10, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
-        add(backButton, Integer.valueOf(1));
+        JButton homeButton = MainScreen.buttonCreate(20, 20, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
+        add(homeButton, Integer.valueOf(1));
+        JLabel homeText = new JLabel("< HOME");
+        homeText.setFont(customFont);
+        homeText.setForeground(Color.BLACK);
+        homeText.setBounds(20,20,192,64);
+        homeText.setHorizontalAlignment(SwingConstants.CENTER);
+        homeText.setVerticalAlignment(SwingConstants.CENTER);
+        add(homeText, Integer.valueOf(4));
 
         // Labels
         JLabel totalPlayLabel = createLabel("TOTAL PLAY TIME:", 240, 245, 300, 40);
@@ -53,21 +60,21 @@ public class ParentalControlScreen extends JLayeredPane {
         updateStatLabels();
 
         // Buttons
-        JButton resetStatsButton = MainScreen.buttonCreate(620,240, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "");
+        JButton resetStatsButton = MainScreen.buttonCreate(620,190, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "");
         resetStatsButton.setText("RESET STATS");
         resetStatsButton.setFont(customFont.deriveFont(13f));
         resetStatsButton.setForeground(Color.decode("#7392B2"));
         resetStatsButton.setHorizontalTextPosition(SwingConstants.CENTER);
         resetStatsButton.setVerticalTextPosition(SwingConstants.CENTER);
 
-        JButton setPlayTimeButton = MainScreen.buttonCreate(620, 370, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "");
+        JButton setPlayTimeButton = MainScreen.buttonCreate(620, 320, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "");
         setPlayTimeButton.setText("SET PLAY TIME");
         setPlayTimeButton.setFont(customFont.deriveFont(12f));
         setPlayTimeButton.setForeground(Color.decode("#7392B2"));
         setPlayTimeButton.setHorizontalTextPosition(SwingConstants.CENTER);
         setPlayTimeButton.setVerticalTextPosition(SwingConstants.CENTER);
 
-        JButton revivePetButton = MainScreen.buttonCreate(620, 500, 192, 62, "resources/white_button.png", "resources/white_button_clicked.png", "");
+        JButton revivePetButton = MainScreen.buttonCreate(620, 440, 192, 62, "resources/white_button.png", "resources/white_button_clicked.png", "");
         revivePetButton.setText("REVIVE PET");
         revivePetButton.setFont(customFont.deriveFont(13f));
         revivePetButton.setForeground(Color.decode("#7392B2"));
@@ -115,8 +122,12 @@ public class ParentalControlScreen extends JLayeredPane {
         });
 
 
-        JButton resetPlayTimeButton = MainScreen.buttonCreate(620, 610, 192, 64,
-                "resources/white_button.png", "resources/white_button_clicked.png", "");
+        JButton resetPlayTimeButton = MainScreen.buttonCreate(620, 560, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "");
+        resetPlayTimeButton.setText("RESET PLAY TIME");
+        resetPlayTimeButton.setFont(customFont.deriveFont(11f));
+        resetPlayTimeButton.setForeground(Color.decode("#7392B2"));
+        resetPlayTimeButton.setHorizontalTextPosition(SwingConstants.CENTER);
+        resetPlayTimeButton.setVerticalTextPosition(SwingConstants.CENTER);
 
         // SET PLAY TIME button → shows dialog to get start/end hour and enables limit
         resetPlayTimeButton.addActionListener(e -> {

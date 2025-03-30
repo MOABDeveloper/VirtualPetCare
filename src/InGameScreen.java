@@ -227,6 +227,7 @@ public class InGameScreen extends JLayeredPane {
         // Start the timer
         statDecayTimer.start();
 
+        new KeyboardShortcuts(this, mainPanel, cardLayout, customFont, gameData).setupKeyBindings();
 
     }
     private void updateGif(String gifPath, int duration) {
@@ -545,7 +546,7 @@ public class InGameScreen extends JLayeredPane {
         add(vetIconLabel, Integer.valueOf(3));
         add(vetButton, Integer.valueOf(2));
 
-        JButton sleepButton = MainScreen.buttonCreate(200, 100, 56,47, "resources/sleep_button.png", "resources/sleep_button.png", "");
+        JButton sleepButton = MainScreen.buttonCreate(150, 500, 56,47, "resources/sleep_button.png", "resources/sleep_button.png", "");
         add(sleepButton, Integer.valueOf(2));
     }
 
@@ -888,5 +889,6 @@ public class InGameScreen extends JLayeredPane {
             e.printStackTrace();
         }
     }
+
 
 }
