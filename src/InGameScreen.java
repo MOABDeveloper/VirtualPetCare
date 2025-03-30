@@ -202,7 +202,7 @@ public class InGameScreen extends JLayeredPane {
         add(backButton, Integer.valueOf(2));
 
         // Decay every 5 seconds (5000 ms)
-        statDecayTimer = new Timer(500, e -> {
+        statDecayTimer = new Timer(5000, e -> {
             pet.applyDecline();
 
             // Update progress bar or any UI components
@@ -256,7 +256,7 @@ public class InGameScreen extends JLayeredPane {
                 giveGiftButton.setEnabled(false);
                 vetButton.setEnabled(false);
                 shopButton.setEnabled(false);
-
+                exerciseButton.setEnabled(false);
             } else if (pet.isSleeping()) {
                 state = "Sleep";
                 feedButton.setEnabled(false);
@@ -264,6 +264,7 @@ public class InGameScreen extends JLayeredPane {
                 sleepButton.setEnabled(false);
                 giveGiftButton.setEnabled(false);
                 vetButton.setEnabled(false);
+                exerciseButton.setEnabled(false);
             } else if (pet.isAngry()) {
                 state = "Angry";
                 feedButton.setEnabled(false);
@@ -271,6 +272,10 @@ public class InGameScreen extends JLayeredPane {
                 vetButton.setEnabled(false);
             } else if (pet.isHungry()) {
                 state = "Hungry";
+            }else if (pet.getHealth() <= 20) {
+                state = "Sick";
+            } else if (pet.getHealth() <= 50) {
+                state = "Tired";
             } else {
                 state = "Idle";
                 feedButton.setEnabled(true);
@@ -612,9 +617,11 @@ public class InGameScreen extends JLayeredPane {
         add(exerciseButton, Integer.valueOf(2));
 
         vetButton = MainScreen.buttonCreate(900,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
-        vetButton.addActionListener(e -> playSound("resources/heal_sound.wav"));
-        add(vetButton, Integer.valueOf(2));
+        vetButton = MainScreen.buttonCreate(900,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
         vetButton.addActionListener(e -> {
+
+            playSound("resources/heal_sound.wav");
+
             PlayerInventory inventory = gameData.getInventory(); // Get PlayerInventory
             int currentTime = (int) (System.currentTimeMillis() / 1000); // Current time in seconds
 
@@ -633,6 +640,7 @@ public class InGameScreen extends JLayeredPane {
                 );
             }
         });
+
         ImageIcon vetIcon = new ImageIcon("resources/vet_icon.png");
         JLabel vetIconLabel = new JLabel(vetIcon);
         vetIconLabel.setBounds(900 + (128 - 47)/2, 545 + (128 - 47)/2, 47, 44);
