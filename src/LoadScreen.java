@@ -49,12 +49,7 @@ public class LoadScreen extends JLayeredPane {
         add(deleteButton, Integer.valueOf(2)); // Ensure it appears on top
 
         // Back Button (Returns to MainScreen)
-        JButton homeButton = MainScreen.buttonCreate(
-                20, 10, 192, 64,
-                "resources/white_button.png",
-                "resources/white_button_clicked.png",
-                "Home"
-        );
+        JButton homeButton = MainScreen.buttonCreate(20, 10, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
         add(homeButton, Integer.valueOf(2));
 
         // Load the save files and create buttons

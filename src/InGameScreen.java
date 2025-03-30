@@ -480,6 +480,9 @@ public class InGameScreen extends JLayeredPane {
         vetIconLabel.setBounds(900 + (128 - 47)/2, 545 + (128 - 47)/2, 47, 44);
         add(vetIconLabel, Integer.valueOf(3));
         add(vetButton, Integer.valueOf(2));
+
+        JButton sleepButton = MainScreen.buttonCreate(200, 100, 56,47, "resources/sleep_button.png", "resources/sleep_button.png", "");
+        add(sleepButton, Integer.valueOf(2));
     }
 
     private void showInventoryPopup(JButton sourceButton, String inventoryType) {

@@ -17,6 +17,7 @@ public class StoreScreen extends JLayeredPane {
     private GameData gameData;
     private JButton nextButton;
     private JButton prevButton;
+    private JLabel coinLabel;
 
     public StoreScreen(Font customFont, CardLayout mainCardLayout, JPanel mainPanel, Store store, GameData gameData) {
         this.customFont = customFont;
@@ -37,6 +38,7 @@ public class StoreScreen extends JLayeredPane {
         setPreferredSize(new Dimension(1080, 750));
 
         setupBackground();
+        updateCoinDisplay();
 
         this.shopCardLayout = new CardLayout();
         this.shopPanel = new JPanel(shopCardLayout);
@@ -45,14 +47,14 @@ public class StoreScreen extends JLayeredPane {
         add(shopPanel, Integer.valueOf(2));
 
         // Create navigation buttons
-        nextButton = createNavButton("resources/next_page.png", 900, 350);
+        nextButton = createNavButton("resources/next_page.png", 700, 600);
         nextButton.addActionListener(e -> {
             shopCardLayout.next(shopPanel);
             updateNavButtons();
         });
         add(nextButton, Integer.valueOf(3));
 
-        prevButton = createNavButton("resources/prev_page.png", 100, 350);
+        prevButton = createNavButton("resources/prev_page.png", 300, 600);
         prevButton.addActionListener(e -> {
             shopCardLayout.previous(shopPanel);
             updateNavButtons();
@@ -127,6 +129,13 @@ public class StoreScreen extends JLayeredPane {
         JLabel bgLabel = new JLabel(shopBG);
         bgLabel.setBounds(0, -15, 1080, 750);
         add(bgLabel, Integer.valueOf(1));
+
+        JLabel shopText = new JLabel("SHOP");
+        shopText.setFont(customFont.deriveFont(Font.BOLD, 18f));
+        shopText.setForeground(Color.BLACK);
+        shopText.setBounds(500, 70, 200, 30);
+        add(shopText, Integer.valueOf(3)); // Higher layer to appear above background
+
     }
 
     private void populateStorePages() {
@@ -324,8 +333,6 @@ public class StoreScreen extends JLayeredPane {
         prevButton.setEnabled(enabled);
     }
 
-
-
     private void showPopup(String itemName, int price, Pet pet) {
         // Disable all buttons first
         setAllButtonsEnabled(false);
@@ -334,13 +341,58 @@ public class StoreScreen extends JLayeredPane {
         popup.setBounds(372, 86, 336, 579);
         popup.setOpaque(false);
 
+        // Background image
         JLabel popupImage = new JLabel(new ImageIcon("resources/store_popup.png"));
         popupImage.setBounds(0, 0, 336, 579);
-        popup.add(popupImage, Integer.valueOf(1));
+        popup.add(popupImage, Integer.valueOf(0));
 
-        JLabel textLabel = new JLabel("<html><center>" + itemName + "<br>Price: " + price + "</center></html>");
-        textLabel.setBounds(50, 200, 236, 50);
-        popup.add(textLabel, Integer.valueOf(2));
+        // Load and display item image
+        String imagePath = getItemImagePath(itemName);
+        ImageIcon itemIcon = loadAndScaleImage(imagePath, 130, 130);
+        JLabel itemImageLabel = new JLabel(itemIcon);
+        itemImageLabel.setBounds(100, 60, 130, 130);
+        popup.add(itemImageLabel, Integer.valueOf(1));
+
+        // Item name
+        JLabel nameLabel = new JLabel(itemName, SwingConstants.CENTER);
+        nameLabel.setBounds(0, 240, 336, 30);
+        nameLabel.setFont(customFont.deriveFont(Font.BOLD, 18f));
+        popup.add(nameLabel, Integer.valueOf(1));
+
+        // Initialize description and stats
+        String description = "";
+        String stats = "";
+
+        if (store.hasFood(itemName)) {
+            Food food = store.getFood(itemName);
+            description = food.getDescription().isEmpty() ? "A tasty treat!" : food.getDescription();
+            stats = "Fullness: +" + food.getFullness();
+        }
+        else if (store.hasToys(itemName)) {
+            Toys toy = store.getToy(itemName);
+            description = toy.getDescription().isEmpty() ? "Fun to play with!" : toy.getDescription();
+            stats = "Happiness: +20"; // Assuming fixed happiness increase for toys
+        }
+        else if (store.hasGift(itemName)) {
+            description = "A special outfit for your pet!";
+            stats = "Unique appearance";
+        }
+
+        // Description with word wrap
+        JTextArea descArea = new JTextArea(description);
+        descArea.setBounds(40, 400, 276, 40);
+        descArea.setFont(customFont.deriveFont(Font.PLAIN, 14f));
+        descArea.setLineWrap(true);
+        descArea.setWrapStyleWord(true);
+        descArea.setOpaque(false);
+        popup.add(descArea, Integer.valueOf(1));
+
+        // Stats
+        JLabel statsLabel = new JLabel(stats, SwingConstants.CENTER);
+        statsLabel.setBounds(0, 480, 336, 30);
+        statsLabel.setFont(customFont.deriveFont(Font.BOLD, 14f));
+        popup.add(statsLabel, Integer.valueOf(1));
+
 
         JButton buyButton = new JButton("Buy");
         buyButton.setBounds(90, 540, 80, 30);
@@ -368,6 +420,7 @@ public class StoreScreen extends JLayeredPane {
             // Process the purchase
             boolean purchaseSuccess = attemptPurchase(itemName, price);
             if (purchaseSuccess) {
+                updateCoinDisplay();
                 if (isOutfit(itemName)) {
                     pet.setOutfit(itemName); // Equip the outfit
                     JOptionPane.showMessageDialog(this,
@@ -395,6 +448,8 @@ public class StoreScreen extends JLayeredPane {
 
         popup.add(buyButton, Integer.valueOf(2));
 
+
+        // Close Button
         JButton closeButton = new JButton("Close");
         closeButton.setBounds(190, 540, 80, 30);
         closeButton.addActionListener(e -> {
@@ -403,10 +458,9 @@ public class StoreScreen extends JLayeredPane {
             revalidate();
             repaint();
         });
+        popup.add(closeButton, Integer.valueOf(1));
 
-        popup.add(closeButton, Integer.valueOf(2));
         add(popup, Integer.valueOf(5));
-
         revalidate();
         repaint();
     }
@@ -424,5 +478,18 @@ public class StoreScreen extends JLayeredPane {
             case "PetOption3": return "outfit3";
             default: return "None"; // In case of an unknown pet type
         }
+    }
+
+    private void updateCoinDisplay() {
+        if (coinLabel != null) {
+            remove(coinLabel); // Remove existing label if it exists
+        }
+
+        int coins = gameData.getInventory().getPlayerCoins();
+        coinLabel = new JLabel("Coins: " + coins);
+        coinLabel.setFont(customFont.deriveFont(Font.BOLD, 18f));
+        coinLabel.setForeground(Color.BLACK);
+        coinLabel.setBounds(20, 20, 200, 30);
+        add(coinLabel, Integer.valueOf(3)); // Higher layer to appear above background
     }
 }

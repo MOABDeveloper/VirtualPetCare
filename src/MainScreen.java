@@ -81,8 +81,6 @@ public class MainScreen extends JFrame {
         ImageIcon iconImage = new ImageIcon("resources/Purple.png");
         this.setIconImage(iconImage.getImage());
 
-
-
         this.setVisible(true);
     }
 
