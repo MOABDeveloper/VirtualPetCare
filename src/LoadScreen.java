@@ -34,22 +34,44 @@ public class LoadScreen extends JLayeredPane {
         ImageIcon scaledLoadIcon = new ImageIcon(scaledLoad);
         JLabel loadLabel = new JLabel(scaledLoadIcon);
         loadLabel.setBounds(0, 0, 1080, 750);
-        add(loadLabel, Integer.valueOf(1));
+
+        JLabel loadText = new JLabel("LOAD");
+        loadText.setForeground(Color.WHITE);
+        loadText.setFont(customFont.deriveFont(24f));
+        loadText.setBounds(800, 70, 192, 64);
+        loadText.setVerticalAlignment(SwingConstants.CENTER);
+        loadText.setHorizontalAlignment(SwingConstants.CENTER);
+        add(loadText, Integer.valueOf(2));
+
         // ======== BACKGROUND UNCHANGED =========
 
         JButton deleteButton = MainScreen.buttonCreate(
-                800, 10, 192, 64, // Adjust position as needed
+                540, 70, 192, 64, // Adjust position as needed
                 "resources/button.png",
                 "resources/button_clicked.png",
-                "Delete Save"
+                ""
         );
 
         deleteButton.addActionListener(e -> promptDeleteSave());
-
         add(deleteButton, Integer.valueOf(2)); // Ensure it appears on top
 
+        JLabel deleteText = new JLabel("DELETE SAVE");
+        deleteText.setFont(customFont);
+        deleteText.setForeground(Color.WHITE);
+        deleteText.setBounds(540,70,192,64);
+        deleteText.setHorizontalAlignment(SwingConstants.CENTER);
+        deleteText.setVerticalAlignment(SwingConstants.CENTER);
+        add(deleteText, Integer.valueOf(3));
+
         // Back Button (Returns to MainScreen)
-        JButton homeButton = MainScreen.buttonCreate(20, 10, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
+        JButton homeButton = MainScreen.buttonCreate(20, 20, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
+        JLabel homeText = new JLabel("< HOME");
+        homeText.setFont(customFont);
+        homeText.setForeground(Color.BLACK);
+        homeText.setBounds(20,20,192,64);
+        homeText.setHorizontalAlignment(SwingConstants.CENTER);
+        homeText.setVerticalAlignment(SwingConstants.CENTER);
+        add(homeText, Integer.valueOf(2));
         add(homeButton, Integer.valueOf(2));
 
         // Load the save files and create buttons
