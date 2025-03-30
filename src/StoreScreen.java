@@ -25,6 +25,8 @@ public class StoreScreen extends JLayeredPane {
         this.mainPanel = mainPanel;
         this.store = store;
         this.gameData = gameData;
+        this.playerInventory = gameData.getInventory();
+
 
         if (this.playerInventory == null) {
             System.out.println("ERROR: PlayerInventory is NULL in StoreScreen!");

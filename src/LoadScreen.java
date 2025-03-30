@@ -90,6 +90,21 @@ public class LoadScreen extends JLayeredPane {
                 //Load and scale images
                 ImageIcon defaultIcon = scaleImageIcon(BUTTON_IMG, 798 ,  138 );
 
+                String petIconLocation = "";
+
+                if(gameData.getPet().getPetType().equals("PetOption1")) {
+                    //petIconLocation = ""
+                } else if (gameData.getPet().getPetType().equals("PetOption2")) {
+                    //Load the icon here from resources/whatever
+                } else if (gameData.getPet().getPetType().equals("PetOption3")) {
+                    //Load the icon here from resources/whatever
+                }
+
+                ImageIcon petIcon = scaleImageIcon(petIconLocation, 798 ,  138 );
+
+
+
+
                 // Declare final variable to avoid scope issue
                 final JButton saveButton = new JButton(defaultIcon);
 
@@ -113,18 +128,18 @@ public class LoadScreen extends JLayeredPane {
                 saveButton.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        // 🚫 Check parental playtime restrictions before loading
+                        //Check parental playtime
                         if (!MainScreen.getParentalControl().isPlayAllowedNow()) {
                             JOptionPane.showMessageDialog(
                                     LoadScreen.this,
-                                    "⏰ Playtime is currently restricted.\nPlease try again during allowed hours.",
+                                    "Playtime is currently restricted.\nPlease try again during allowed hours.",
                                     "Playtime Restricted",
                                     JOptionPane.WARNING_MESSAGE
                             );
                             return;
                         }
 
-                        // ✅ Proceed to load the game if allowed
+                        // Load
                         GameData loadedGame = GameDataManager.loadGame(filePath);
                         if (loadedGame != null) {
                             switchToInGameScreen(loadedGame, filePath);
