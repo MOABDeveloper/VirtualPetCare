@@ -119,8 +119,8 @@ public class InGameScreen extends JLayeredPane {
         healthBars();
         commandButtons();
         //spriteGifs();
-//        String petType =  GameDataManager.getPetTypeFromSave(saveFilePath);
-        String petType = pet.getPetType(); // ✅ Use the object already in memory
+        //String petType =  GameDataManager.getPetTypeFromSave(saveFilePath);
+        String petType = pet.getPetType();
 
         if (petType.equals("PetOption1")) {
             if (pet.isWearingOutfit()) {
