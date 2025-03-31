@@ -90,18 +90,7 @@ public class TutorialScreen extends JLayeredPane {
         JLayeredPane screen = tutorialScreen("resources/give_gift_tutorial.png", giftGivingScreen);
 
         JTextArea textArea = new JTextArea(tutorialText.getGiftGivingText());
-        textArea.setFont(customFont.deriveFont(16f));
-        textArea.setForeground(Color.BLACK);
-        textArea.setOpaque(false);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        textArea.setEditable(false);
-        textArea.setFocusable(false);
-        textArea.setBounds(160, 460, 750, 120);
-        screen.add(textArea, Integer.valueOf(3));
-
-
-        return screen;
+        return setText(screen, textArea);
     }
 
     private JLayeredPane feedingScreen() {
@@ -122,18 +111,7 @@ public class TutorialScreen extends JLayeredPane {
         JLayeredPane screen = tutorialScreen("resources/feeding_tutorial.png", feedingScreen);
 
         JTextArea textArea = new JTextArea(tutorialText.getFeedingScreenText());
-        textArea.setFont(customFont.deriveFont(16f));
-        textArea.setForeground(Color.BLACK);
-        textArea.setOpaque(false);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        textArea.setEditable(false);
-        textArea.setFocusable(false);
-        textArea.setBounds(160, 460, 750, 120);
-        screen.add(textArea, Integer.valueOf(3));
-
-
-        return screen;
+        return setText(screen, textArea);
     }
 
     private JLayeredPane vetScreen() {
@@ -154,17 +132,7 @@ public class TutorialScreen extends JLayeredPane {
         JLayeredPane screen = tutorialScreen("resources/vet_tutorial.png", vetScreen);
 
         JTextArea textArea = new JTextArea(tutorialText.getVetScreenText());
-        textArea.setFont(customFont.deriveFont(16f));
-        textArea.setForeground(Color.BLACK);
-        textArea.setOpaque(false);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        textArea.setEditable(false);
-        textArea.setFocusable(false);
-        textArea.setBounds(160, 460, 750, 120);
-        screen.add(textArea, Integer.valueOf(3));
-
-        return screen;
+        return setText(screen, textArea);
 
     }
 
@@ -186,17 +154,7 @@ public class TutorialScreen extends JLayeredPane {
         JLayeredPane screen = tutorialScreen("resources/exercise_tutorial.png", exerciseScreen);
 
         JTextArea textArea = new JTextArea(tutorialText.getExerciseScreenText());
-        textArea.setFont(customFont.deriveFont(16f));
-        textArea.setForeground(Color.BLACK);
-        textArea.setOpaque(false);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        textArea.setEditable(false);
-        textArea.setFocusable(false);
-        textArea.setBounds(160, 460, 750, 120);
-        screen.add(textArea, Integer.valueOf(3));
-
-        return screen;
+        return setText(screen, textArea);
     }
 
     private JLayeredPane sleepScreen() {
@@ -217,17 +175,7 @@ public class TutorialScreen extends JLayeredPane {
         JLayeredPane screen = tutorialScreen("resources/sleeping_tutorial.png", sleepingScreen);
 
         JTextArea textArea = new JTextArea(tutorialText.getSleepScreenText());
-        textArea.setFont(customFont.deriveFont(16f));
-        textArea.setForeground(Color.BLACK);
-        textArea.setOpaque(false);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        textArea.setEditable(false);
-        textArea.setFocusable(false);
-        textArea.setBounds(160, 460, 750, 120);
-        screen.add(textArea, Integer.valueOf(3));
-
-        return screen;
+        return setText(screen, textArea);
     }
 
     private JLayeredPane playingScreen() {
@@ -247,17 +195,7 @@ public class TutorialScreen extends JLayeredPane {
         JLayeredPane screen = tutorialScreen("resources/playing_tutorial.png", playScreen);
 
         JTextArea textArea = new JTextArea(tutorialText.getPlayScreenText());
-        textArea.setFont(customFont.deriveFont(16f));
-        textArea.setForeground(Color.BLACK);
-        textArea.setOpaque(false);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        textArea.setEditable(false);
-        textArea.setFocusable(false);
-        textArea.setBounds(160, 460, 750, 120);
-        screen.add(textArea, Integer.valueOf(3));
-
-        return screen;
+        return setText(screen, textArea);
     }
 
     public void arrowImageIcon(JLayeredPane screenSource) {
@@ -320,6 +258,17 @@ public class TutorialScreen extends JLayeredPane {
         return screenSource;
 
     }
+    private JLayeredPane setText(JLayeredPane screen, JTextArea textArea) {
+        textArea.setFont(customFont.deriveFont(15f));
+        textArea.setForeground(Color.BLACK);
+        textArea.setOpaque(false);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        textArea.setEditable(false);
+        textArea.setFocusable(false);
+        textArea.setBounds(170, 480, 700, 120);
+        screen.add(textArea, Integer.valueOf(3));
 
+        return screen;
+    }
 }
-

@@ -20,9 +20,7 @@ public class InGameScreen extends JLayeredPane {
     private GameData gameData;
     private String saveFilePath;
     private JLabel gifLabel;
-
     private long sessionStartTime;
-
     private JButton feedButton;
     private JButton playButton;
     private JButton sleepButton;
@@ -30,10 +28,11 @@ public class InGameScreen extends JLayeredPane {
     private JButton exerciseButton;
     private JButton vetButton;
     private JButton shopButton;
-
     private String base;
     private String state;
     private String currentSpritePath = "";
+    private JLabel coinLabel;
+
 
 
     public InGameScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel, GameData gameData, String saveFilePath) {
@@ -55,6 +54,7 @@ public class InGameScreen extends JLayeredPane {
         commandButtons();
         createBackButton();
         startStatDecayTimer();
+        displayCoins();
         new KeyboardShortcuts(this, mainPanel, cardLayout, customFont, gameData).setupKeyBindings();
     }
 
@@ -840,4 +840,30 @@ public class InGameScreen extends JLayeredPane {
             clip.start();
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             e.printStackTrace();
-        }}}
+        }
+    }
+
+    public void displayCoins(){
+        // Load and scale the coin display image smoothly
+        ImageIcon originalCoinIcon = new ImageIcon("resources/coins_display.png");
+        Image scaledCoinImage = originalCoinIcon.getImage().getScaledInstance(200, 46, Image.SCALE_SMOOTH);
+        ImageIcon scaledCoinIcon = new ImageIcon(scaledCoinImage);
+
+        // create the label with scaled image
+        JLabel coinDisplayLabel = new JLabel(scaledCoinIcon);
+        coinDisplayLabel.setBounds(820, 460, 200, 46);
+
+        int coins = gameData.getInventory().getPlayerCoins();
+
+        coinLabel = new JLabel(String.valueOf(coins));
+        coinLabel.setFont(customFont.deriveFont(Font.BOLD, 17f));
+        coinLabel.setForeground(Color.BLACK);
+
+        coinLabel.setBounds(890, 470, 100, 30);
+
+        add(coinLabel, Integer.valueOf(4));
+        add(coinDisplayLabel, Integer.valueOf(3));
+        revalidate();
+        repaint();
+    }
+}

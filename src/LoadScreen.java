@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.Objects;
 
 
 public class LoadScreen extends JLayeredPane {
@@ -23,7 +24,7 @@ public class LoadScreen extends JLayeredPane {
         this.cardLayout = cardLayout;
         setPreferredSize(new Dimension(1080, 750));
 
-        // ======== DO NOT CHANGE BACKGROUND =========
+
         ImageIcon background = new ImageIcon("resources/grid.png");
         JLabel backgroundLabel = new JLabel(background);
         backgroundLabel.setBounds(0, 0, 1080, 750);
@@ -44,17 +45,10 @@ public class LoadScreen extends JLayeredPane {
         loadText.setHorizontalAlignment(SwingConstants.CENTER);
         add(loadText, Integer.valueOf(2));
 
-        // ======== BACKGROUND UNCHANGED =========
-
-        JButton deleteButton = MainScreen.buttonCreate(
-                540, 70, 192, 64, // Adjust position as needed
-                "resources/button.png",
-                "resources/button_clicked.png",
-                ""
-        );
+        JButton deleteButton = MainScreen.buttonCreate(540, 70, 192, 64, "resources/button.png", "resources/button_clicked.png", "");
 
         deleteButton.addActionListener(e -> promptDeleteSave());
-        add(deleteButton, Integer.valueOf(2)); // Ensure it appears on top
+        add(deleteButton, Integer.valueOf(2));
 
         JLabel deleteText = new JLabel("DELETE SAVE");
         deleteText.setFont(customFont);
@@ -78,84 +72,7 @@ public class LoadScreen extends JLayeredPane {
         // Load the save files and create buttons
         File[] saveFiles = getSaveFiles();
 
-//        for (int i = 0; i < Math.min(3, saveFiles.length); i++) {
-//            final String filePath = saveFiles[i].getAbsolutePath(); // Make final for inner class
-//
-//            GameData gameData = GameDataManager.loadGame(filePath);
-//            if (gameData != null) {
-//                String petName = gameData.getPet().getName();
-//                int petHealth = gameData.getPet().getHealth();
-//                int playerCoins = gameData.getInventory().getPlayerCoins();
-//
-//                //Load and scale images
-//                ImageIcon defaultIcon = scaleImageIcon(BUTTON_IMG, 798 ,  138 );
-//
-//                String petIconLocation = "";
-//
-//                if(gameData.getPet().getPetType().equals("PetOption1")) {
-//                    petIconLocation = "resources/PetOption1Icon.PNG";
-//                } else if (gameData.getPet().getPetType().equals("PetOption2")) {
-//                    petIconLocation = "resources/PetOption2Icon.PNG";
-//                } else if (gameData.getPet().getPetType().equals("PetOption3")) {
-//                    petIconLocation = "resources/PetOption3Icon.PNG";
-//                }
-//
-//                ImageIcon petIcon = scaleImageIcon(petIconLocation, 200 ,  200 );
-//                JLabel petIconLabel= new JLabel(petIcon);
-//                petIconLabel.setBounds(100, 135 + (i * 170), 200 ,  200);
-//                add(petIconLabel, Integer.valueOf(3));
-//
-//
-//
-//
-//                // Declare final variable to avoid scope issue
-//                final JButton saveButton = new JButton(defaultIcon);
-//
-//                // Set button size and position
-//                saveButton.setBounds(141, 174 + (i * 170), 798, 138);
-//                saveButton.setBorderPainted(false);
-//                saveButton.setContentAreaFilled(false);
-//                saveButton.setFocusPainted(false);
-//
-//                // Set text inside button
-//
-//                saveButton.setText("<html><center>" +
-//                        "<b>" + petName + "</b><br>" +
-//                        "Health: " + petHealth + "<br>" +
-//                        "Coins: " + playerCoins +
-//                        "</center></html>");
-//                saveButton.setFont(customFont);
-//                saveButton.setHorizontalTextPosition(JButton.CENTER);
-//                saveButton.setVerticalTextPosition(JButton.CENTER);
-//
-//                // Change button appearance when clicked
-//                saveButton.addMouseListener(new MouseAdapter() {
-//                    @Override
-//                    public void mouseClicked(MouseEvent e) {
-//                        //Check parental playtime
-//                        if (!MainScreen.getParentalControl().isPlayAllowedNow()) {
-//                            JOptionPane.showMessageDialog(
-//                                    LoadScreen.this,
-//                                    "Playtime is currently restricted.\nPlease try again during allowed hours.",
-//                                    "Playtime Restricted",
-//                                    JOptionPane.WARNING_MESSAGE
-//                            );
-//                            return;
-//                        }
-//
-//                        // Load
-//                        GameData loadedGame = GameDataManager.loadGame(filePath);
-//                        if (loadedGame != null) {
-//                            switchToInGameScreen(loadedGame, filePath);
-//                        }
-//                    }
-//                });
-//
-//
-//
-//                add(saveButton, Integer.valueOf(2));
-//            }
-//        }
+
         for (int i = 0; i < Math.min(3, saveFiles.length); i++) {
             final String filePath = saveFiles[i].getAbsolutePath();
 
@@ -170,20 +87,16 @@ public class LoadScreen extends JLayeredPane {
 
                 // Choose pet icon
                 String petIconLocation = "";
-                switch (gameData.getPet().getPetType()) {
-                    case "PetOption1":
-                        petIconLocation = "resources/PetOption1Icon.PNG";
-                        break;
-                    case "PetOption2":
-                        petIconLocation = "resources/PetOption2Icon.PNG";
-                        break;
-                    case "PetOption3":
-                        petIconLocation = "resources/PetOption3Icon.PNG";
-                        break;
+                if (Objects.equals(gameData.getPet().getPetType(), "PetOption1")){
+                    petIconLocation = "resources/PetOption1Icon.PNG";
+                } else if (Objects.equals(gameData.getPet().getPetType(), "PetOption2")){
+                    petIconLocation = "resources/PetOption2Icon.PNG";
+                } else {
+                    petIconLocation = "resources/PetOption3Icon.PNG";
                 }
 
                 // Add pet image icon
-                ImageIcon petIcon = scaleImageIcon(petIconLocation, 200, 200);
+                ImageIcon petIcon = scaleImageIcon(petIconLocation, 220, 200);
                 JLabel petIconLabel = new JLabel(petIcon);
                 petIconLabel.setBounds(100, 135 + (i * 170), 200, 200);
                 add(petIconLabel, Integer.valueOf(3));
@@ -200,12 +113,7 @@ public class LoadScreen extends JLayeredPane {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         if (!MainScreen.getParentalControl().isPlayAllowedNow()) {
-                            JOptionPane.showMessageDialog(
-                                    LoadScreen.this,
-                                    "Playtime is currently restricted.\nPlease try again during allowed hours.",
-                                    "Playtime Restricted",
-                                    JOptionPane.WARNING_MESSAGE
-                            );
+                            JOptionPane.showMessageDialog(LoadScreen.this, "Playtime is currently restricted.\nPlease try again during allowed hours.", "Playtime Restricted", JOptionPane.WARNING_MESSAGE);
                             return;
                         }
 
@@ -246,8 +154,6 @@ public class LoadScreen extends JLayeredPane {
                 labelPanel.add(coinsLabel, gbc);
 
                 add(labelPanel, Integer.valueOf(3));
-
-
             }
         }
 
@@ -269,18 +175,11 @@ public class LoadScreen extends JLayeredPane {
         return new File[0];
     }
 
-    // Switch to InGameScreen using MainScreen's managed instance
-//    private void switchToInGameScreen(GameData gameData) {
-//        MainScreen.showInGameScreen(gameData);
-//    }
-
     private void switchToInGameScreen(GameData gameData, String filePath) {
         InGameScreen inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel, gameData, filePath);
         mainPanel.add(inGameScreen, "InGameScreen");
         cardLayout.show(mainPanel, "InGameScreen");
     }
-
-
 
     private void promptDeleteSave() {
         File[] saveFiles = getSaveFiles();
@@ -297,26 +196,13 @@ public class LoadScreen extends JLayeredPane {
         }
 
         // Ask user to select a file
-        String selectedFile = (String) JOptionPane.showInputDialog(
-                this,
-                "Select a save file to delete:",
-                "Delete Save",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                saveNames,
-                saveNames[0]
-        );
+        String selectedFile = (String) JOptionPane.showInputDialog(this, "Select a save file to delete:", "Delete Save", JOptionPane.QUESTION_MESSAGE, null, saveNames, saveNames[0]);
 
         // If user canceled, do nothing
         if (selectedFile == null) return;
 
         // Confirm before deleting
-        int confirm = JOptionPane.showConfirmDialog(
-                this,
-                "Are you sure you want to delete " + selectedFile + "?",
-                "Confirm Delete",
-                JOptionPane.YES_NO_OPTION
-        );
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete " + selectedFile + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
             File fileToDelete = new File(SAVE_DIR + selectedFile);
