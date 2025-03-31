@@ -101,10 +101,13 @@ public class Pet {
 
         //SET THE THREE SELECTABLE PET TYPES AND THEIR CHARACTERISTICS
         this.petTypeMap = new HashMap<>();
-        petTypeMap.put("PetOption1", new PetType(1.2F,2.5F,.6F,1.3F));
-        petTypeMap.put("PetOption2",  new PetType(2F,2F,2F,3F));
-        petTypeMap.put("PetOption3",  new PetType(1.2F,.5F,2.4F,1.3F));
+        petTypeMap.put("PetOption1", new PetType(.5F,.9F,.5F,.5F));
+        petTypeMap.put("PetOption2",  new PetType(.6F,.4F,.6F,.9F));
+        petTypeMap.put("PetOption3",  new PetType(.5F,.5F,.9F,.6F));
 
+        // pet 1 -> hunger decreases most
+        // pet 2 -> happiness decreases most
+        // pet 3 -> sleepiness decreases most
 
         this.name = name;
         this.health = health;

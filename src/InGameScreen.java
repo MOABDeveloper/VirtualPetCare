@@ -279,6 +279,7 @@ public class InGameScreen extends JLayeredPane {
                 sleepButton.setEnabled(true);
                 giveGiftButton.setEnabled(true);
                 vetButton.setEnabled(true);
+                exerciseButton.setEnabled(true);
             }
 
             String spritePath;
@@ -645,6 +646,9 @@ public class InGameScreen extends JLayeredPane {
 
         sleepButton = MainScreen.buttonCreate(150, 500, 56,47, "resources/sleep_button.png", "resources/sleep_button.png", "");
         add(sleepButton, Integer.valueOf(2));
+        sleepButton.addActionListener(e -> {
+            pet.setSleeping(true);
+        });
     }
 
     private void toggleOutfit(Pet pet, PlayerInventory inventory) {
