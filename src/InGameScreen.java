@@ -34,7 +34,9 @@ public class InGameScreen extends JLayeredPane {
     private JButton vetButton;
     private JButton shopButton;
 
-
+    private boolean hasOutfit;
+    private String state = null;
+    private String base;
 
     public InGameScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel, GameData gameData, String saveFilePath) {
         this.customFont = customFont;
@@ -47,7 +49,7 @@ public class InGameScreen extends JLayeredPane {
 
 
 
-        mainPanel.add(this, "InGame");  // ✅ Ensure it exists in mainPanel
+        mainPanel.add(this, "InGame");
 
 
         setPreferredSize(new Dimension(1080, 750));
@@ -137,14 +139,16 @@ public class InGameScreen extends JLayeredPane {
 
         String petType = pet.getPetType();
 
-        if (petType.equals("PetOption1")) {
+        if (petType.equals("PetOption1"))
+        {
             if (pet.isWearingOutfit()) {
                 spriteGifs("resources/PetOneOutfit_Idle.gif");
             } else {
                 spriteGifs("resources/PetOne_Idle.gif");
             }
         }
-        else if (petType.equals("PetOption2")) {
+        else if (petType.equals("PetOption2"))
+        {
             if(pet.isWearingOutfit())
             {
                 spriteGifs("resources/PetTwoOutfit_Idle.gif");
@@ -201,7 +205,7 @@ public class InGameScreen extends JLayeredPane {
 
         add(backButton, Integer.valueOf(2));
 
-        // Decay every 5 seconds (5000 ms)
+        // Decay every 250ms
         statDecayTimer = new Timer(250, e -> {
             pet.applyDecline();
 
@@ -229,7 +233,7 @@ public class InGameScreen extends JLayeredPane {
             // Optional: print stats to console for debugging
             pet.printStats();
 
-            String base;
+
             switch (pet.getPetType()) {
                 case "PetOption1":
                     base = "PetOne";
@@ -245,8 +249,7 @@ public class InGameScreen extends JLayeredPane {
                     break;
             }
 
-            boolean hasOutfit = pet.isWearingOutfit();
-            String state = null;
+            hasOutfit = pet.isWearingOutfit();
 
             if (pet.isDead()) {
                 state = "Dead";
@@ -288,37 +291,36 @@ public class InGameScreen extends JLayeredPane {
                 exerciseButton.setEnabled(true);
             }
 
-            String spritePath;
-            if (hasOutfit) {
-                spritePath = "resources/" + base + "Outfit_" + state + ".gif";
-            } else {
-                spritePath = "resources/" + base + "_" + state + ".gif";
-            }
-
-
-            // Only change sprite if different
-            if (gifLabel == null ||
-                    !((ImageIcon) gifLabel.getIcon()).getDescription().equals(spritePath)) {
-                spriteGifs(spritePath);
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//            String spritePath;
+//            if (hasOutfit) {
+//                spritePath = "resources/" + base + "Outfit_" + state + ".gif";
+//            } else {
+//                spritePath = "resources/" + base + "_" + state + ".gif";
+//            }
+//
+//
+//            // Only change sprite if different
+//            if (gifLabel == null ||
+//                    !((ImageIcon) gifLabel.getIcon()).getDescription().equals(spritePath)) {
+//                spriteGifs(spritePath);
+//            }
 
         });
+
+//        String spritePath;
+//        if (hasOutfit) {
+//            spritePath = "resources/" + base + "Outfit_" + state + ".gif";
+//        } else {
+//            spritePath = "resources/" + base + "_" + state + ".gif";
+//        }
+        updateSprite(pet);
+
+
+        // Only change sprite if different
+//        if (gifLabel == null ||
+//                !((ImageIcon) gifLabel.getIcon()).getDescription().equals(spritePath)) {
+//            spriteGifs(spritePath);
+//        }
 
         // Start the timer
         //statDecayTimer.start();
@@ -996,8 +998,4 @@ public class InGameScreen extends JLayeredPane {
             clip.start();
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             e.printStackTrace();
-        }
-    }
-
-
-}
+        }}}
