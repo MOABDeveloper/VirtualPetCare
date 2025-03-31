@@ -390,18 +390,18 @@ public class InGameScreen extends JLayeredPane {
 
     private void commandButtons() {
         shopButton = MainScreen.buttonCreate(30, 550, 128, 128, "resources/command_button.png", "resources/command_button_clicked.png", "Shop");
-
         // Ensure existing StoreScreen is refreshed before switching
         shopButton.addActionListener(e -> {
-            for (Component comp : mainPanel.getComponents()) {
-                if (comp instanceof StoreScreen) {
-                    ((StoreScreen) comp).resetToFirstPage();  // Ensure store is refreshed
+            Component[] components = mainPanel.getComponents();
+            for (int i = 0; i < components.length; i++) {
+                if (components[i] instanceof StoreScreen) {
+                    ((StoreScreen) components[i]).resetToFirstPage();  // Ensure store is refreshed
                     cardLayout.show(mainPanel, "Shop");  // ✅ Now switch to the Store
                     return;
                 }
             }
 
-            // If StoreScreen is missing, create and add it
+        // If StoreScreen is missing, create and add it
             Store store = new Store();
             StoreScreen storeScreen = new StoreScreen(customFont, cardLayout, mainPanel, store, gameData);
             mainPanel.add(storeScreen, "Shop");
@@ -414,6 +414,12 @@ public class InGameScreen extends JLayeredPane {
         shopIconLabel.setBounds(30 + (128 - 44)/2, 545 + (128 - 38)/2, 44, 38);
         add(shopIconLabel, Integer.valueOf(3));
         add(shopButton, Integer.valueOf(2));
+        JLabel shopTextLabel = new JLabel("SHOP");
+        shopTextLabel.setFont(customFont.deriveFont(Font.BOLD, 14f));
+        shopTextLabel.setForeground(Color.BLACK);
+        shopTextLabel.setBounds(30, 530 + 128 + 5, 128, 20);
+        shopTextLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        add(shopTextLabel, Integer.valueOf(3));
 
 
         // Feed Button with Inventory Popup
@@ -424,6 +430,12 @@ public class InGameScreen extends JLayeredPane {
         feedIconLabel.setBounds(210 + (128 - 39)/2, 545 + (128 - 38)/2, 39, 38);
         add(feedIconLabel, Integer.valueOf(3));
         add(feedButton, Integer.valueOf(2));
+        JLabel feedTextLabel = new JLabel("FEED");
+        feedTextLabel.setFont(customFont.deriveFont(Font.BOLD, 14f));
+        feedTextLabel.setForeground(Color.BLACK);
+        feedTextLabel.setBounds(210, 530 + 128 + 5, 128, 20);
+        feedTextLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        add(feedTextLabel, Integer.valueOf(3));
 
         // Play Button with Inventory Popup
         playButton = MainScreen.buttonCreate(390,550, 128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
@@ -433,6 +445,12 @@ public class InGameScreen extends JLayeredPane {
         playIconLabel.setBounds(390 + (128 - 47)/2, 545 + (128 - 58)/2, 47, 58);
         add(playIconLabel, Integer.valueOf(3));
         add(playButton, Integer.valueOf(2));
+        JLabel playTextLabel = new JLabel("PLAY");
+        playTextLabel.setFont(customFont.deriveFont(Font.BOLD, 14f));
+        playTextLabel.setForeground(Color.BLACK);
+        playTextLabel.setBounds(390, 530 + 128 + 5, 128, 20);
+        playTextLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        add(playTextLabel, Integer.valueOf(3));
 
         // Gift Button without Inventory Popup
         giveGiftButton = MainScreen.buttonCreate(560, 550, 128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
@@ -444,15 +462,27 @@ public class InGameScreen extends JLayeredPane {
         giveGiftButton.addActionListener(e -> {
             PlayerInventory inventory = gameData.getInventory();
             Pet pet = gameData.getPet();
+
             // 1. Toggle outfit
             toggleOutfit(pet, inventory);
+
             // 2. Update sprite
             updateSprite(pet);
-            //3. Increase Happiness
-            if(pet.isWearingOutfit()) {
+
+            // 3. If wearing outfit, increase happiness and update coins
+            if (pet.isWearingOutfit()) {
                 pet.setHappiness(pet.getMaxHappiness());
+                // Add coin reward for wearing outfit
+                inventory.setPlayerCoins(inventory.getPlayerCoins() + 100);
+                refreshCoinDisplay();
             }
         });
+        JLabel giftTextLabel = new JLabel("GIFT");
+        giftTextLabel.setFont(customFont.deriveFont(Font.BOLD, 14f));
+        giftTextLabel.setForeground(Color.BLACK);
+        giftTextLabel.setBounds(560, 530 + 128 + 5, 128, 20);
+        giftTextLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        add(giftTextLabel, Integer.valueOf(3));
 
 
         exerciseButton = MainScreen.buttonCreate(730,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
@@ -464,6 +494,7 @@ public class InGameScreen extends JLayeredPane {
             HealthProgressBar.setValue(pet.getHealth());
             FullnessProgressBar.setValue(pet.getFullness());
             SleepProgressBar.setValue(pet.getSleep());
+            refreshCoinDisplay(); // Add this to update coin display
             updateGif(getGifPath("Exercising"),1500);
         });
 
@@ -473,6 +504,12 @@ public class InGameScreen extends JLayeredPane {
         exerciseIconLabel.setBounds(730 + (128 - 50)/2, 545 + (128 - 47)/2, 50, 47);
         add(exerciseIconLabel, Integer.valueOf(3));
         add(exerciseButton, Integer.valueOf(2));
+        JLabel exerciseTextLabel = new JLabel("EXERCISE");
+        exerciseTextLabel.setFont(customFont.deriveFont(Font.BOLD, 14f));
+        exerciseTextLabel.setForeground(Color.BLACK);
+        exerciseTextLabel.setBounds(730, 530 + 128 + 5, 128, 20);
+        exerciseTextLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        add(exerciseTextLabel, Integer.valueOf(3));
 
         vetButton = MainScreen.buttonCreate(900,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
         vetButton = MainScreen.buttonCreate(900,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
@@ -484,8 +521,9 @@ public class InGameScreen extends JLayeredPane {
             int currentTime = (int) (System.currentTimeMillis() / 1000); // Current time in seconds
 
             if (inventory.takePetToVet(pet, currentTime)) {
-                HealthProgressBar.setValue(pet.getHealth()); // Update UI
+                HealthProgressBar.setValue(pet.getHealth());
                 System.out.println(pet.getName() + " went to the vet and gained health!");
+                refreshCoinDisplay(); // Add this to update coin display
             } else {
                 int remainingCooldown = pet.getVetCooldownDuration() - (currentTime - pet.getLastVetVisitTime());
                 remainingCooldown = Math.max(remainingCooldown, 0); // Ensure it doesn't go negative
@@ -504,6 +542,12 @@ public class InGameScreen extends JLayeredPane {
         vetIconLabel.setBounds(900 + (128 - 47)/2, 545 + (128 - 47)/2, 47, 44);
         add(vetIconLabel, Integer.valueOf(3));
         add(vetButton, Integer.valueOf(2));
+        JLabel vetTextLabel = new JLabel("VET");
+        vetTextLabel.setFont(customFont.deriveFont(Font.BOLD, 14f));
+        vetTextLabel.setForeground(Color.BLACK);
+        vetTextLabel.setBounds(900, 530 + 128 + 5, 128, 20);
+        vetTextLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        add(vetTextLabel, Integer.valueOf(3));
 
         sleepButton = MainScreen.buttonCreate(150, 500, 56,47, "resources/sleep_button.png", "resources/sleep_button.png", "");
         add(sleepButton, Integer.valueOf(2));
@@ -631,12 +675,7 @@ public class InGameScreen extends JLayeredPane {
                 JLabel quantityLabel = new JLabel("x" + quantity);
                 quantityLabel.setFont(customFont.deriveFont(12f));
                 quantityLabel.setForeground(Color.BLACK);
-                quantityLabel.setBounds(
-                        square.getX() + square.getWidth() - 25,
-                        square.getY() + square.getHeight() - 20,
-                        25,
-                        15
-                );
+                quantityLabel.setBounds(square.getX() + square.getWidth() - 25, square.getY() + square.getHeight() - 20, 25, 15);
 
                 inventoryPane.add(foodButton, JLayeredPane.MODAL_LAYER);
                 inventoryPane.add(quantityLabel, JLayeredPane.MODAL_LAYER);
@@ -653,7 +692,7 @@ public class InGameScreen extends JLayeredPane {
                         FullnessProgressBar.setValue(pet.getFullness());
                         playSound("resources/eating_sound.wav");
                         updateGif(getGifPath("Eating"),1500);
-                        System.out.println("🍊 " + pet.getName() + " ate " + food.getName());
+                        refreshCoinDisplay(); // Add this to update coin display
 
                         // Remove the food GIF after 1.5 seconds
                         Timer gifTimer = new Timer(1500, ev -> {
@@ -691,12 +730,7 @@ public class InGameScreen extends JLayeredPane {
 
                 // Create toy button with scaled icon
                 JButton toyButton = new JButton(new ImageIcon(scaledToyImage));
-                toyButton.setBounds(
-                        square.getX() + (square.getWidth() - 40)/2,
-                        square.getY() + (square.getHeight() - 40)/2,
-                        40,
-                        40
-                );
+                toyButton.setBounds(square.getX() + (square.getWidth() - 40)/2, square.getY() + (square.getHeight() - 40)/2, 40, 40);
                 toyButton.setContentAreaFilled(false);
                 toyButton.setBorderPainted(false);
                 toyButton.setFocusPainted(false);
@@ -715,21 +749,25 @@ public class InGameScreen extends JLayeredPane {
                 inventoryPane.add(toyButton, JLayeredPane.MODAL_LAYER);
                 inventoryPane.add(quantityLabel, JLayeredPane.MODAL_LAYER);
 
+                // In the toy button action listener (play action)
                 toyButton.addActionListener(e -> {
-                    itemGifLabel.setBounds(430, 350, 100, 100); // Toy position
+                    itemGifLabel.setBounds(430, 350, 100, 100);
 
-                    // Show the toy GIF beside the pet - scale down to 80x80 instead of 200x200
+                    // Show the toy GIF
                     String toyPngPath = "resources/toy_" + toy.getName().replace(" ", "_").toLowerCase() + ".png";
                     ImageIcon originalToyPNG = new ImageIcon(toyPngPath);
-                    Image scaledToyPNG = originalToyPNG.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH); // Changed from 200x200 to 80x80
+                    Image scaledToyPNG = originalToyPNG.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
                     itemGifLabel.setIcon(new ImageIcon(scaledToyPNG));
 
                     if (inventory.hasToy(toy)) {
-                        pet.increaseHappiness(10);
+                        pet.increaseHappiness(25);
                         HappinessProgressBar.setValue(pet.getHappiness());
                         playSound("resources/play_sound.wav");
                         updateGif(getGifPath("Playing"),1500);
-                        System.out.println("🎾 " + pet.getName() + " played with " + toy.getName());
+
+                        // Add coin reward for playing
+                        inventory.setPlayerCoins(inventory.getPlayerCoins() + 500);
+                        refreshCoinDisplay(); // Update the coin display
 
                         // Remove the toy GIF after 1.5 seconds
                         Timer gifTimer = new Timer(1500, ev -> {
@@ -787,8 +825,6 @@ public class InGameScreen extends JLayeredPane {
         repaint();
     }
 
-
-
     private String getGifPath(String action) {
         String petType = pet.getPetType();
         String baseName = "";
@@ -844,7 +880,6 @@ public class InGameScreen extends JLayeredPane {
     }
 
     public void displayCoins(){
-        // Load and scale the coin display image smoothly
         ImageIcon originalCoinIcon = new ImageIcon("resources/coins_display.png");
         Image scaledCoinImage = originalCoinIcon.getImage().getScaledInstance(200, 46, Image.SCALE_SMOOTH);
         ImageIcon scaledCoinIcon = new ImageIcon(scaledCoinImage);
@@ -863,6 +898,13 @@ public class InGameScreen extends JLayeredPane {
 
         add(coinLabel, Integer.valueOf(4));
         add(coinDisplayLabel, Integer.valueOf(3));
+        revalidate();
+        repaint();
+    }
+
+    public void refreshCoinDisplay() {
+        int coins = gameData.getInventory().getPlayerCoins();
+        coinLabel.setText(String.valueOf(coins));
         revalidate();
         repaint();
     }

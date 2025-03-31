@@ -40,7 +40,6 @@ public class StoreScreen extends JLayeredPane {
         setPreferredSize(new Dimension(1080, 750));
 
         setupBackground();
-        updateCoinDisplay();
 
         this.shopCardLayout = new CardLayout();
         this.shopPanel = new JPanel(shopCardLayout);
@@ -71,11 +70,20 @@ public class StoreScreen extends JLayeredPane {
         homeButton.addActionListener(e -> {
             resetToFirstPage(); // Ensure shop resets
 
-            // Directly switch to InGameScreen
+            // Get reference to InGameScreen and refresh its coin display
+            for (Component comp : mainPanel.getComponents()) {
+                if (comp instanceof InGameScreen) {
+                    ((InGameScreen) comp).refreshCoinDisplay();
+                    break;
+                }
+            }
+
+            // Switch to InGameScreen
             mainCardLayout.show(mainPanel, "InGameScreen");
         });
 
 
+        updateCoinDisplay();
         add(homeButton, Integer.valueOf(3));
         allButtons.add(homeButton);
     }
@@ -315,20 +323,46 @@ public class StoreScreen extends JLayeredPane {
     }
 
 
-    private boolean attemptPurchase(String itemName, int price) {
-        PlayerInventory inventory = gameData.getInventory();
-        System.out.println("Player coins before purchase: " + inventory.getPlayerCoins());
+//    private boolean attemptPurchase(String itemName, int price) {
+//        PlayerInventory inventory = gameData.getInventory();
+//        System.out.println("Player coins before purchase: " + inventory.getPlayerCoins());
+//
+//        if (store.hasFood(itemName)) {
+//            return store.buyFood(itemName, inventory, 1);
+//        } else if (store.hasToys(itemName)) {
+//            return store.buyToy(itemName, inventory, 1);
+//        } else if (store.hasGift(itemName)) {
+//            return store.buyGift(itemName, inventory, 1);
+//        }
+//
+//        return false;
+//    }
+private boolean attemptPurchase(String itemName, int price) {
+    PlayerInventory inventory = gameData.getInventory();
+    System.out.println("Player coins before purchase: " + inventory.getPlayerCoins());
 
-        if (store.hasFood(itemName)) {
-            return store.buyFood(itemName, inventory, 1);
-        } else if (store.hasToys(itemName)) {
-            return store.buyToy(itemName, inventory, 1);
-        } else if (store.hasGift(itemName)) {
-            return store.buyGift(itemName, inventory, 1);
-        }
-
+    // Check if player has enough coins
+    if (inventory.getPlayerCoins() < price) {
         return false;
     }
+
+    boolean purchaseSuccess = false;
+    if (store.hasFood(itemName)) {
+        purchaseSuccess = store.buyFood(itemName, inventory, 1);
+    } else if (store.hasToys(itemName)) {
+        purchaseSuccess = store.buyToy(itemName, inventory, 1);
+    } else if (store.hasGift(itemName)) {
+        purchaseSuccess = store.buyGift(itemName, inventory, 1);
+    }
+
+    if (purchaseSuccess) {
+        // Deduct coins
+        inventory.setPlayerCoins(inventory.getPlayerCoins() - price);
+        System.out.println("Player coins after purchase: " + inventory.getPlayerCoins());
+        return true;
+    }
+    return false;
+}
 
     private void setAllButtonsEnabled(boolean enabled) {
         for (JButton button : allButtons) {
@@ -377,7 +411,7 @@ public class StoreScreen extends JLayeredPane {
         else if (store.hasToys(itemName)) {
             Toys toy = store.getToy(itemName);
             description = toy.getDescription().isEmpty() ? "Fun to play with!" : toy.getDescription();
-            stats = "Happiness: +20"; // Assuming fixed happiness increase for toys
+            stats = "Happiness: +25";
         }
         else if (store.hasGift(itemName)) {
             description = "A special outfit for your pet!";
@@ -400,6 +434,58 @@ public class StoreScreen extends JLayeredPane {
         popup.add(statsLabel, Integer.valueOf(1));
 
 
+//        JButton buyButton = new JButton("Buy");
+//        buyButton.setBounds(90, 540, 80, 30);
+//        buyButton.addActionListener(e -> {
+//            System.out.println("Buy button clicked, Outfit clicked is: "+ itemName);
+//
+//            // Check if the item is an outfit
+//            if (isOutfit(itemName)) {
+//                String allowedOutfit = getAllowedOutfit(pet);
+//
+//                System.out.println("You are trying to buy" + itemName);
+//                System.out.println("Pet can only wear" + allowedOutfit);
+//
+//                // If the pet is not allowed to wear this outfit, show an error message
+//                if (!itemName.equals(allowedOutfit)) {
+//                    System.out.println("Should have failed");
+//                    JOptionPane.showMessageDialog(this,
+//                            "This pet cannot wear " + itemName + "! It can only wear " + allowedOutfit,
+//                            "Purchase Failed",
+//                            JOptionPane.ERROR_MESSAGE);
+//                    return; // Stop the purchase
+//                }
+//            }
+//
+//            // Process the purchase
+//            boolean purchaseSuccess = attemptPurchase(itemName, price);
+//            if (purchaseSuccess) {
+//                updateCoinDisplay();
+//                if (isOutfit(itemName)) {
+//                    gameData.getInventory().addOutfit(itemName);
+//
+//                    JOptionPane.showMessageDialog(this,
+//                            "You bought " + itemName + "! Your pet is now wearing it!",
+//                            "Purchase Successful",
+//                            JOptionPane.INFORMATION_MESSAGE);
+//                } else {
+//                    JOptionPane.showMessageDialog(this,
+//                            "You bought " + itemName + "!",
+//                            "Purchase Successful",
+//                            JOptionPane.INFORMATION_MESSAGE);
+//                }
+//            } else {
+//                JOptionPane.showMessageDialog(this,
+//                        "Not enough coins!",
+//                        "Purchase Failed",
+//                        JOptionPane.ERROR_MESSAGE);
+//            }
+//
+//            remove(popup);
+//            setAllButtonsEnabled(true); // Re-enable buttons
+//            revalidate();
+//            repaint();
+//        });
         JButton buyButton = new JButton("Buy");
         buyButton.setBounds(90, 540, 80, 30);
         buyButton.addActionListener(e -> {
@@ -426,10 +512,10 @@ public class StoreScreen extends JLayeredPane {
             // Process the purchase
             boolean purchaseSuccess = attemptPurchase(itemName, price);
             if (purchaseSuccess) {
-                updateCoinDisplay();
+                updateCoinDisplay(); // Update the coin display immediately
+
                 if (isOutfit(itemName)) {
                     gameData.getInventory().addOutfit(itemName);
-
                     JOptionPane.showMessageDialog(this,
                             "You bought " + itemName + "! Your pet is now wearing it!",
                             "Purchase Successful",
@@ -488,15 +574,46 @@ public class StoreScreen extends JLayeredPane {
     }
 
     private void updateCoinDisplay() {
+        // Remove existing components if they exist
         if (coinLabel != null) {
-            remove(coinLabel); // Remove existing label if it exists
+            remove(coinLabel);
         }
 
+        // Remove any existing coin display background
+        for (Component comp : getComponents()) {
+            if (comp instanceof JLabel && ((JLabel)comp).getIcon() != null &&
+                    ((JLabel)comp).getIcon().toString().contains("coins_display")) {
+                remove(comp);
+            }
+        }
+
+        // Load and scale the coin display image
+        ImageIcon originalCoinIcon = new ImageIcon("resources/coins_display.png");
+        Image scaledCoinImage = originalCoinIcon.getImage().getScaledInstance(190, 46, Image.SCALE_SMOOTH);
+        ImageIcon scaledCoinIcon = new ImageIcon(scaledCoinImage);
+
+        // Create the label with scaled image
+        JLabel coinDisplayLabel = new JLabel(scaledCoinIcon);
+        coinDisplayLabel.setBounds(10, 20, 200, 46);
+        add(coinDisplayLabel, Integer.valueOf(3));
+
+        // Update coin count
         int coins = gameData.getInventory().getPlayerCoins();
-        coinLabel = new JLabel("Coins: " + coins);
-        coinLabel.setFont(customFont.deriveFont(Font.BOLD, 18f));
+        coinLabel = new JLabel(String.valueOf(coins));
+        coinLabel.setFont(customFont.deriveFont(Font.BOLD, 17f));
         coinLabel.setForeground(Color.BLACK);
-        coinLabel.setBounds(20, 20, 200, 30);
-        add(coinLabel, Integer.valueOf(3)); // Higher layer to appear above background
+        coinLabel.setBounds(80, 30, 100, 30);
+        add(coinLabel, Integer.valueOf(4));
+
+        revalidate();
+        repaint();
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        if (visible) {
+            updateCoinDisplay(); // Refresh coins when store opens
+        }
     }
 }
