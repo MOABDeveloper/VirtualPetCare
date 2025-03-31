@@ -461,6 +461,18 @@ public class StoreScreen extends JLayeredPane {
                 }
             }
 
+            if (store.hasToys(itemName)) {
+                Toys toy = store.getToy(itemName);
+                if (playerInventory.hasToy(toy)) {
+                    showStyledMessage("Purchase Denied",
+                            "You already own this toy!", true);
+                    return;
+                }
+            }
+
+
+
+
             boolean purchaseSuccess = attemptPurchase(itemName, price);
             if (purchaseSuccess) {
                 updateCoinDisplay();
