@@ -3,25 +3,22 @@ package src;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.Timer;
 
 public class InGameScreen extends JLayeredPane {
     private Font customFont;
-    private CardLayout cardLayout;  // Remove static
+    private CardLayout cardLayout;
     private JPanel mainPanel;
     private JProgressBar HealthProgressBar;
     private JProgressBar SleepProgressBar;
     private JProgressBar HappinessProgressBar;
     private JProgressBar FullnessProgressBar;
     private Pet pet;
-    private static String health_red = "#A94337";
     private Timer statDecayTimer;
     private GameData gameData;
-    private String saveFilePath;  // Store the save file path
+    private String saveFilePath;
     private JLabel gifLabel;
 
     private long sessionStartTime;
@@ -34,9 +31,10 @@ public class InGameScreen extends JLayeredPane {
     private JButton vetButton;
     private JButton shopButton;
 
-    private boolean hasOutfit;
-    private String state = null;
     private String base;
+    private String state;
+    private String currentSpritePath = "";
+
 
     public InGameScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel, GameData gameData, String saveFilePath) {
         this.customFont = customFont;
@@ -44,292 +42,145 @@ public class InGameScreen extends JLayeredPane {
         this.mainPanel = mainPanel;
         this.pet = gameData.getPet();
         this.gameData = gameData;
-        this.saveFilePath = saveFilePath;  // Store the file path
+        this.saveFilePath = saveFilePath;
         this.sessionStartTime = System.currentTimeMillis();
 
-
-
         mainPanel.add(this, "InGame");
-
-
         setPreferredSize(new Dimension(1080, 750));
+
+        initializePetSprite();
         setBackground();
-
-        // Create and position progress bar for health
-        HealthProgressBar = new JProgressBar(JProgressBar.VERTICAL, 0,pet.getMaxHealth());
-        HealthProgressBar.setBounds(26, 81, 25, 135);
-        HealthProgressBar.setValue(pet.getHealth()); // Initial value
-        HealthProgressBar.setStringPainted(false); // Show percentage text
-
-        // Paint the progress bar colors
-        updateProgressBarColor(HealthProgressBar,pet.getHealth());
-
-        //Set Background Color
-        HealthProgressBar.setBackground(Color.decode("#f9e6c6"));
-        HealthProgressBar.repaint();
-
-        HealthProgressBar.revalidate();
-
-        //Place bar below the graphics
-        add(HealthProgressBar, Integer.valueOf(1));
-        //Finished Health Progress bar
-
-        // Create and position progress bar for Sleep
-        SleepProgressBar = new JProgressBar(JProgressBar.VERTICAL, 0,pet.getMaxSleep());
-        SleepProgressBar.setBounds(101, 81, 25, 135);
-        SleepProgressBar.setValue(pet.getSleep()); // Initial value
-        SleepProgressBar.setStringPainted(false); // Show percentage text
-
-        // Paint the progress bar colors
-        updateProgressBarColor(SleepProgressBar,pet.getSleep());
-
-        //Set Background Color
-        SleepProgressBar.setBackground(Color.decode("#f9e6c6"));
-        SleepProgressBar.repaint();
-
-        SleepProgressBar.revalidate();
-
-        //Place bar below the graphics
-        add(SleepProgressBar, Integer.valueOf(1));
-        //Finished sleep progress bar
-
-        // Create and position progress bar for health
-        FullnessProgressBar = new JProgressBar(JProgressBar.VERTICAL, 0,pet.getMaxFullness());
-        FullnessProgressBar.setBounds(26, 299, 25, 135);
-        FullnessProgressBar.setValue(pet.getFullness()); // Initial value
-        FullnessProgressBar.setStringPainted(false); // Show percentage text
-
-        // Paint the progress bar colors
-        updateProgressBarColor(FullnessProgressBar,pet.getFullness());
-
-        //Set Background Color
-        FullnessProgressBar.setBackground(Color.decode("#f9e6c6"));
-        FullnessProgressBar.repaint();
-
-        FullnessProgressBar.revalidate();
-
-        //Place bar below the graphics
-        add(FullnessProgressBar, Integer.valueOf(1));
-        //Finished Health Progress bar
-
-
-        // Create and position progress bar for health
-        HappinessProgressBar = new JProgressBar(JProgressBar.VERTICAL, 0,pet.getMaxHappiness());
-        HappinessProgressBar.setBounds(101, 299, 25, 135);
-        HappinessProgressBar.setValue(pet.getHappiness()); // Initial value
-        HappinessProgressBar.setStringPainted(false); // Show percentage text
-
-        // Paint the progress bar colors
-        updateProgressBarColor(HappinessProgressBar,pet.getHappiness());
-
-        //Set Background Color
-        HappinessProgressBar.setBackground(Color.decode("#f9e6c6"));
-        HappinessProgressBar.repaint();
-
-        HappinessProgressBar.revalidate();
-
-        //Place bar below the graphics
-        add(HappinessProgressBar, Integer.valueOf(1));
-
-        //Finished Health Progress bar
+        createProgressBars();
         healthBars();
         commandButtons();
+        createBackButton();
+        startStatDecayTimer();
+        new KeyboardShortcuts(this, mainPanel, cardLayout, customFont, gameData).setupKeyBindings();
+    }
 
+    private void createProgressBars() {
+        HealthProgressBar = createBar(26, 81, pet.getMaxHealth(), pet.getHealth());
+        SleepProgressBar = createBar(101, 81, pet.getMaxSleep(), pet.getSleep());
+        FullnessProgressBar = createBar(26, 299, pet.getMaxFullness(), pet.getFullness());
+        HappinessProgressBar = createBar(101, 299, pet.getMaxHappiness(), pet.getHappiness());
+    }
 
+    private JProgressBar createBar(int x, int y, int max, int value) {
+        JProgressBar bar = new JProgressBar(JProgressBar.VERTICAL, 0, max);
+        bar.setBounds(x, y, 25, 135);
+        bar.setValue(value);
+        bar.setStringPainted(false);
+        updateProgressBarColor(bar, value);
+        bar.setBackground(Color.decode("#f9e6c6"));
+        add(bar, Integer.valueOf(1));
+        return bar;
+    }
 
-        String petType = pet.getPetType();
+    private void initializePetSprite() {
+        String type = pet.getPetType();
+        String outfitPrefix = "";
+        String base = "";
 
-        if (petType.equals("PetOption1"))
-        {
-            if (pet.isWearingOutfit()) {
-                spriteGifs("resources/PetOneOutfit_Idle.gif");
-            } else {
-                spriteGifs("resources/PetOne_Idle.gif");
-            }
-        }
-        else if (petType.equals("PetOption2"))
-        {
-            if(pet.isWearingOutfit())
-            {
-                spriteGifs("resources/PetTwoOutfit_Idle.gif");
-            }
-            else
-            {
-                spriteGifs("resources/PetTwo_Idle.gif");
-            }
-        }
-        else if (petType.equals("PetOption3")) {
-            if(pet.isWearingOutfit())
-            {
-                spriteGifs("resources/PetThreeOutfit_Idle.gif");
-            }
-            else
-            {
-                spriteGifs("resources/PetThree_Idle.gif");
-            }
+        if (pet.isWearingOutfit()) {
+            outfitPrefix = "Outfit_";
         }
 
-        JButton backButton = MainScreen.buttonCreate(800,70, 70,70, "resources/home_button.png", "resources/home_button_clicked.png", "");
+        if (type.equals("PetOption1")) {
+            base = "PetOne";
+        } else if (type.equals("PetOption2")) {
+            base = "PetTwo";
+        } else if (type.equals("PetOption3")) {
+            base = "PetThree";
+        }
+
+        spriteGifs("resources/" + base + outfitPrefix + "Idle.gif");
+    }
+
+
+
+    private void createBackButton() {
+        JButton backButton = MainScreen.buttonCreate(800, 70, 70, 70, "resources/home_button.png", "resources/home_button_clicked.png", "");
         backButton.setBounds(990, 15, 64, 64);
 
         ImageIcon homeIcon = new ImageIcon("resources/home_icon.png");
         JLabel homeIconLabel = new JLabel(homeIcon);
         homeIconLabel.setBounds(990, 15, 64, 64);
-        add(homeIconLabel,Integer.valueOf(3));
-
-//        backButton.addActionListener(e -> cardLayout.show(mainPanel, "Home"));
-//        add(backButton, Integer.valueOf(2));
+        add(homeIconLabel, Integer.valueOf(3));
+        add(backButton, Integer.valueOf(2));
 
         backButton.addActionListener(e -> {
             stopDecayTimer();
-
-            long sessionEndTime = System.currentTimeMillis();
-            long sessionDuration = sessionEndTime - sessionStartTime;
-
-            // Update parental control stats
-            ParentalControl pc = MainScreen.getParentalControl();
-            pc.updateAfterSession(sessionDuration);
-
-            // Debug print: Total and average play time
-            System.out.println("Session Duration: " + sessionDuration + " ms");
-            System.out.println("Total Play Time: " + pc.getTotalPlayTime() + " ms");
-            System.out.println("Average Play Time: " + pc.getAveragePlayTime() + " ms");
-
-            // Save the updated parental control stats (if you persist them)
-            GameDataManager.saveParentalControlSettings(pc);
-
+            long sessionDuration = System.currentTimeMillis() - sessionStartTime;
+            MainScreen.getParentalControl().updateAfterSession(sessionDuration);
+            GameDataManager.saveParentalControlSettings(MainScreen.getParentalControl());
             cardLayout.show(mainPanel, "Home");
         });
-
-
-
-        add(backButton, Integer.valueOf(2));
-
-        // Decay every 250ms
-        statDecayTimer = new Timer(250, e -> {
-            pet.applyDecline();
-
-            // Update progress bar or any UI components
-            HealthProgressBar.setMaximum(pet.getMaxHealth());
-            HealthProgressBar.setValue(pet.getHealth());
-            updateProgressBarColor(HealthProgressBar, pet.getHealth());
-
-            // Update progress bar or any UI components
-            SleepProgressBar.setMaximum(pet.getMaxSleep());
-            SleepProgressBar.setValue(pet.getSleep());
-            updateProgressBarColor(SleepProgressBar, pet.getSleep());
-
-            // Update progress bar or any UI components
-            FullnessProgressBar.setMaximum(pet.getMaxFullness());
-            FullnessProgressBar.setValue(pet.getFullness());
-            updateProgressBarColor(FullnessProgressBar, pet.getFullness());
-
-            // Update progress bar or any UI components
-            HappinessProgressBar.setMaximum(pet.getMaxHappiness());
-            HappinessProgressBar.setValue(pet.getHappiness());
-            updateProgressBarColor(HappinessProgressBar, pet.getHappiness());
-
-
-            // Optional: print stats to console for debugging
-            pet.printStats();
-
-
-            switch (pet.getPetType()) {
-                case "PetOption1":
-                    base = "PetOne";
-                    break;
-                case "PetOption2":
-                    base = "PetTwo";
-                    break;
-                case "PetOption3":
-                    base = "PetThree";
-                    break;
-                default:
-                    base = "Pet";
-                    break;
-            }
-
-            hasOutfit = pet.isWearingOutfit();
-
-            if (pet.isDead()) {
-                state = "Dead";
-                feedButton.setEnabled(false);
-                playButton.setEnabled(false);
-                sleepButton.setEnabled(false);
-                giveGiftButton.setEnabled(false);
-                vetButton.setEnabled(false);
-                shopButton.setEnabled(false);
-                exerciseButton.setEnabled(false);
-            } else if (pet.isSleeping()) {
-                state = "Sleep";
-                feedButton.setEnabled(false);
-                playButton.setEnabled(false);
-                sleepButton.setEnabled(false);
-                giveGiftButton.setEnabled(false);
-                vetButton.setEnabled(false);
-                exerciseButton.setEnabled(false);
-            } else if (pet.isAngry()) {
-                state = "Angry";
-                feedButton.setEnabled(false);
-                sleepButton.setEnabled(false);
-                vetButton.setEnabled(false);
-            } else if (pet.isHungry()) {
-                state = "Hungry";
-                feedButton.setEnabled(true);
-                playButton.setEnabled(true);
-                sleepButton.setEnabled(true);
-                giveGiftButton.setEnabled(true);
-                vetButton.setEnabled(true);
-                exerciseButton.setEnabled(true);
-            } else {
-                state = "Idle";
-                feedButton.setEnabled(true);
-                playButton.setEnabled(true);
-                sleepButton.setEnabled(true);
-                giveGiftButton.setEnabled(true);
-                vetButton.setEnabled(true);
-                exerciseButton.setEnabled(true);
-            }
-
-//            String spritePath;
-//            if (hasOutfit) {
-//                spritePath = "resources/" + base + "Outfit_" + state + ".gif";
-//            } else {
-//                spritePath = "resources/" + base + "_" + state + ".gif";
-//            }
-//
-//
-//            // Only change sprite if different
-//            if (gifLabel == null ||
-//                    !((ImageIcon) gifLabel.getIcon()).getDescription().equals(spritePath)) {
-//                spriteGifs(spritePath);
-//            }
-
-        });
-
-//        String spritePath;
-//        if (hasOutfit) {
-//            spritePath = "resources/" + base + "Outfit_" + state + ".gif";
-//        } else {
-//            spritePath = "resources/" + base + "_" + state + ".gif";
-//        }
-        updateSprite(pet);
-
-
-        // Only change sprite if different
-//        if (gifLabel == null ||
-//                !((ImageIcon) gifLabel.getIcon()).getDescription().equals(spritePath)) {
-//            spriteGifs(spritePath);
-//        }
-
-        // Start the timer
-        //statDecayTimer.start();
-        SwingUtilities.invokeLater(() -> statDecayTimer.start());
-
-        new KeyboardShortcuts(this, mainPanel, cardLayout, customFont, gameData).setupKeyBindings();
-
     }
 
+    private void startStatDecayTimer() {
+        statDecayTimer = new Timer(250, e -> {
+            pet.applyDecline();
+            updateBar(HealthProgressBar, pet.getMaxHealth(), pet.getHealth());
+            updateBar(SleepProgressBar, pet.getMaxSleep(), pet.getSleep());
+            updateBar(FullnessProgressBar, pet.getMaxFullness(), pet.getFullness());
+            updateBar(HappinessProgressBar, pet.getMaxHappiness(), pet.getHappiness());
+            pet.printStats();
+            updatePetState();
+        });
+        SwingUtilities.invokeLater(statDecayTimer::start);
+    }
+
+    private void updateBar(JProgressBar bar, int max, int value) {
+        bar.setMaximum(max);
+        bar.setValue(value);
+        updateProgressBarColor(bar, value);
+    }
+
+    private void updatePetState() {
+        String type = pet.getPetType();
+
+        if (type.equals("PetOption1")) {
+            base = "PetOne";
+        } else if (type.equals("PetOption2")) {
+            base = "PetTwo";
+        } else if (type.equals("PetOption3")) {
+            base = "PetThree";
+        } else {
+            base = "Pet";
+        }
+
+        if (pet.isDead()) {
+            state = "Dead";
+            setButtonsEnabled(false);
+        } else if (pet.isSleeping()) {
+            state = "Sleep";
+            setButtonsEnabled(false);
+        } else if (pet.isAngry()) {
+            state = "Angry";
+            feedButton.setEnabled(false);
+            //sleepButton.setEnabled(false);
+            vetButton.setEnabled(false);
+        } else if (pet.isHungry()) {
+            state = "Hungry";
+            setButtonsEnabled(true);
+        } else {
+            state = "Idle";
+            setButtonsEnabled(true);
+        }
+
+        updateSprite(pet);
+    }
+
+
+    private void setButtonsEnabled(boolean enabled) {
+        feedButton.setEnabled(enabled);
+        playButton.setEnabled(enabled);
+        sleepButton.setEnabled(enabled);
+        giveGiftButton.setEnabled(enabled);
+        vetButton.setEnabled(enabled);
+        exerciseButton.setEnabled(enabled);
+        shopButton.setEnabled(enabled);
+    }
 
 
     private void updateGif(String gifPath, int duration) {
@@ -911,40 +762,31 @@ public class InGameScreen extends JLayeredPane {
     }
 
     private void updateSprite(Pet pet) {
-        if (gifLabel != null) {
-            remove(gifLabel); // ✅ Remove old sprite before updating
-        }
-
-        String petType = pet.getPetType();
-        String petFileName = "";
-
-        if (petType.equals("PetOption1")) {
-            petFileName = "PetOne";
-        } else if (petType.equals("PetOption2")) {
-            petFileName = "PetTwo";
-        } else if (petType.equals("PetOption3")) {
-            petFileName = "PetThree";
-        }
-
         String outfit = pet.getCurrentOutfit();
         String spritePath;
 
         if (outfit == null || outfit.isEmpty()) {
-            spritePath = "resources/" + petFileName + "_Idle.gif";
+            spritePath = "resources/" + base + "_"+ state + ".gif";
         } else {
-            spritePath = "resources/" + petFileName + "Outfit_Idle.gif";
+            spritePath = "resources/" + base + "Outfit_" + state + ".gif";
         }
 
-        System.out.println("Updating sprite to: " + spritePath); // Debugging
+        // Only update if sprite has changed
+        if (spritePath.equals(currentSpritePath)) return;
+
+        // Remove old label
+        if (gifLabel != null) remove(gifLabel);
 
         ImageIcon gifIcon = new ImageIcon(spritePath);
         gifLabel = new JLabel(gifIcon);
         gifLabel.setBounds(300, 30, 622, 632);
         add(gifLabel, Integer.valueOf(3));
+        currentSpritePath = spritePath;
 
         revalidate();
         repaint();
     }
+
 
 
     private String getGifPath(String action) {
