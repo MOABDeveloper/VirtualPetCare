@@ -272,6 +272,12 @@ public class InGameScreen extends JLayeredPane {
                 vetButton.setEnabled(false);
             } else if (pet.isHungry()) {
                 state = "Hungry";
+                feedButton.setEnabled(true);
+                playButton.setEnabled(true);
+                sleepButton.setEnabled(true);
+                giveGiftButton.setEnabled(true);
+                vetButton.setEnabled(true);
+                exerciseButton.setEnabled(true);
             } else {
                 state = "Idle";
                 feedButton.setEnabled(true);
