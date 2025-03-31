@@ -78,6 +78,7 @@ public class Pet {
     @SerializedName("currentOutfit")
 
     private String currentOutfit;
+    private static int declineCounter = 0;
 
     private static final Map<String, String> allowedOutfits = new HashMap<>();
 
@@ -356,42 +357,47 @@ public class Pet {
     }
 
     public void applyDecline() {
-        if (isDead) return;
+        declineCounter++;
 
-        // 1. Passive stat decline (except health)
-        if (!isSleeping) {
-            decreaseFullness(fullnessDeclineRate);
-            decreaseSleep(sleepDeclineRate);
-            decreaseHappiness(fullness <= 0 ? happinessDeclineRate * 2 : happinessDeclineRate);
-        } else {
-            // Regenerate sleep while sleeping
-            increaseSleep(sleepDeclineRate);
-        }
+        if(declineCounter % 10 == 0)
+        {
+            if (isDead) return;
 
-        // 2. Check Hunger (Fullness == 0)
-        if (fullness <= 0) {
-            isHungry = true;
-            decreaseHealth(healthDeclineRate); // gradual health loss
-        } else {
-            isHungry = false;
-        }
+            // 1. Passive stat decline (except health)
+            if (!isSleeping) {
+                decreaseFullness(fullnessDeclineRate);
+                decreaseSleep(sleepDeclineRate);
+                decreaseHappiness(fullness <= 0 ? happinessDeclineRate * 2 : happinessDeclineRate);
+            } else {
+                // Regenerate sleep while sleeping
+                increaseSleep(sleepDeclineRate);
+            }
 
-        // 3. Check Happiness (Angry state)
-        isHappy = happiness > 0;
+            // 2. Check Hunger (Fullness == 0)
+            if (fullness <= 0) {
+                isHungry = true;
+                decreaseHealth(healthDeclineRate); // gradual health loss
+            } else {
+                isHungry = false;
+            }
 
-        // 4. Sleep logic
-        if (sleep <= 0) {
-            decreaseHealth(healthDeclineRate); // penalty for exhaustion
-            sleep = 0;
-            isSleeping = true;
-        } else if (sleep >= maxSleep) {
-            isSleeping = false; // wakes up when rested
-        }
+            // 3. Check Happiness (Angry state)
+            isHappy = happiness > 0;
 
-        // 5. Check Death
-        if (health <= 0) {
-            health = 0;
-            isDead = true;
+            // 4. Sleep logic
+            if (sleep <= 0) {
+                decreaseHealth(healthDeclineRate); // penalty for exhaustion
+                sleep = 0;
+                isSleeping = true;
+            } else if (sleep >= maxSleep) {
+                isSleeping = false; // wakes up when rested
+            }
+
+            // 5. Check Death
+            if (health <= 0) {
+                health = 0;
+                isDead = true;
+            }
         }
     }
 

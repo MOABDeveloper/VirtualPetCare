@@ -202,7 +202,7 @@ public class InGameScreen extends JLayeredPane {
         add(backButton, Integer.valueOf(2));
 
         // Decay every 5 seconds (5000 ms)
-        statDecayTimer = new Timer(5000, e -> {
+        statDecayTimer = new Timer(250, e -> {
             pet.applyDecline();
 
             // Update progress bar or any UI components
