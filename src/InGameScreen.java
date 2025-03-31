@@ -591,12 +591,14 @@ public class InGameScreen extends JLayeredPane {
         giveGiftButton.addActionListener(e -> {
             PlayerInventory inventory = gameData.getInventory();
             Pet pet = gameData.getPet();
-
             // 1. Toggle outfit
             toggleOutfit(pet, inventory);
-
             // 2. Update sprite
             updateSprite(pet);
+            //3. Increase Happiness
+            if(pet.isWearingOutfit()) {
+                pet.setHappiness(pet.getMaxHappiness());
+            }
         });
 
 

@@ -331,6 +331,9 @@ public class Pet {
         this.happinessDeclineRate = rate;
     }
 
+    public void setHappiness(int happiness) {
+        this.happiness = happiness;
+    }
     public int getHealthDeclineRate() {
         return healthDeclineRate;
     }
@@ -346,6 +349,7 @@ public class Pet {
     public int getHappinessDeclineRate() {
         return happinessDeclineRate;
     }
+
 
     public void setPetType(String petType) {
         if (petTypeMap.containsKey(petType)) {

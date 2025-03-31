@@ -1,7 +1,7 @@
 {
   "pet": {
-    "name": "bro is cooked",
-    "petType": "PetOption1",
+    "name": "j",
+    "petType": "PetOption2",
     "health": 100,
     "sleep": 100,
     "fullness": 100,
@@ -11,9 +11,9 @@
     "maxFullness": 100,
     "maxHappiness": 100,
     "healthDeclineRate": 3,
-    "fullnessDeclineRate": 4,
+    "fullnessDeclineRate": 2,
     "sleepDeclineRate": 3,
-    "happinessDeclineRate": 3,
+    "happinessDeclineRate": 5,
     "isSleeping": false,
     "isHungry": false,
     "isHappy": true,
@@ -34,5 +34,5 @@
     },
     "outfitInventory": {}
   },
-  "totalPlayTime": 11727
+  "totalPlayTime": 9905
 }
