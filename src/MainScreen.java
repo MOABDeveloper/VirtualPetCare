@@ -70,7 +70,7 @@ public class MainScreen extends JFrame {
         JLayeredPane loadScreen = new LoadScreen(customFont, mainPanel, cardLayout);
         JLayeredPane creditScreen = new CreditScreen(customFont, cardLayout, mainPanel);
         //InGameScreen inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel,);
-        Store store = new Store(); // Create Store instance
+        Store store = GameDataManager.getSharedStore();
 
 
 
@@ -356,8 +356,9 @@ public class MainScreen extends JFrame {
         mainPanel.add(inGameScreen, "InGame");
 
         // Ensure StoreScreen is properly initialized
-        Store store = new Store();
-        JLayeredPane shopScreen = new StoreScreen(customFont, cardLayout, mainPanel, store, gameData);
+        Store store = GameDataManager.getSharedStore();
+        JLayeredPane shopScreen = new StoreScreen(customFont, cardLayout, mainPanel, store, gameData,saveFilePath);
+
 
         // Remove existing shop screen if needed
         components = mainPanel.getComponents();
@@ -372,6 +373,9 @@ public class MainScreen extends JFrame {
 
         // Switch to InGame screen
         cardLayout.show(mainPanel, "InGame");
+
+        inGameScreen.refreshCoinDisplay();// 🧠 Force update on resume
+
     }
 
     public static ParentalControl getParentalControl() {

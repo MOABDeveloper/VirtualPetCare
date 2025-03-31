@@ -53,10 +53,19 @@ public class InGameScreen extends JLayeredPane {
         healthBars();
         commandButtons();
         createBackButton();
-        startStatDecayTimer();
         displayCoins();
         new KeyboardShortcuts(this, mainPanel, cardLayout, customFont, gameData).setupKeyBindings();
+        startStatDecayTimer();
     }
+
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        if (visible) {
+            refreshCoinDisplay(); // Keep coin display in sync every time screen is shown
+        }
+    }
+
 
     private void createProgressBars() {
         HealthProgressBar = createBar(26, 81, pet.getMaxHealth(), pet.getHealth());
@@ -118,12 +127,20 @@ public class InGameScreen extends JLayeredPane {
     }
 
     private void startStatDecayTimer() {
+        if (statDecayTimer != null && statDecayTimer.isRunning()) {
+            System.out.println("Timer already running. Skipping start.");
+            return;
+        }
+
+        System.out.println("Starting stat decay timer...");
         statDecayTimer = new Timer(250, e -> {
+
             pet.applyDecline();
             updateBar(HealthProgressBar, pet.getMaxHealth(), pet.getHealth());
             updateBar(SleepProgressBar, pet.getMaxSleep(), pet.getSleep());
             updateBar(FullnessProgressBar, pet.getMaxFullness(), pet.getFullness());
             updateBar(HappinessProgressBar, pet.getMaxHappiness(), pet.getHappiness());
+            refreshCoinDisplay();
             pet.printStats();
             updatePetState();
         });
@@ -399,21 +416,32 @@ public class InGameScreen extends JLayeredPane {
         shopButton = MainScreen.buttonCreate(30, 550, 128, 128, "resources/command_button.png", "resources/command_button_clicked.png", "Shop");
         // Ensure existing StoreScreen is refreshed before switching
         shopButton.addActionListener(e -> {
-            Component[] components = mainPanel.getComponents();
-            for (int i = 0; i < components.length; i++) {
-                if (components[i] instanceof StoreScreen) {
-                    ((StoreScreen) components[i]).resetToFirstPage();  // Ensure store is refreshed
-                    cardLayout.show(mainPanel, "Shop");  // ✅ Now switch to the Store
-                    return;
+
+
+            GameDataManager.saveGame(saveFilePath, gameData.getPet(), gameData.getInventory(), gameData.getTotalPlayTime());
+
+
+            // Reload fresh game data
+            GameData updatedGameData = GameDataManager.loadGame(saveFilePath);
+
+            // Remove old StoreScreen if it exists
+            for (Component comp : mainPanel.getComponents()) {
+                if (comp instanceof StoreScreen) {
+                    mainPanel.remove(comp);
+                    break;
                 }
             }
 
-        // If StoreScreen is missing, create and add it
-            Store store = new Store();
-            StoreScreen storeScreen = new StoreScreen(customFont, cardLayout, mainPanel, store, gameData);
+            // Create new StoreScreen with updated game data
+            Store store = GameDataManager.getSharedStore();
+            StoreScreen storeScreen = new StoreScreen(customFont, cardLayout, mainPanel, store, updatedGameData, saveFilePath);
+
+
             mainPanel.add(storeScreen, "Shop");
             cardLayout.show(mainPanel, "Shop");
         });
+
+
 
 
         ImageIcon shopIcon = new ImageIcon("resources/store_icon.png");
@@ -909,12 +937,26 @@ public class InGameScreen extends JLayeredPane {
         repaint();
     }
 
+//    public void refreshCoinDisplay() {
+//        int coins = gameData.getInventory().getPlayerCoins();
+//        coinLabel.setText(String.valueOf(coins));
+//        revalidate();
+//        repaint();
+//    }
+
     public void refreshCoinDisplay() {
-        int coins = gameData.getInventory().getPlayerCoins();
-        coinLabel.setText(String.valueOf(coins));
-        revalidate();
-        repaint();
+        if (coinLabel != null) {
+            coinLabel.setText(String.valueOf(gameData.getInventory().getPlayerCoins()));
+
+            revalidate();
+            repaint();
+        }
     }
+
+    public void setGameData(GameData data) {
+        this.gameData = data;
+    }
+
     private void showStyledDialog(String title, String message) {
         JPanel panel = new JPanel(new BorderLayout(10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));

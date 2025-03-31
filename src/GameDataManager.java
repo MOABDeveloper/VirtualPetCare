@@ -1,7 +1,7 @@
 package src;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.FileReader;
@@ -13,23 +13,14 @@ import java.io.File;
 
 
 public class GameDataManager {
+    private static final Store sharedStore = new Store(); // Shared across game
+
     private static final Gson gson = new GsonBuilder()
-            .registerTypeAdapter(
-                    new TypeToken<Map<Food, Integer>>() {}.getType(),
-                    new FoodInventoryAdapter()
-            )
-            .registerTypeAdapter(
-                    new TypeToken<Map<Toys, Integer>>() {}.getType(),
-                    new ToyInventoryAdapter()
-            )
-            .registerTypeAdapter(
-                    new TypeToken<Map<Gifts, Integer>>() {}.getType(),
-                    new GiftInventoryAdapter()
-            )
-            .registerTypeAdapter(
-                    Pet.class,
-                    new PetAdapter()
-            )
+            .registerTypeAdapter(new TypeToken<Map<Food, Integer>>() {}.getType(), new FoodInventoryAdapter())
+            .registerTypeAdapter(new TypeToken<Map<Toys, Integer>>() {}.getType(), new ToyInventoryAdapter())
+            .registerTypeAdapter(new TypeToken<Map<Gifts, Integer>>() {}.getType(), new GiftInventoryAdapter())
+            .registerTypeAdapter(Pet.class, new PetAdapter())
+            .registerTypeAdapter(PlayerInventory.class, new PlayerInventoryAdapter(sharedStore))
             .setPrettyPrinting()
             .create();
 
@@ -46,10 +37,10 @@ public class GameDataManager {
         GameData data = new GameData(pet, inventory, updatedPlayTime);
         try (FileWriter writer = new FileWriter(filename)) {
             gson.toJson(data, writer);
-            //.out.println("✅ Game saved to '" + filename + "' with total play time: " + (updatedPlayTime / 1000) + "s");
+            //.out.println("Game saved to '" + filename + "' with total play time: " + (updatedPlayTime / 1000) + "s");
 
         } catch (IOException e) {
-            //System.out.println("❌ Failed to save game: " + e.getMessage());
+            //System.out.println("Failed to save game: " + e.getMessage());
         }
 
         // Reset session start time
@@ -62,12 +53,12 @@ public class GameDataManager {
     public static GameData loadGame(String filename) {
         try (FileReader reader = new FileReader(filename)) {
             GameData data = gson.fromJson(reader, GameData.class);
-            //System.out.println("✅ Game loaded from '" + filename + "'");
+            //System.out.println("Game loaded from '" + filename + "'");
             sessionStartTime = System.currentTimeMillis();
 
             return data;
         } catch (IOException e) {
-            //System.out.println("❌ Failed to load game from '" + filename + "': " + e.getMessage());
+            //System.out.println("Failed to load game from '" + filename + "': " + e.getMessage());
             return null;
         }
     }
@@ -106,13 +97,8 @@ public class GameDataManager {
         }
         return true; // Allow if the directory doesn't exist
     }
-//    public static String getPetTypeFromSave(String filename) {
-//        GameData data = loadGame(filename);
-//        if (data != null && data.getPet() != null) {
-//            return data.getPet().getPetType(); // ✅ Return the pet type
-//        }
-//        return "Unknown"; // Default value if loading fails
-//    }
+
+
     public static String getPetTypeFromSave(String filePath) {
         if (filePath == null || filePath.isEmpty()) {
             System.err.println("Error: Save file path is empty!");
@@ -138,4 +124,41 @@ public class GameDataManager {
 
         return "default";  // Return default pet type in case of error
     }
+
+    public static Store getSharedStore() {
+        return sharedStore;
+    }
+
+    public static void saveInventory(String filename, PlayerInventory inventory) {
+        try (FileWriter writer = new FileWriter(filename)) {
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(PlayerInventory.class, new PlayerInventoryAdapter(getSharedStore()))
+                    .registerTypeAdapter(new TypeToken<Map<Food, Integer>>() {}.getType(), new FoodInventoryAdapter())
+                    .registerTypeAdapter(new TypeToken<Map<Gifts, Integer>>() {}.getType(), new GiftInventoryAdapter())
+                    .registerTypeAdapter(new TypeToken<Map<Toys, Integer>>() {}.getType(), new ToyInventoryAdapter())
+                    .setPrettyPrinting()
+                    .create();
+
+            gson.toJson(inventory, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveInventoryToGameFile(String filename, PlayerInventory updatedInventory) {
+        GameData existingData = loadGame(filename);
+        if (existingData != null) {
+            Pet pet = existingData.getPet(); // keep the pet stats
+            long totalPlayTime = existingData.getTotalPlayTime(); // keep play time
+            GameData updatedData = new GameData(pet, updatedInventory, totalPlayTime);
+            System.out.println("Game was saved?");
+            try (FileWriter writer = new FileWriter(filename)) {
+                gson.toJson(updatedData, writer);
+            } catch (IOException e) {
+                System.err.println("Failed to save inventory to file: " + e.getMessage());
+            }
+        }
+    }
+
+
 }

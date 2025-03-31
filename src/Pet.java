@@ -363,7 +363,7 @@ public class Pet {
     public void applyDecline() {
         declineCounter++;
 
-        if(declineCounter % 10 == 0)
+        if(declineCounter % 15 == 0)
         {
             if (isDead) return;
 
@@ -478,10 +478,7 @@ public class Pet {
     }
 
     public void printStats() {
-        System.out.println(name + " - Health: " + health + "/" + maxHealth +
-                ", Sleep: " + sleep + "/" + maxSleep +
-                ", Fullness: " + fullness + "/" + maxFullness +
-                ", Happiness: " + happiness + "/" + maxHappiness);
+
     }
 
     private String getAllowedOutfit(Pet pet) {

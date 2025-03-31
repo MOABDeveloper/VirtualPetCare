@@ -24,13 +24,6 @@ public class KeyboardShortcuts {
         InputMap userInput = inGameScreen.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap actionMap = inGameScreen.getActionMap();
 
-        userInput.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), "openShop");
-        actionMap.put("openShop", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                openShop();
-            }
-        });
 
         // Play - P key
         userInput.put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0), "playWithPet");
@@ -96,23 +89,6 @@ public class KeyboardShortcuts {
         });
     }
 
-    private void openShop() {
-        Component[] components = mainPanel.getComponents();
-        for (int i = 0; i < components.length; i++) {
-            Component comp = components[i];
-            if (comp instanceof StoreScreen) {
-                StoreScreen storeScreen = (StoreScreen) comp;
-                storeScreen.resetToFirstPage();
-                cardLayout.show(mainPanel, "Shop");
-                return;
-            }
-        }
-
-        Store store = new Store();
-        StoreScreen storeScreen = new StoreScreen(customFont, cardLayout, mainPanel, store, gameData);
-        mainPanel.add(storeScreen, "Shop");
-        cardLayout.show(mainPanel, "Shop");
-    }
 
     private void clickButtonAtPosition(int x, int y) {
         Component[] components = inGameScreen.getComponents();

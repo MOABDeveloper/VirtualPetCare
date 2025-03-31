@@ -28,7 +28,7 @@ public class GiftInventoryAdapter implements JsonSerializer<Map<Gifts, Integer>>
             if (gift != null) {
                 giftMap.put(gift, entry.getValue().getAsInt());
             } else {
-                System.out.println("⚠️ Unknown gift in save file: " + entry.getKey());
+                System.out.println("Unknown gift in save file: " + entry.getKey());
             }
         }
         return giftMap;

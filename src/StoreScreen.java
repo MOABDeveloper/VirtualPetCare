@@ -7,52 +7,123 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class StoreScreen extends JLayeredPane {
+    /* Font used throughout store UI */
     private Font customFont;
+    /* Layout for switching screens */
     private CardLayout mainCardLayout;
+    /* Main container that holds all screens */
     private JPanel mainPanel;
+    /* Switching screen within the store */
     private CardLayout shopCardLayout;
+    /* Panel that contains the store pages */
     private JPanel shopPanel;
+    /* A list of all the clickable buttons */
     private List<JButton> allButtons = new ArrayList<>();
+    /* The store that holds foods, toys, and gifts */
     private Store store;
+    /* The players inventory */
     private PlayerInventory playerInventory;
+    /* The pets and players inventory */
     private GameData gameData;
+    /* Button to go to the next screen */
     private JButton nextButton;
+    /* Button to go to the previous screen */
     private JButton prevButton;
+    /* A label to show the player how many coins they have */
     private JLabel coinLabel;
+    private String saveFilePath;
 
-    public StoreScreen(Font customFont, CardLayout mainCardLayout, JPanel mainPanel, Store store, GameData gameData) {
+
+
+    /** constructor
+     * *
+     * @param customFont
+     * @param mainCardLayout
+     * @param mainPanel
+     * @param store
+     * @param gameData
+     */
+    public StoreScreen(Font customFont, CardLayout mainCardLayout, JPanel mainPanel, Store store, GameData gameData, String saveFilePath) {
+        /* Save custom font */
         this.customFont = customFont;
+        /* Save layout for switching screens */
         this.mainCardLayout = mainCardLayout;
+        /* Save main container */
         this.mainPanel = mainPanel;
+        /* Save store reference */
         this.store = store;
+        /* Save game data*/
         this.gameData = gameData;
+        /* Get players inventory */
         this.playerInventory = gameData.getInventory();
+        this.saveFilePath = saveFilePath;
+
+        /* Printing debug messages*/
+        debugInventory();
+        /* Preferred size of this panel*/
+        setPreferredSize(new Dimension(1080, 750));
+        /* Setting up background visuals like grid, store BG, title */
+        setupBackground();
+        /* Setup layout panel that holds the stores pages*/
+        setupShopPanel();
+        /* Setup next and previous buttons */
+        setupNavButtons();
+        /* Adding things to the store like food, toys, and gifts */
+        populateStorePages();
+        /* Setup the home button to allow user to go to the home screen when clicked */
+        setupHomeButton();
+        /* Setup the exit to allow the user to exit the game when clicked */
+        setupExitIcon();
+        /* Displaying the players coins */
+        updateCoinDisplay();
+    }
 
 
+    /**
+     * Prints debug information about the player's inventory and main panel components.
+     *
+     * Logs the player's coin count at the start of the store and lists all components
+     * currently in the main panel. Used for debugging initialization issues.
+     *
+     * @author Mohammed Abdulnabi
+     */
+    private void debugInventory() {
+        // If the players inventory is empty, print to console
         if (this.playerInventory == null) {
             System.out.println("ERROR: PlayerInventory is NULL in StoreScreen!");
+        // Otherwise, print to console how many coins at the start of the store
         } else {
             System.out.println("Player Coins at Store Start: " + this.playerInventory.getPlayerCoins());
         }
 
         Component[] components = mainPanel.getComponents();
-        for (int i = 0; i < components.length; i++) {
-            System.out.println("Component: " + components[i].getClass().getName());
+        for (Component comp : components) {
+            System.out.println("Component: " + comp.getClass().getName());
         }
+    }
 
-        setPreferredSize(new Dimension(1080, 750));
+    /**
+     * Initializes the shop panel with a CardLayout and sets its visual properties.
+     *
+     * The panel is made transparent and sized to fit the screen. It is then added
+     * to the layered pane at the appropriate layer.
+     *
+     * @author Mohammed Abdulnabi
+     */
 
-
-        setupBackground();
-
+    private void setupShopPanel() {
         this.shopCardLayout = new CardLayout();
         this.shopPanel = new JPanel(shopCardLayout);
         shopPanel.setOpaque(false);
         shopPanel.setBounds(0, 0, 1080, 750);
         add(shopPanel, Integer.valueOf(2));
+    }
 
-        // Create navigation buttons
+
+
+    private void setupNavButtons() {
         nextButton = createNavButton("resources/next_page.png", 700, 600);
         nextButton.addActionListener(e -> {
             shopCardLayout.next(shopPanel);
@@ -65,40 +136,75 @@ public class StoreScreen extends JLayeredPane {
             shopCardLayout.previous(shopPanel);
             updateNavButtons();
         });
-        prevButton.setVisible(false); // Hide initially
+        prevButton.setVisible(false);
         add(prevButton, Integer.valueOf(3));
+    }
 
-        populateStorePages();
-
+    /**
+     * Sets up the home button with functionality to return to InGameScreen.
+     */
+    private void setupHomeButton() {
         JButton homeButton = MainScreen.buttonCreate(800, 50, 192, 64,
                 "resources/home_button.png", "resources/home_button_clicked.png", "InGame");
 
         homeButton.addActionListener(e -> {
-            resetToFirstPage(); // Ensure shop resets
+            resetToFirstPage();
 
-            Component[] comp = mainPanel.getComponents();
-            for (int i = 0; i < comp.length; i++) {
-                if (comp[i] instanceof InGameScreen) {
-                    ((InGameScreen) comp[i]).refreshCoinDisplay();
+            // Save updated inventory only so health doesnt get overwritten
+            System.out.println("Calling saveInventoryToGameFile from StoreScreen...");
+            GameDataManager.saveInventoryToGameFile(saveFilePath, gameData.getInventory());
+
+            // Reload the full GameData (including inventory updates)
+            GameData updatedGameData = GameDataManager.loadGame(saveFilePath);
+
+            // Remove the old InGameScreen instance
+            for (Component comp : mainPanel.getComponents()) {
+                if (comp instanceof InGameScreen) {
+                    mainPanel.remove(comp);
                     break;
                 }
             }
+
+            // Create and add a new InGameScreen with fresh data
+            InGameScreen newInGameScreen = new InGameScreen(customFont, mainCardLayout, mainPanel, updatedGameData, saveFilePath);
+            mainPanel.add(newInGameScreen, "InGameScreen");
+
+            // Show the new screen
             mainCardLayout.show(mainPanel, "InGameScreen");
         });
 
-
-
-        ImageIcon exitIcon = new ImageIcon("resources/exit_store.png");
-        JLabel exitLabel = new JLabel(exitIcon);
-        // Position the icon centered on the button (adjust these values as needed)
-        int xPos = 800 + (192 - 24)/2;  // button x + (button width - icon width)/2
-        int yPos = 50 + (64 - 28)/2;  // button y + (button height - icon height)/2
-        exitLabel.setBounds(xPos, yPos, 24, 28);
-        add(exitLabel, Integer.valueOf(4));
-        updateCoinDisplay();
         add(homeButton, Integer.valueOf(3));
         allButtons.add(homeButton);
     }
+
+
+    /**
+     * Adds the exit icon image to the store UI (decorative only).
+     */
+    private void setupExitIcon() {
+        ImageIcon exitIcon = new ImageIcon("resources/exit_store.png");
+        JLabel exitLabel = new JLabel(exitIcon);
+
+        int xPos = 800 + (192 - 24) / 2;
+        int yPos = 50 + (64 - 28) / 2;
+        exitLabel.setBounds(xPos, yPos, 24, 28);
+        add(exitLabel, Integer.valueOf(4));
+    }
+
+
+
+    /**
+     * Updates the visibility of navigation buttons based on the currently visible store page.
+     *
+     * - Page 1: only the next button is shown
+     * - Page 2: both next and previous buttons are shown
+     * - Page 3: only the previous button is shown
+     *
+     * Checks which page is currently visible in the shop panel and adjusts the
+     * visibility of the navigation buttons accordingly.
+     *
+     * @author Aya Abdulnabi
+     */
     private void updateNavButtons() {
         // Get current page name
         Component[] components = shopPanel.getComponents();
@@ -124,6 +230,18 @@ public class StoreScreen extends JLayeredPane {
     }
 
 
+    /**
+     * Creates a navigation button with a given image and position.
+     *
+     * The button is styled to be transparent and plays a click sound when pressed.
+     *
+     * @param imagePath the path to the button's image
+     * @param x the x-coordinate position of the button
+     * @param y the y-coordinate position of the button
+     * @return the styled JButton with click sound behavior
+     *
+     * @author Aya Abdulnabi
+     */
     private JButton createNavButton(String imagePath, int x, int y) {
         JButton button = new JButton(new ImageIcon(imagePath));
         button.setBounds(x, y, 64, 64);
@@ -139,6 +257,14 @@ public class StoreScreen extends JLayeredPane {
         return button;
     }
 
+    /**
+     * Resets the shop view to the first page.
+     *
+     * If the shop panel and its layout are properly initialized,
+     * this method displays "Page 1" and updates the navigation buttons accordingly.
+     *
+     * @author Aya Abdulnabi
+     */
     public void resetToFirstPage() {
         if (shopCardLayout != null && shopPanel != null) {
             shopCardLayout.show(shopPanel, "Page 1");
@@ -146,6 +272,14 @@ public class StoreScreen extends JLayeredPane {
         }
     }
 
+    /**
+     * Sets up the visual background for the store screen.
+     *
+     * Adds layered background images and a "SHOP" title label to the screen.
+     * Elements are positioned and layered to ensure proper visuals
+     *
+     * @author Aya Abdulnabi
+     */
     private void setupBackground() {
         ImageIcon background = new ImageIcon("resources/grid.png");
         JLabel backgroundLabel = new JLabel(background);
@@ -165,12 +299,29 @@ public class StoreScreen extends JLayeredPane {
 
     }
 
+    /**
+     * Populates the store with item pages.
+     *
+     * Initializes and adds three separate pages to the shop panel:
+     * one for food items, one for toys, and one for gifts (outfits).
+     *
+     * @author Aya Abdulnabi
+     */
     private void populateStorePages() {
         // Create three pages
         createPage1();
         createPage2();
         createPage3();
     }
+
+    /**
+     * Creates and populates the first store page with food items.
+     *
+     * Displays up to six food items retrieved from the store,
+     * arranged in a grid layout, and adds the page to the shop panel.
+     *
+     * @author Aya Abdulnabi
+     */
 
     private void createPage1() {
         JLayeredPane page = new JLayeredPane();
@@ -198,6 +349,16 @@ public class StoreScreen extends JLayeredPane {
         }
         shopPanel.add(page, "Page 1");
     }
+
+
+    /**
+     * Creates and populates the second store page with toy items.
+     *
+     * Displays up to six food items retrieved from the store,
+     * arranged in a grid layout, and adds the page to the shop panel.
+     *
+     * @author Aya Abdulnabi
+     */
 
     private void createPage2() {
         JLayeredPane page = new JLayeredPane();
@@ -227,6 +388,14 @@ public class StoreScreen extends JLayeredPane {
         shopPanel.add(page, "Page 2");
     }
 
+    /**
+     * Creates and populates the third store page with gift items (outfits).
+     *
+     * Retrieves all gifts from the store and displays them in a grid layout.
+     * The completed page is added to the shop panel as "Page 3".
+     *
+     * @author Aya Abdulnabi
+     */
     private void createPage3() {
         JLayeredPane page = new JLayeredPane();
         page.setPreferredSize(new Dimension(1080, 750));
@@ -255,6 +424,20 @@ public class StoreScreen extends JLayeredPane {
         shopPanel.add(page, "Page 3");
     }
 
+    /**
+     * Creates a visual panel for a shop item, including image, price, and click behavior.
+     *
+     * Displays the item's image centered on a styled button. When clicked, a popup
+     * with item details is shown. The method supports food, toys, and gift items.
+     *
+     * @param itemName the name of the item to display
+     * @param price the price of the item
+     * @param x the x-coordinate for positioning the panel
+     * @param y the y-coordinate for positioning the panel
+     * @return a JPanel representing the shop item
+     *
+     * @author Aya Abdulnabi
+     */
     private JPanel createShopItem(String itemName, int price, int x, int y) {
         JPanel panel = new JPanel();
         panel.setLayout(new OverlayLayout(panel));
@@ -306,6 +489,17 @@ public class StoreScreen extends JLayeredPane {
         return panel;
     }
 
+    /**
+     * Returns the file path for the image corresponding to a given item name.
+     *
+     * Determines whether the item is a food, toy, or gift, and constructs the image
+     * path accordingly. Special cases are handled for specific outfit names.
+     *
+     * @param itemName the name of the item to retrieve the image path for
+     * @return the file path to the item's image, or null if the item is not found
+     *
+     * @author Aya Abdulnabi
+     */
     private String getItemImagePath(String itemName) {
         // Check food items first
         if (store.hasFood(itemName)) {
@@ -326,6 +520,18 @@ public class StoreScreen extends JLayeredPane {
         return null;
     }
 
+    /**
+     * Loads an image from the given file path and scales it to the specified dimensions.
+     *
+     * If loading fails, an error message is printed and null is returned.
+     *
+     * @param path the file path of the image to load
+     * @param width the desired width of the scaled image
+     * @param height the desired height of the scaled image
+     * @return the scaled ImageIcon, or null if loading fails
+     *
+     * @author Aya Abdulnabi
+     */
     private ImageIcon loadAndScaleImage(String path, int width, int height) {
         try {
             ImageIcon originalIcon = new ImageIcon(path);
@@ -337,6 +543,18 @@ public class StoreScreen extends JLayeredPane {
         }
     }
 
+    /**
+     * Attempts to purchase a store item and updates the player's inventory if successful.
+     *
+     * Checks the item type (food, toy, or gift) and calls the appropriate purchase method.
+     * Logs the player's coin count before and after the attempt.
+     *
+     * @param itemName the name of the item to purchase
+     * @param price the price of the item (not directly used in logic but passed for context)
+     * @return true if the purchase was successful, false otherwise
+     *
+     * @author Aya Abdulnabi
+     */
     private boolean attemptPurchase(String itemName, int price) {
         PlayerInventory inventory = gameData.getInventory();
         System.out.println("Player coins before purchase: " + inventory.getPlayerCoins());
@@ -358,6 +576,16 @@ public class StoreScreen extends JLayeredPane {
         return false;
     }
 
+    /**
+     * Enables or disables all interactive buttons on the store screen.
+     *
+     * Iterates through all stored buttons and sets their enabled state.
+     * Also explicitly updates the navigation buttons (next and previous).
+     *
+     * @param enabled true to enable all buttons, false to disable them
+     *
+     * @author Aya Abdulnabi
+     */
     private void setAllButtonsEnabled(boolean enabled) {
         for (int i = 0; i < allButtons.size(); i++) {
             allButtons.get(i).setEnabled(enabled);
@@ -368,6 +596,22 @@ public class StoreScreen extends JLayeredPane {
     }
 
 
+    /**
+     * Displays a popup window with details about a selected store item.
+     *
+     * The popup includes the item image, name, description, and stats. It provides
+     * options to buy or close. If the item is an outfit, validation is performed
+     * to ensure it's compatible with the current pet. If the item is a toy, a
+     * purchase is denied if the toy is already owned.
+     *
+     * The popup disables all store buttons while active and restores them afterward.
+     *
+     * @param itemName the name of the item being previewed
+     * @param price the price of the item
+     * @param pet the current pet used for outfit validation
+     *
+     * @author Aya Abdulnabi
+     */
     private void showPopup(String itemName, int price, Pet pet) {
         // Disable all buttons first
         setAllButtonsEnabled(false);
@@ -470,9 +714,6 @@ public class StoreScreen extends JLayeredPane {
                 }
             }
 
-
-
-
             boolean purchaseSuccess = attemptPurchase(itemName, price);
             if (purchaseSuccess) {
                 updateCoinDisplay();
@@ -515,12 +756,33 @@ public class StoreScreen extends JLayeredPane {
         repaint();
     }
 
-    // Check if the item is an outfit
+
+    /**
+     * Checks if the given item name corresponds to a predefined outfit.
+     *
+     * Used to validate purchases and determine if special outfit logic should apply.
+     *
+     * @param itemName the name of the item to check
+     * @return true if the item is an outfit, false otherwise
+     *
+     * @author Mohammed Abdulnabi
+     */
     private boolean isOutfit(String itemName) {
         return itemName.equals("outfit1") || itemName.equals("outfit2") || itemName.equals("outfit3");
     }
 
-    // Get the allowed outfit for the pet
+
+    /**
+     * Returns the outfit allowed for the given pet based on its type.
+     *
+     * Each pet type has a corresponding outfit. Used to validate if the selected
+     * outfit is suitable for the pet during purchase.
+     *
+     * @param pet the pet whose allowed outfit is to be determined
+     * @return the name of the outfit allowed for the pet, or "None" if unknown
+     *
+     * @author Mohammed Abdulnabi
+     */
     private String getAllowedOutfit(Pet pet) {
         switch (pet.getPetType()) {
             case "PetOption1": return "outfit1";
@@ -530,6 +792,15 @@ public class StoreScreen extends JLayeredPane {
         }
     }
 
+
+    /**
+     * Updates the visual display of the player's current coin count on the store screen.
+     *
+     * Removes any previous coin labels and backgrounds, then loads and adds the updated
+     * coin display image and label with the current coin value from the player's inventory.
+     *
+     * @author Aya Abdulnabi
+     */
     private void updateCoinDisplay() {
         // Remove existing components if they exist
         if (coinLabel != null) {
