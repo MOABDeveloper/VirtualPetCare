@@ -356,7 +356,7 @@ public class Pet {
             this.petType = petType;
             updateRatesBasedOfType();
         } else {
-            System.out.println("❌ Invalid pet type: " + petType);
+            System.out.println("Invalid pet type: " + petType);
         }
     }
 

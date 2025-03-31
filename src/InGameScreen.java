@@ -293,6 +293,13 @@ public class InGameScreen extends JLayeredPane {
 
         // save icon
         JButton saveButton = MainScreen.buttonCreate(17, 15, 50, 50, "resources/save.png", "resources/save_clicked.png", "Save");
+        ImageIcon saveIcon = new ImageIcon("resources/save_icon.png");
+        JLabel saveLabel = new JLabel(saveIcon);
+        // Position the icon centered on the button (adjust these values as needed)
+        int xPos = 17 + (50 - 28)/2;  // button x + (button width - icon width)/2
+        int yPos = 15 + (50 - 28)/2;  // button y + (button height - icon height)/2
+        saveLabel.setBounds(xPos, yPos, 28, 28);
+        add(saveLabel, Integer.valueOf(3));
         add(saveButton, Integer.valueOf(2));
 
         saveButton.addActionListener(e -> {
@@ -490,7 +497,8 @@ public class InGameScreen extends JLayeredPane {
         exerciseButton.addActionListener(e -> {
             PlayerInventory inventory = gameData.getInventory(); // Get PlayerInventory
             inventory.exercisePet(pet);
-            playSound("resources/exercise_sound.wav");
+            MusicPlayer.playSoundEffect("resources/exercise_sound.wav");
+            MusicPlayer.setSfxVolume(0.07f);
             HealthProgressBar.setValue(pet.getHealth());
             FullnessProgressBar.setValue(pet.getFullness());
             SleepProgressBar.setValue(pet.getSleep());
@@ -515,7 +523,8 @@ public class InGameScreen extends JLayeredPane {
         vetButton = MainScreen.buttonCreate(900,550,128,128, "resources/command_button.png", "resources/command_button_clicked.png", "");
         vetButton.addActionListener(e -> {
 
-            playSound("resources/heal_sound.wav");
+            MusicPlayer.playSoundEffect("resources/heal_sound.wav");
+            MusicPlayer.setSfxVolume(0.07f);
 
             PlayerInventory inventory = gameData.getInventory(); // Get PlayerInventory
             int currentTime = (int) (System.currentTimeMillis() / 1000); // Current time in seconds
@@ -528,12 +537,8 @@ public class InGameScreen extends JLayeredPane {
                 int remainingCooldown = pet.getVetCooldownDuration() - (currentTime - pet.getLastVetVisitTime());
                 remainingCooldown = Math.max(remainingCooldown, 0); // Ensure it doesn't go negative
 
-                JOptionPane.showMessageDialog(
-                        this,
-                        pet.getName() + " must wait " + remainingCooldown + " seconds before visiting the vet again.",
-                        "Vet Cooldown",
-                        JOptionPane.WARNING_MESSAGE
-                );
+                showStyledDialog("Vet Cooldown",
+                        pet.getName() + " must wait " + remainingCooldown + " seconds before visiting the vet again.");
             }
         });
 
@@ -573,7 +578,7 @@ public class InGameScreen extends JLayeredPane {
                 System.out.println("Equipping outfit: " + matchingOutfit);
                 inventory.equipOutfit(matchingOutfit, pet);
             } else {
-                playSound("resources/error_button_sound.wav");
+                MusicPlayer.playSoundEffect("resources/error_button_sound.wav");
                 System.out.println("No outfit available to equip.");
             }
         }
@@ -648,7 +653,8 @@ public class InGameScreen extends JLayeredPane {
             PlayerInventory inventory = gameData.getInventory();
             int itemIndex = 0;
 
-            for (Food food : inventory.getFoodInventory().keySet()) {
+            for (int i = 0; i < inventory.getFoodInventory().keySet().size(); i++) {
+                Food food = (Food) inventory.getFoodInventory().keySet().toArray()[i];
                 int quantity = inventory.getFoodCount(food);
                 if (quantity <= 0 || itemIndex >= 6) continue;
 
@@ -662,8 +668,8 @@ public class InGameScreen extends JLayeredPane {
                 // Create food button with scaled icon
                 JButton foodButton = new JButton(new ImageIcon(scaledFoodImage));
                 foodButton.setBounds(
-                        square.getX() + (square.getWidth() - 40)/2,
-                        square.getY() + (square.getHeight() - 40)/2,
+                        square.getX() + (square.getWidth() - 40) / 2,
+                        square.getY() + (square.getHeight() - 40) / 2,
                         40,
                         40
                 );
@@ -671,7 +677,7 @@ public class InGameScreen extends JLayeredPane {
                 foodButton.setBorderPainted(false);
                 foodButton.setFocusPainted(false);
 
-                // Quantity label
+            // Quantity label
                 JLabel quantityLabel = new JLabel("x" + quantity);
                 quantityLabel.setFont(customFont.deriveFont(12f));
                 quantityLabel.setForeground(Color.BLACK);
@@ -705,7 +711,7 @@ public class InGameScreen extends JLayeredPane {
                         revalidate();
                         repaint();
                     } else {
-                        JOptionPane.showMessageDialog(this, "Out of " + food.getName() + "!", "No Food", JOptionPane.WARNING_MESSAGE);
+                        showStyledDialog("No Food", "Out of " + food.getName() + "!");
                     }
                 });
                 itemIndex++;
@@ -717,7 +723,8 @@ public class InGameScreen extends JLayeredPane {
             PlayerInventory inventory = gameData.getInventory();
             int itemIndex = 0;
 
-            for (Toys toy : inventory.getToyInventory().keySet()) {
+            for (int i = 0; i < inventory.getToyInventory().keySet().size(); i++) {
+                Toys toy = (Toys) inventory.getToyInventory().keySet().toArray()[i];
                 int quantity = inventory.getToyCount(toy);
                 if (quantity <= 0 || itemIndex >= 6) continue;
 
@@ -730,24 +737,24 @@ public class InGameScreen extends JLayeredPane {
 
                 // Create toy button with scaled icon
                 JButton toyButton = new JButton(new ImageIcon(scaledToyImage));
-                toyButton.setBounds(square.getX() + (square.getWidth() - 40)/2, square.getY() + (square.getHeight() - 40)/2, 40, 40);
+                toyButton.setBounds(square.getX() + (square.getWidth() - 40) / 2, square.getY() + (square.getHeight() - 40) / 2, 40, 40);
                 toyButton.setContentAreaFilled(false);
                 toyButton.setBorderPainted(false);
                 toyButton.setFocusPainted(false);
 
-                // Quantity label
-                JLabel quantityLabel = new JLabel("x" + quantity);
-                quantityLabel.setFont(customFont.deriveFont(12f));
-                quantityLabel.setForeground(Color.BLACK);
-                quantityLabel.setBounds(
-                        square.getX() + square.getWidth() - 25,
-                        square.getY() + square.getHeight() - 20,
-                        25,
-                        15
-                );
+//            // Quantity label
+//                JLabel quantityLabel = new JLabel("x" + quantity);
+//                quantityLabel.setFont(customFont.deriveFont(12f));
+//                quantityLabel.setForeground(Color.BLACK);
+//                quantityLabel.setBounds(
+//                        square.getX() + square.getWidth() - 25,
+//                        square.getY() + square.getHeight() - 20,
+//                        25,
+//                        15
+//                );
 
                 inventoryPane.add(toyButton, JLayeredPane.MODAL_LAYER);
-                inventoryPane.add(quantityLabel, JLayeredPane.MODAL_LAYER);
+//                inventoryPane.add(quantityLabel, JLayeredPane.MODAL_LAYER);
 
                 // In the toy button action listener (play action)
                 toyButton.addActionListener(e -> {
@@ -766,7 +773,7 @@ public class InGameScreen extends JLayeredPane {
                         updateGif(getGifPath("Playing"),1500);
 
                         // Add coin reward for playing
-                        inventory.setPlayerCoins(inventory.getPlayerCoins() + 500);
+                        inventory.setPlayerCoins(inventory.getPlayerCoins() + 100);
                         refreshCoinDisplay(); // Update the coin display
 
                         // Remove the toy GIF after 1.5 seconds
@@ -780,7 +787,7 @@ public class InGameScreen extends JLayeredPane {
                         revalidate();
                         repaint();
                     } else {
-                        JOptionPane.showMessageDialog(this, "You don't have " + toy.getName() + "!", "No Toy", JOptionPane.WARNING_MESSAGE);
+                        showStyledDialog("No Toy", "You don't have " + toy.getName() + "!");
                     }
                 });
                 itemIndex++;
@@ -908,4 +915,42 @@ public class InGameScreen extends JLayeredPane {
         revalidate();
         repaint();
     }
+    private void showStyledDialog(String title, String message) {
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        panel.setBackground(new Color(240, 240, 240));
+
+        JLabel messageLabel = new JLabel("<html><div style='text-align: center;'>"
+                + "<font size=4 color='#2E86C1'><b>" + title + "</b></font><br>"
+                + "<font size=3 color='#5D6D7E'>" + message + "</font></div></html>");
+        messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(messageLabel, BorderLayout.CENTER);
+
+        JButton okButton = new JButton("OK");
+        okButton.setFont(customFont.deriveFont(Font.BOLD, 14f));
+        okButton.setBackground(new Color(52, 152, 219));
+        okButton.setForeground(Color.WHITE);
+        okButton.setFocusPainted(false);
+        okButton.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
+
+        okButton.addActionListener(e -> {
+            Window window = SwingUtilities.getWindowAncestor(panel);
+            if (window != null) {
+                window.dispose();
+            }
+        });
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setBackground(new Color(240, 240, 240));
+        buttonPanel.add(okButton);
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+
+        JDialog dialog = new JDialog((Frame)null, title, true);
+        dialog.setContentPane(panel);
+        dialog.setSize(350, 200);
+        dialog.setLocationRelativeTo(this);
+        dialog.setResizable(false);
+        dialog.setVisible(true);
+    }
+
 }

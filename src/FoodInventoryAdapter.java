@@ -28,7 +28,7 @@ public class FoodInventoryAdapter implements JsonSerializer<Map<Food, Integer>>,
             if (food != null) {
                 foodMap.put(food, entry.getValue().getAsInt());
             } else {
-                System.out.println("⚠️ Unknown food item in save file: " + entry.getKey());
+                System.out.println("Unknown food item in save file: " + entry.getKey());
             }
         }
         return foodMap;

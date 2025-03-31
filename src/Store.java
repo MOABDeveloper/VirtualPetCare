@@ -29,8 +29,8 @@ public class Store {
 
         //Load in default gifts
         giftsMap = new HashMap<>();
-        giftsMap.put("outfit1", new Gifts("outfit1", 1000));
-        giftsMap.put("outfit2", new Gifts("outfit2", 1500));
+        giftsMap.put("outfit1", new Gifts("outfit1", 3000));
+        giftsMap.put("outfit2", new Gifts("outfit2", 3000));
         giftsMap.put("outfit3", new Gifts("outfit3", 3000));
 
     }
@@ -72,17 +72,13 @@ public class Store {
     }
 
     public boolean buyFood(String name, PlayerInventory inventory, int quantity) {
-        // if the player has entered a valid food name
-        if (hasFood(name)) {
+        if (hasFood(name) && quantity > 0) {  // Add quantity check
             Food food = getFood(name);
-            int cost = food.getPrice();
+            int totalCost = food.getPrice() * quantity;
 
-            // if the player has enough coins
-            if (inventory.getPlayerCoins() >= cost) {
-                // Decrease the coins and increase the qty by the amount
-                inventory.setPlayerCoins(inventory.getPlayerCoins() - cost);
+            if (inventory.getPlayerCoins() >= totalCost) {
+                inventory.setPlayerCoins(inventory.getPlayerCoins() - totalCost);
                 inventory.addFood(food, quantity);
-
                 return true;
             }
         }

@@ -305,18 +305,4 @@ public class NewGameScreen extends JLayeredPane {
 
         parentPane.repaint();
     }
-
-    private void hidePopup(JLayeredPane parentPane, JLabel overlayLabel, JLabel popUpLabel, JButton backButton, JButton doneButton) {
-        // Hide overlay and popup
-        overlayLabel.setVisible(false);
-        popUpLabel.setVisible(false);
-
-        // Remove buttons
-        parentPane.remove(backButton);
-        parentPane.remove(doneButton);
-
-        // Refresh UI
-        parentPane.revalidate();
-        parentPane.repaint();
-    }
 }

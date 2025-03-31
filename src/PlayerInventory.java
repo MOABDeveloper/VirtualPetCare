@@ -13,7 +13,7 @@ public class PlayerInventory {
     private final Map<String, Boolean> outfitInventory = new HashMap<>();
 
     public PlayerInventory(Store store) {
-        this.playerCoins = 5000; // Set default coins to 500
+        this.playerCoins = 500; // Set default coins to 500
 
 
         // Retrieve predefined items from Store
@@ -185,7 +185,7 @@ public class PlayerInventory {
             pet.increaseHappiness(15);
             pet.setLastPlayTime(currentTime);
             //Give 750 coins when playing with the pet.
-            setPlayerCoins(getPlayerCoins()+750);
+            setPlayerCoins(getPlayerCoins()+100);
             return true;
         }
         return false;
@@ -197,7 +197,7 @@ public class PlayerInventory {
         pet.decreaseFullness(10);
         pet.increaseHealth(15);
         //Give 500 when exercising
-        setPlayerCoins(getPlayerCoins()+500);
+        setPlayerCoins(getPlayerCoins()+200);
     }
 
 

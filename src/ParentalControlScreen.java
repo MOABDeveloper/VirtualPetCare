@@ -109,7 +109,6 @@ public class ParentalControlScreen extends JLayeredPane {
                 parentalControl.setPlayTimeWindow(startHour, endHour);
                 parentalControl.setLimitationsEnabled(true);
 
-                // ✅ Save it
                 GameDataManager.saveParentalControlSettings(parentalControl);
 
                 JOptionPane.showMessageDialog(this,
@@ -133,7 +132,6 @@ public class ParentalControlScreen extends JLayeredPane {
         resetPlayTimeButton.addActionListener(e -> {
             parentalControl.resetPlayTimeRestrictions();
 
-            // 🔥 Save updated settings
             GameDataManager.saveParentalControlSettings(parentalControl);
 
             JOptionPane.showMessageDialog(this,
@@ -213,9 +211,5 @@ public class ParentalControlScreen extends JLayeredPane {
         totalPlayValue.setText(formatMillis(parentalControl.getTotalPlayTime()));
         avgPlayValue.setText(formatMillis(parentalControl.getAveragePlayTime()));
     }
-
-
-
-
 
 }

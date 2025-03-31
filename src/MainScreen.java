@@ -50,8 +50,9 @@ public class MainScreen extends JFrame {
             System.out.println("Could not load button click sound");
         }
 
-//        MusicPlayer.playBackgroundMusic("resources/verdanturf.wav");
-//        MusicPlayer.setVolume(0.05f);
+
+        MusicPlayer.playBackgroundMusic("resources/background_music.wav");
+        MusicPlayer.setVolume(0.2f);
         // actual screen
         this.setTitle("Virtual Pet");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -132,18 +133,16 @@ public class MainScreen extends JFrame {
         buttonLabel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                playButtonClickSound(); // Moved this to be the first thing that happens
-
+                MusicPlayer.playSoundEffect("resources/button_clicked.wav");
                 if (location.equals("Load")) {
                     // Remove old LoadScreen if it exists (optional but clean)
-                    for (Component comp : mainPanel.getComponents()) {
-                        if (comp instanceof LoadScreen) {
-                            mainPanel.remove(comp);
+                    Component[] components = mainPanel.getComponents();
+                    for (int i = 0; i < components.length; i++) {
+                        if (components[i] instanceof LoadScreen) {
+                            mainPanel.remove(components[i]);
                             break;
                         }
                     }
-
-
 
                     // Rebuild LoadScreen with updated data
                     JLayeredPane refreshedLoadScreen = new LoadScreen(customFont, mainPanel, cardLayout);
@@ -155,13 +154,6 @@ public class MainScreen extends JFrame {
         });
 
         return buttonLabel;
-    }
-
-    private static void playButtonClickSound() {
-        if (buttonClickSound != null) {
-            buttonClickSound.setFramePosition(0); // Rewind to the beginning
-            buttonClickSound.start();
-        }
     }
 
     private static JLabel buttonText(String text, int x, int y, int width, int height) {
@@ -237,6 +229,13 @@ public class MainScreen extends JFrame {
 
         JButton parentalControlButton = buttonCreate(850, 620, 192, 64, "resources/button.png", "resources/button_clicked.png", "");
         parentalControlButton.addActionListener(e -> showPasswordPopup(layeredPane));
+        JLabel homeText = new JLabel("PARENTAL CONTROL");
+        homeText.setFont(customFont.deriveFont(11f));
+        homeText.setForeground(Color.WHITE);
+        homeText.setBounds(850,620,192,64);
+        homeText.setHorizontalAlignment(SwingConstants.CENTER);
+        homeText.setVerticalAlignment(SwingConstants.CENTER);
+        layeredPane.add(homeText, Integer.valueOf(3));
         layeredPane.add(parentalControlButton, Integer.valueOf(2));
 
 
@@ -249,6 +248,23 @@ public class MainScreen extends JFrame {
         passwordLabel.setBounds(20, 66, desiredWidth, desiredHeight);
         passwordLabel.setVisible(false);
         layeredPane.add(passwordLabel, Integer.valueOf(3)); // move above everything else
+
+        // stop music button
+        JButton musicToggle = MainScreen.buttonCreate(20, 15, 50, 50, "resources/save.png", "resources/save_clicked.png", "");
+        ImageIcon musicIcon = new ImageIcon("resources/Speaker-Crossed.png");
+        JLabel musicLabel = new JLabel(musicIcon);
+
+        // Position the icon centered on the button (adjust these values as needed)
+        int iconX = 20  + (50 - 26)/2;  // button x + (button width - icon width)/2
+        int iconY = 15 + (50 - 28)/2;  // button y + (button height - icon height)/2
+        musicLabel.setBounds(iconX, iconY, 26, 28);
+
+        layeredPane.add(musicLabel, Integer.valueOf(3));
+        layeredPane.add(musicToggle, Integer.valueOf(2));
+
+        musicToggle.addActionListener(e -> {
+            MusicPlayer.toggleBackgroundMusic();
+        });
 
         return layeredPane;
     }
@@ -327,9 +343,10 @@ public class MainScreen extends JFrame {
 
     public static void showInGameScreen(GameData gameData, String saveFilePath) {
         // Remove old instance if it exists
-        for (Component comp : mainPanel.getComponents()) {
-            if (comp instanceof InGameScreen) {
-                mainPanel.remove(comp);
+        Component[] components = mainPanel.getComponents();
+        for (int i = 0; i < components.length; i++) {
+            if (components[i] instanceof InGameScreen) {
+                mainPanel.remove(components[i]);
                 break;
             }
         }
@@ -343,9 +360,10 @@ public class MainScreen extends JFrame {
         JLayeredPane shopScreen = new StoreScreen(customFont, cardLayout, mainPanel, store, gameData);
 
         // Remove existing shop screen if needed
-        for (Component comp : mainPanel.getComponents()) {
-            if (comp instanceof StoreScreen) {
-                mainPanel.remove(comp);
+        components = mainPanel.getComponents();
+        for (int i = 0; i < components.length; i++) {
+            if (components[i] instanceof StoreScreen) {
+                mainPanel.remove(components[i]);
                 break;
             }
         }
@@ -359,36 +377,5 @@ public class MainScreen extends JFrame {
     public static ParentalControl getParentalControl() {
         return parentalControl;
     }
-
-
-
-
-//    public static void showInGameScreen(GameData gameData) {
-//        if (inGameScreen != null) {
-//            inGameScreen.stopDecayTimer();
-//            mainPanel.remove(inGameScreen);
-//        }
-//
-//        inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel, gameData);
-//        mainPanel.add(inGameScreen, "InGame");
-//
-//        // ✅ Add or replace the store screen with correct gameData
-//        Store store = new Store();
-//        JLayeredPane shopScreen = new StoreScreen(customFont, cardLayout, mainPanel, store, gameData);
-//
-//        // Remove existing shop screen if needed (cleaner)
-//        for (Component comp : mainPanel.getComponents()) {
-//            if (comp instanceof StoreScreen) {
-//                mainPanel.remove(comp);
-//                break;
-//            }
-//        }
-//
-//        mainPanel.add(shopScreen, "Shop");
-//
-//        cardLayout.show(mainPanel, "InGame");
-//    }
-
-
 
 }

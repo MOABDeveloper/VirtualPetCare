@@ -3,27 +3,28 @@ package src;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MusicPlayer {
     private static Clip backgroundMusic;
     private static boolean isPlaying = false;
-    private static float volume = 0.5f; // Default volume (50%)
+    private static float volume = 0.1f;
+    private static float sfxVolume = 0.1f;
+    private static Map<String, Clip> soundEffects = new HashMap<>(); // Cache for sound effects
 
+    // Background music methods (existing)
     public static void playBackgroundMusic(String filePath) {
         try {
             if (backgroundMusic != null && backgroundMusic.isRunning()) {
                 backgroundMusic.stop();
             }
 
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(
-                    new File(filePath).getAbsoluteFile());
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
             backgroundMusic = AudioSystem.getClip();
             backgroundMusic.open(audioInputStream);
 
-            // Set volume before playing
             setVolume(volume);
-
-            // Loop continuously
             backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
             isPlaying = true;
 
@@ -32,21 +33,51 @@ public class MusicPlayer {
         }
     }
 
-    public static void setVolume(float volumeLevel) {
-        // Ensure volume is between 0 and 1
-        volume = Math.max(0.0f, Math.min(1.0f, volumeLevel));
+    // New methods for sound effects
+    public static void playSoundEffect(String filePath) {
+        try {
+            Clip clip = soundEffects.get(filePath);
 
-        if (backgroundMusic != null && backgroundMusic.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-            FloatControl gainControl = (FloatControl) backgroundMusic.getControl(FloatControl.Type.MASTER_GAIN);
+            if (clip == null) {
+                // Load the sound if not already cached
+                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(
+                        new File(filePath).getAbsoluteFile());
+                clip = AudioSystem.getClip();
+                clip.open(audioInputStream);
+                soundEffects.put(filePath, clip);
+            }
 
-            // Convert linear volume to decibels
-            float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
-            gainControl.setValue(dB);
+            // Set SFX volume
+            if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+                FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+                float dB = (float) (Math.log(sfxVolume) / Math.log(10.0) * 20.0);
+                gainControl.setValue(dB);
+            }
+
+            clip.setFramePosition(0); // Rewind to start
+            clip.start();
+
+        } catch (Exception e) {
+            System.out.println("Error playing sound effect: " + e.getMessage());
         }
     }
 
-    public static float getVolume() {
-        return volume;
+    public static void setSfxVolume(float volumeLevel) {
+        sfxVolume = Math.max(0.0f, Math.min(0.5f, volumeLevel));
+    }
+
+    public static float getSfxVolume() {
+        return sfxVolume;
+    }
+
+    // Existing methods remain unchanged
+    public static void setVolume(float volumeLevel) {
+        volume = Math.max(0.0f, Math.min(1.0f, volumeLevel));
+        if (backgroundMusic != null && backgroundMusic.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+            FloatControl gainControl = (FloatControl) backgroundMusic.getControl(FloatControl.Type.MASTER_GAIN);
+            float dB = (float) (Math.log(volume) / Math.log(10.0) * 20.0);
+            gainControl.setValue(dB);
+        }
     }
 
     public static void stopBackgroundMusic() {
@@ -65,9 +96,5 @@ public class MusicPlayer {
                 isPlaying = true;
             }
         }
-    }
-
-    public static boolean isPlaying() {
-        return isPlaying;
     }
 }

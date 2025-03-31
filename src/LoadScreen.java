@@ -12,8 +12,6 @@ public class LoadScreen extends JLayeredPane {
     private Font customFont;
     private static final String SAVE_DIR = "saves/";
     private static final String BUTTON_IMG = "resources/load_file_clicked.png";
-    private static final int BUTTON_WIDTH = 580;
-    private static final int BUTTON_HEIGHT = 100;
 
     private JPanel mainPanel;
     private CardLayout cardLayout;
@@ -23,7 +21,6 @@ public class LoadScreen extends JLayeredPane {
         this.mainPanel = mainPanel;
         this.cardLayout = cardLayout;
         setPreferredSize(new Dimension(1080, 750));
-
 
         ImageIcon background = new ImageIcon("resources/grid.png");
         JLabel backgroundLabel = new JLabel(background);
@@ -72,7 +69,6 @@ public class LoadScreen extends JLayeredPane {
         // Load the save files and create buttons
         File[] saveFiles = getSaveFiles();
 
-
         for (int i = 0; i < Math.min(3, saveFiles.length); i++) {
             final String filePath = saveFiles[i].getAbsolutePath();
 
@@ -112,8 +108,10 @@ public class LoadScreen extends JLayeredPane {
                 saveButton.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
+                        MusicPlayer.playSoundEffect("resources/button_clicked.wav");
                         if (!MainScreen.getParentalControl().isPlayAllowedNow()) {
-                            JOptionPane.showMessageDialog(LoadScreen.this, "Playtime is currently restricted.\nPlease try again during allowed hours.", "Playtime Restricted", JOptionPane.WARNING_MESSAGE);
+                            showStyledDialog("Playtime Restricted",
+                                    "Playtime is currently restricted.\nPlease try again during allowed hours.");
                             return;
                         }
 
@@ -156,7 +154,6 @@ public class LoadScreen extends JLayeredPane {
                 add(labelPanel, Integer.valueOf(3));
             }
         }
-
     }
 
     // Helper function to scale ImageIcons
@@ -185,7 +182,7 @@ public class LoadScreen extends JLayeredPane {
         File[] saveFiles = getSaveFiles();
 
         if (saveFiles.length == 0) {
-            JOptionPane.showMessageDialog(this, "No save files found.", "Delete Save", JOptionPane.INFORMATION_MESSAGE);
+            showStyledDialog("Delete Save", "No save files found.");
             return;
         }
 
@@ -195,24 +192,128 @@ public class LoadScreen extends JLayeredPane {
             saveNames[i] = saveFiles[i].getName();
         }
 
-        // Ask user to select a file
-        String selectedFile = (String) JOptionPane.showInputDialog(this, "Select a save file to delete:", "Delete Save", JOptionPane.QUESTION_MESSAGE, null, saveNames, saveNames[0]);
+        // Create a custom panel for the input dialog
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        panel.setBackground(new Color(240, 240, 240));
 
-        // If user canceled, do nothing
+        JLabel messageLabel = new JLabel("<html><div style='text-align: center;'>"
+                + "<font size=4 color='#2E86C1'><b>Select a save file to delete:</b></font></div></html>");
+        messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(messageLabel, BorderLayout.CENTER);
+
+        JComboBox<String> saveComboBox = new JComboBox<>(saveNames);
+        saveComboBox.setFont(customFont.deriveFont(14f));
+        panel.add(saveComboBox, BorderLayout.SOUTH);
+
+        // Create the dialog
+        int option = JOptionPane.showOptionDialog(
+                this,
+                panel,
+                "Delete Save",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                new Object[]{"Select", "Cancel"},
+                "Select"
+        );
+
+        if (option != JOptionPane.OK_OPTION) return;
+
+        String selectedFile = (String) saveComboBox.getSelectedItem();
         if (selectedFile == null) return;
 
-        // Confirm before deleting
-        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete " + selectedFile + "?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+        // Create confirmation dialog
+        JPanel confirmPanel = new JPanel(new BorderLayout(10, 10));
+        confirmPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        confirmPanel.setBackground(new Color(240, 240, 240));
 
-        if (confirm == JOptionPane.YES_OPTION) {
+        JLabel confirmLabel = new JLabel("<html><div style='text-align: center;'>"
+                + "<font size=4 color='#2E86C1'><b>Confirm Delete</b></font><br>"
+                + "<font size=3 color='#5D6D7E'>Are you sure you want to delete " + selectedFile + "?</font></div></html>");
+        confirmLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        confirmPanel.add(confirmLabel, BorderLayout.CENTER);
+
+        JButton yesButton = new JButton("Yes");
+        yesButton.setFont(customFont.deriveFont(Font.BOLD, 14f));
+        yesButton.setBackground(new Color(52, 152, 219));
+        yesButton.setForeground(Color.WHITE);
+        yesButton.setFocusPainted(false);
+        yesButton.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
+
+        JButton noButton = new JButton("No");
+        noButton.setFont(customFont.deriveFont(Font.BOLD, 14f));
+        noButton.setBackground(new Color(231, 76, 60));
+        noButton.setForeground(Color.WHITE);
+        noButton.setFocusPainted(false);
+        noButton.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        buttonPanel.setBackground(new Color(240, 240, 240));
+        buttonPanel.add(yesButton);
+        buttonPanel.add(noButton);
+        confirmPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        JDialog confirmDialog = new JDialog((Frame)null, "Confirm Delete", true);
+        confirmDialog.setContentPane(confirmPanel);
+        confirmDialog.setSize(350, 200);
+        confirmDialog.setLocationRelativeTo(this);
+        confirmDialog.setResizable(false);
+
+        final boolean[] confirmed = {false};
+        yesButton.addActionListener(e -> {
+            confirmed[0] = true;
+            confirmDialog.dispose();
+        });
+        noButton.addActionListener(e -> confirmDialog.dispose());
+
+        confirmDialog.setVisible(true);
+
+        if (confirmed[0]) {
             File fileToDelete = new File(SAVE_DIR + selectedFile);
             if (fileToDelete.delete()) {
-                JOptionPane.showMessageDialog(this, "Save file deleted successfully.", "Delete Save", JOptionPane.INFORMATION_MESSAGE);
+                showStyledDialog("Delete Save", "Save file deleted successfully.");
                 refreshLoadScreen();
             } else {
-                JOptionPane.showMessageDialog(this, "Failed to delete save file.", "Delete Save", JOptionPane.ERROR_MESSAGE);
+                showStyledDialog("Delete Save", "Failed to delete save file.");
             }
         }
+    }
+
+    private void showStyledDialog(String title, String message) {
+        JPanel panel = new JPanel(new BorderLayout(10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        panel.setBackground(new Color(240, 240, 240));
+
+        JLabel messageLabel = new JLabel("<html><div style='text-align: center;'>" + "<font size=4 color='#2E86C1'><b>" + title + "</b></font><br>" + "<font size=3 color='#5D6D7E'>" + message + "</font></div></html>");
+        messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(messageLabel, BorderLayout.CENTER);
+
+        JButton okButton = new JButton("OK");
+        okButton.setFont(customFont.deriveFont(Font.BOLD, 14f));
+        okButton.setBackground(new Color(52, 152, 219));
+        okButton.setForeground(Color.WHITE);
+        okButton.setFocusPainted(false);
+        okButton.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
+
+        okButton.addActionListener(e -> {
+            Window window = SwingUtilities.getWindowAncestor(panel);
+            if (window != null) {
+                window.dispose();
+            }
+        });
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setBackground(new Color(240, 240, 240));
+        buttonPanel.add(okButton);
+        panel.add(buttonPanel, BorderLayout.SOUTH);
+
+        JDialog dialog = new JDialog((Frame)null, title, true);
+        dialog.setContentPane(panel);
+        dialog.setSize(350, 200);
+        dialog.setLocationRelativeTo(this);
+        dialog.setResizable(false);
+        dialog.setVisible(true);
     }
 
     private void refreshLoadScreen() {
@@ -232,6 +333,4 @@ public class LoadScreen extends JLayeredPane {
         mainPanel.revalidate();
         mainPanel.repaint();
     }
-
 }
-
