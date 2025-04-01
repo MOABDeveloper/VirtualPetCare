@@ -511,21 +511,4 @@ public class Pet {
                 return false; // If petType is unknown, deny all outfits
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
