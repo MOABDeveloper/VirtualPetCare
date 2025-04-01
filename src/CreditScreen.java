@@ -18,11 +18,11 @@ import java.awt.*;
  */
 
 public class CreditScreen extends JLayeredPane {
-    /* Font used throughout store UI */
+    /** Font used throughout store UI */
     private Font customFont;
-    /* Layout to swap different screens in the game */
+    /** Layout to swap different screens in the game */
     private CardLayout cardLayout;
-    /* Main panel that holds all the screens*/
+    /** Main panel that holds all the screens*/
     private JPanel mainPanel;
 
     /**

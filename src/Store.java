@@ -17,8 +17,11 @@ import java.util.Map;
  * @version 1.0
  */
 public class Store {
+    /** Maps to the food item based on ID */
     private final Map<String, Food> foodMap;
+    /** Maps to the gift item based on ID */
     private final Map<String, Gifts> giftsMap;
+    /** Maps to the toys item based on ID */
     private final Map<String, Toys> toysMap;
 
 

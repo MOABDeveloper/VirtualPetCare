@@ -27,19 +27,19 @@ import java.awt.event.KeyEvent;
  * @version 1.0
  */
 public class KeyboardShortcuts {
-    /* Reference to the in game UI*/
+    /** Reference to the in game UI*/
     private final InGameScreen inGameScreen;
 
-    /* Holds the main panel that uses CardLayout to switch between different game screens */
+    /** Holds the main panel that uses CardLayout to switch between different game screens */
     private final JPanel mainPanel;
 
-    /* Layout manager used by mainPanel to navigate between screens */
+    /** Layout manager used by mainPanel to navigate between screens */
     private final CardLayout cardLayout;
 
-    /* Custom font throughout the UI */
+    /** Custom font throughout the UI */
     private final Font customFont;
 
-    /* Holds the current game state and data */
+    /** Holds the current game state and data */
     private final GameData gameData;
 
 

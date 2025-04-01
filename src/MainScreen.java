@@ -35,25 +35,25 @@ import java.io.InputStream;
  * @version 1.0
  */
 public class MainScreen extends JFrame {
-    /* Layout manager for switching between different screens */
+    /** Layout manager for switching between different screens */
     private static CardLayout cardLayout;
-    /* Main container panel that holds all the screens */
+    /** Main container panel that holds all the screens */
     private static JPanel mainPanel;
-    /* Custom font used throughout the entire class */
+    /** Custom font used throughout the entire class */
     private static Font customFont;
-    /* Label for the password popup (parental controls) */
+    /** Label for the password popup (parental controls) */
     private static JLabel passwordLabel;
-    /* Overlay for dialogs */
+    /** Overlay for dialogs */
     private static JLabel overlayLabel;
-    /* Reference to tutorial screen instance */
+    /** Reference to tutorial screen instance */
     private static TutorialScreen tutorialScreen;
-    /* Parental control manager instance */
+    /** Parental control manager instance */
     private static ParentalControl parentalControl;
-    /* Reference to parental control screen instance */
+    /** Reference to parental control screen instance */
     private static ParentalControlScreen parentalControlScreen;
-    /* Sound clip for button click sound effect*/
+    /** Sound clip for button click sound effect*/
     private static Clip buttonClickSound;
-    /* Current game screen instance */
+    /** Current game screen instance */
     private static InGameScreen inGameScreen;
 
     /**
@@ -154,7 +154,6 @@ public class MainScreen extends JFrame {
      * @param location Screen location to navigate to when clicked
      * @return Configured JButton instance
      *
-     * @author Clair Yu
      */
     public static JButton buttonCreate(int x, int y, int width, int height, String defaultImageSource, String pressedImageSource, String location) {
         // Load the default image and the image when pressed
@@ -452,7 +451,6 @@ public class MainScreen extends JFrame {
     /**
      * Updates the parental control status labels on the settings screen.
      *
-     * @author Kamaldeep Ghorta
      */
     public static void updateParentalStatLabels() {
         if (parentalControlScreen != null) {
@@ -467,9 +465,6 @@ public class MainScreen extends JFrame {
      * @param gameData The game state to load
      * @param saveFilePath Path to the save file for persistence
      *
-     * @author Mohammed Abdulnabi
-     * @author Kamaldeep Ghorta
-     * @author Aya Abdulnabi
      */
     public static void showInGameScreen(GameData gameData, String saveFilePath) {
         // Remove existing in game screen
@@ -509,7 +504,6 @@ public class MainScreen extends JFrame {
      *
      * @return The ParentalControl instance
      *
-     * @author Kamaldeep Ghorta
      */
     public static ParentalControl getParentalControl() {
         return parentalControl;

@@ -13,8 +13,11 @@ package src;
  * @version 1.0
  */
 public class GameData {
+    /** Type of pet to be saved */
     private Pet pet;
+    /** What was in the players inventory so it can be saved when they leave and come back after saving */
     private PlayerInventory inventory;
+    /** Total playtime during playing */
     private long totalPlayTime; // in milliseconds, or use int for seconds
 
 

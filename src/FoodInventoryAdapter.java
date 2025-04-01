@@ -31,7 +31,7 @@ public class FoodInventoryAdapter implements JsonSerializer<Map<Food, Integer>>,
      * This allows food items to be saved in a clean, readable format.
      *
      * @param foodMap The food inventory map to serialize
-     * @param type    The type of the object (ignored here)
+     * @param type    The type of the object
      * @param context The serialization context
      * @return A JSON object representing the food inventory
      */
@@ -50,7 +50,7 @@ public class FoodInventoryAdapter implements JsonSerializer<Map<Food, Integer>>,
      * It uses the Store class to look up actual Food instances based on names.
      *
      * @param json    The JSON data to parse
-     * @param type    The expected type of the result (Map<Food, Integer>)
+     * @param type    The expected type of the result
      * @param context The deserialization context
      * @return A reconstructed food inventory map
      * @throws JsonParseException if the JSON is malformed or missing data

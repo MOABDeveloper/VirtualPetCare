@@ -11,10 +11,13 @@ package src;
  * @version 1.0
  */
 public class PetType {
-    /* Mutlipliers for pet stats */
+    /** Health multipler for pet stats */
     private float healthDeclineMultiplier;
+    /** Fullness multipler for pet stats */
     private float fullnessDeclineMultiplier;
+    /** Sleep multipler for pet stats */
     private float sleepDeclineMultiplier;
+    /** Happiness multipler for pet stats */
     private float happinessDeclineMultiplier;
 
 

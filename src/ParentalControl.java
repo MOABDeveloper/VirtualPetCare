@@ -17,18 +17,19 @@ package src;
  * @version 1.0
  */
 public class ParentalControl {
-    /* Parental control password (set to 1234) */
+    /** Parental control password (set to 1234) */
     private static final String PARENT_PASSWORD = "1234";
 
-    /* Flag that determines if parental time restrictions are currently active */
+    /** Flag that determines if parental time restrictions are currently active */
     private boolean limitationsEnabled;
 
-    /* The allowed start and end hour of the user (24 hr format) */
+    /** The allowed start hour of the user (24 hr format) */
     private int allowedStartHour;
+    /** The allowed end hour fo the user (24hr format) */
     private int allowedEndHour;
-
-    /* Tracking the total play time and sessions count for avg time */
-    private long totalPlayTime = 0;  // milliseconds
+    /** Tracking the total play time for avg time */
+    private long totalPlayTime = 0;
+    /** Tracking the sessions count for avg time */
     private int sessionCount = 0;
 
 

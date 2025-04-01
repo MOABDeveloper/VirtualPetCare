@@ -25,13 +25,13 @@ import java.awt.*;
  * @version 1.0
  */
 public class ParentalControlScreen extends JLayeredPane {
-    /* Custom font used throughout the screen */
+    /** Custom font used throughout the screen */
     private Font customFont;
-    /* Reference to the parental control manager*/
+    /** Reference to the parental control manager*/
     private ParentalControl parentalControl;
-    /* Label to display the total play time value*/
+    /** Label to display the total play time value*/
     private JLabel totalPlayValue;
-    /* Label to display the average play time value*/
+    /** Label to display the average play time value*/
     private JLabel avgPlayValue;
 
     /**
@@ -42,8 +42,6 @@ public class ParentalControlScreen extends JLayeredPane {
      * @param mainPanel The main panel containing all screens
      * @param parentalControl The parental control manager instance
      *
-     * @author Aya Abdulnabi
-     * @author Kamaldeep Ghorta
      */
     public ParentalControlScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel, ParentalControl parentalControl) {
         // Set font and dimensions of the screen
@@ -264,7 +262,6 @@ public class ParentalControlScreen extends JLayeredPane {
     /**
      * Updates the statistics labels with current values from parental controls
      *
-     * @author Kamaldeep Ghorta
      */
     public void updateStatLabels() {
         totalPlayValue.setText(formatMillis(parentalControl.getTotalPlayTime()));

@@ -12,8 +12,11 @@ package src;
  * @version 1.0
  */
 public class Toys {
+    /** Name of the toy */
     private String name;
+    /** Price of the toy */
     private int price;
+    /** Description of the toy */
     private String description;  // optional
 
 

@@ -14,9 +14,13 @@ package src;
  * @version 1.0
  */
 public class Food {
+    /** name of the food */
     private String name;
+    /** price of the food */
     private int price;
+    /** fullness of the food, how much fullness does it increase */
     private int fullness;
+    /** description of the food */
     private String description;
 
 

@@ -22,7 +22,7 @@ import java.util.Map;
  *   <li>Cooldown mechanics for special actions</li>
  *   <li>Warnings for critical stat levels</li>
  * </ul>
- * </p>
+ *
  *
  * <p>The class uses GSON annotations for serialization/deserialization of pet state.</p>
  * @author
@@ -30,18 +30,18 @@ import java.util.Map;
  * Mohammed Abdulnabi
  */
 public class Pet {
-    /* The name given to the pet by the player */
+    /** The name given to the pet by the player */
     @SerializedName("name")
     private String name;
 
-    /* Map that holds different types of pets and their declinerate multipliers */
+    /** Map that holds different types of pets and their declinerate multipliers */
     private final Map<String, PetType> petTypeMap;
 
-    /* Type of the pet */
+    /** Type of the pet */
     @SerializedName("petType")
     private String petType;
 
-    /* Current stats */
+    /** Current stats */
     @SerializedName("health")
     private int health;
     @SerializedName("Sleep")
@@ -51,7 +51,7 @@ public class Pet {
     @SerializedName("happiness")
     private int happiness;
 
-    /* Max values for each stat */
+    /** Max values for each stat */
     @SerializedName("maxHealth")
     private final int maxHealth;
     @SerializedName("maxSleep")
@@ -61,7 +61,7 @@ public class Pet {
     @SerializedName("maxHappiness")
     private final int maxHappiness;
 
-    /* Decline rates for each stat */
+    /** Decline rates for each stat */
     @SerializedName("healthDeclineRate")
     private int healthDeclineRate;
     @SerializedName("fullnessDeclineRate")
@@ -71,7 +71,7 @@ public class Pet {
     @SerializedName("happinessDeclineRate")
     private int happinessDeclineRate;
 
-    /* State Flags */
+    /** State Flags */
     @SerializedName("isSleeping")
     private boolean isSleeping;
     @SerializedName("isHungry")
@@ -82,29 +82,29 @@ public class Pet {
     private boolean isDead;
 
 
-    /* Vet Cooldown */
+    /** Vet Cooldown */
     @SerializedName("lastVetVisitTime")
     private int lastVetVisitTime;  // Last time the pet visited the vet
     @SerializedName("vetCooldownDuration")
     private int vetCooldownDuration;
 
-    /* Play Cooldown */
+    /** Play Cooldown */
     @SerializedName("lastPlayTime")  // The last time the pet played
     private int lastPlayTime;
     @SerializedName("playCooldownDuration")
     private int playCooldownDuration;
 
-    /* Name of the outfit that the pet is wearing (currently) */
+    /** Name of the outfit that the pet is wearing (currently) */
     @SerializedName("currentOutfit")
     private String currentOutfit;
 
-    /* Used to track how often applyDecline() is called */
+    /** Used to track how often applyDecline() is called */
     private static int declineCounter = 0;
 
-    /* Stores which outfits are allowed per pet type */
+    /** Stores which outfits are allowed per pet type */
     private static final Map<String, String> allowedOutfits = new HashMap<>();
 
-    /* Static block to initialize the corresponding outfits to the pet */
+    /** Static block to initialize the corresponding outfits to the pet */
     static {
         allowedOutfits.put("PetOption1", "outfit1");
         allowedOutfits.put("PetOption2", "outfit2");
@@ -878,6 +878,11 @@ public class Pet {
         return fullness <= (maxFullness / 4);
     }
 
+    /**
+     * Checks if the pet's happiness level is critically low.
+     *
+     * @return true if fullness is less than or equal to 25% of the maximum, false otherwise.
+     */
     public boolean isWarningHappiness() {
         return happiness <= (maxHappiness / 4);
     }

@@ -25,19 +25,19 @@ import java.util.Map;
  */
 public class PlayerInventory {
 
-    /* Stores the number of coins the player currently has */
+    /** Stores the number of coins the player currently has */
     private int playerCoins;
 
-    /* Stores the quantity of each food item the player owns */
+    /** Stores the quantity of each food item the player owns */
     private final Map<Food, Integer> foodInventory = new HashMap<>();
 
-    /* Stores the quantity of each gift item the player owns */
+    /** Stores the quantity of each gift item the player owns */
     private final Map<Gifts, Integer> giftInventory = new HashMap<>();
 
-    /* Stores the quantity of each toy item the player owns */
+    /** Stores the quantity of each toy item the player owns */
     private final Map<Toys, Integer> toyInventory = new HashMap<>();
 
-    /* Stores the status of pet outfits */
+    /** Stores the status of pet outfits */
     private final Map<String, Boolean> outfitInventory = new HashMap<>();
 
 

@@ -22,13 +22,20 @@ import java.awt.*;
  * @version 1.0
  */
 public class NewGameScreen extends JLayeredPane {
+    /** Font used throughout the entire UI */
     private static Font customFont;
+    /** CardLayout manager for switching between different pet selection screens/views. */
     private CardLayout petCardLayout;
+    /** Main panel that contains all pet selection views managed by petCardLayout. */
     private JPanel petPanel;
+    /** Primary CardLayout for the application's main screens */
     private static CardLayout mainCardLayout;
+    /** Main panel that contains all the screens */
     private static JPanel mainPanel;
-    private JButton homeButton; // Make homeButton a class field so we can access it in other methods
-    private boolean popupVisible = false; // Track popup visibility
+    /** Button to return to the home/main menu screen. */
+    private JButton homeButton;
+    /** Flag indicating whether a popup is currently visible */
+    private boolean popupVisible = false;
 
     /**
      * Constructs the New Game screen with custom font and layout manager
@@ -38,8 +45,6 @@ public class NewGameScreen extends JLayeredPane {
      * @param mainCardLayout the main {@link CardLayout} controlling application screens
      * @param mainPanel the main container that holds all pet selection cards
      *
-     * @author Clair Yu
-     * @author Aya Abdulnabi
      */
     public NewGameScreen(Font customFont, CardLayout mainCardLayout, JPanel mainPanel) {
         this.customFont = customFont;

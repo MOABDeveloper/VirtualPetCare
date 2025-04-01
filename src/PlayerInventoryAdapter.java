@@ -22,6 +22,7 @@ import java.util.Map;
  * @version 1.0
  */
 public class PlayerInventoryAdapter implements JsonSerializer<PlayerInventory>, JsonDeserializer<PlayerInventory> {
+    /** Store reference for item look up */
     private final Store store;
 
     /**

@@ -20,13 +20,13 @@ import java.io.InputStream;
  * @version 1.0
  */
 public class TutorialScreen extends JLayeredPane {
-    /* Custom used throughout this class */
+    /** Custom used throughout this class */
     private Font customFont;
-    /* Layout to swap different screens in the game */
+    /** Layout to swap different screens in the game */
     private static CardLayout cardLayout;
-    /* Main panel that holds all the screens*/
+    /** Main panel that holds all the screens*/
     private static JPanel mainPanel;
-    /* Tutorial text from the backend*/
+    /** Tutorial text from the backend*/
     private TutorialCommands tutorialText;
 
     /**

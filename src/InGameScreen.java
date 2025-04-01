@@ -35,58 +35,67 @@ import javax.swing.Timer;
  * @version 1.0
  */
 public class InGameScreen extends JLayeredPane {
-    /* Custom font for styling (for the text labels on buttons) */
+    /** Custom font for styling (for the text labels on buttons) */
     private Font customFont;
 
-    /* Layout to swap different screens in the game */
+    /** Layout to swap different screens in the game */
     private CardLayout cardLayout;
 
-    /* Main panel that holds all the screens*/
+    /** Main panel that holds all the screens*/
     private JPanel mainPanel;
 
-    /* Progress bars to display the pets stats (visual) */
+    /** Progress bars to display health stat (visual) */
     private JProgressBar HealthProgressBar;
+    /** Progress bars to display sleep stat (visual) */
     private JProgressBar SleepProgressBar;
+    /** Progress bars to display happiness stat (visual) */
     private JProgressBar HappinessProgressBar;
+    /** Progress bars to display fullness stat (visual) */
     private JProgressBar FullnessProgressBar;
 
-    /* Players pet object */
+    /** Players pet object */
     private Pet pet;
-    
-    /* Timer to reduce the pets stats */
+
+    /** Timer to reduce the pets stats */
     private Timer statDecayTimer;
-    
-    /* Store the current game sessions data */
+
+    /** Store the current game sessions data */
     private GameData gameData;
 
-    /* Path to save/load the current game as a file */
+    /** Path to save/load the current game as a file */
     private String saveFilePath;
 
-    /* Label to display pet animations (GIF) */
+    /** Label to display pet animations (GIF) */
     private JLabel gifLabel;
 
-    /* Track when the player starts playing the game */
+    /** Track when the player starts playing the game */
     private long sessionStartTime;
 
-    /* Buttons for the player to interact with the pet */
+    /** Feed Button for the player to interact with the pet */
     private JButton feedButton;
+    /** Play Button for the player to interact with the pet */
     private JButton playButton;
+    /** Sleep Button for the player to interact with the pet */
     private JButton sleepButton;
+    /** Gift Button for the player to interact with the pet */
     private JButton giveGiftButton;
+    /** Exercise Button for the player to interact with the pet */
     private JButton exerciseButton;
+    /** Vet Button for the player to interact with the pet */
     private JButton vetButton;
+    /** Shop Button for the player to interact with the pet */
     private JButton shopButton;
 
-    /* Used to track which base pet sprite is on the screen */
+    /** Used to track which base pet sprite is on the screen */
     private String base;
 
-    /* The current state of the pet */
+    /** The current state of the pet */
     private String state;
 
-    /* Track the path of the sprite that is currently displayed */
+    /** Track the path of the sprite that is currently displayed */
     private String currentSpritePath = "";
 
-    /* To display how many coins the user has */
+    /** To display how many coins the user has */
     private JLabel coinLabel;
 
 
@@ -102,9 +111,6 @@ public class InGameScreen extends JLayeredPane {
      * @param gameData      The current game data, including pet and inventory.
      * @param saveFilePath  The file path used when saving the current session.
      *
-     * @author Mohammed Abdulnabi
-     * @author Kamaldeep Singh Ghotra
-     * @author Aya Abdulnabi
      */
     public InGameScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel, GameData gameData, String saveFilePath) {
         this.customFont = customFont;  // Store custom font
@@ -155,7 +161,6 @@ public class InGameScreen extends JLayeredPane {
      *
      * @param visible {@code true} to make the screen visible; {@code false} to hide it.
      *
-     * @author Mohammed Abdulnabi
      */
     @Override
     public void setVisible(boolean visible) {
@@ -534,7 +539,6 @@ public class InGameScreen extends JLayeredPane {
      * @param progressBar the JProgressBar to update
      * @param health the current health value (0–100)
      *
-     * @author Mohammed Abdulnabi
      */
     public static void updateProgressBarColor(JProgressBar progressBar, int health) {
         // Change color based on health percentage
@@ -1298,7 +1302,6 @@ public class InGameScreen extends JLayeredPane {
      * Stops the timer that is reducing the vitals of the pet.
      * This is called every time the InGameScreen is left.
      *
-     * @author Mohammed Abdulnabi
      */
     public void stopDecayTimer() {
         // if the timer is not stopped then stop it.
@@ -1342,8 +1345,6 @@ public class InGameScreen extends JLayeredPane {
      * This method creates and positions both the coin image and the numeric label,
      * styling them appropriately and adding them to the component.
      *
-     *
-     * @author Aya Abdulnabi
      */
     public void displayCoins(){
 
@@ -1379,8 +1380,6 @@ public class InGameScreen extends JLayeredPane {
      * Updates the coin label on the screen to reflect the player's current coin count.
      * This method gets the latest coin value from the GameData's PlayerInventory
      * and updates the label accordingly.
-     *
-     * @author Aya Abdulnabi
      */
     public void refreshCoinDisplay() {
         // if the label exists
@@ -1393,12 +1392,6 @@ public class InGameScreen extends JLayeredPane {
             repaint();
         }
     }
-
-    //not needed?
-    public void setGameData(GameData data) {
-        this.gameData = data;
-    }
-
 
 
     /**

@@ -12,7 +12,9 @@ package src;
  * @version 1.0
  */
 public class Gifts {
+    /** Name of the gift */
     private String name;
+    /** Price of the gift */
     private int price;
 
 

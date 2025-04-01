@@ -30,16 +30,16 @@ import java.util.Objects;
  * @version 1.0
  */
 public class LoadScreen extends JLayeredPane {
-    /* Custom font used for styling throughout the whole screen */
+    /** Custom font used for styling throughout the whole screen */
     private Font customFont;
-    /* Directory path where the game files are saved */
+    /** Directory path where the game files are saved */
     private static final String SAVE_DIR = "saves/";
-    /* Path for the default button image used for save files */
+    /** Path for the default button image used for save files */
     private static final String BUTTON_IMG = "resources/load_file_clicked.png";
 
-    /* Reference to the main panel that has all screens for the card layout navigation */
+    /** Reference to the main panel that has all screens for the card layout navigation */
     private JPanel mainPanel;
-    /* Card layout used to transition between different screens */
+    /** Card layout used to transition between different screens */
     private CardLayout cardLayout;
 
     /**
@@ -48,9 +48,6 @@ public class LoadScreen extends JLayeredPane {
      * @param customFont the custom font to be used throughout the screen
      * @param mainPanel the main panel containing all screens for card layout navigation
      * @param cardLayout the card layout manager for screen transitions
-     * @author Mohammed Abdulnabi
-     * @author Kamaldeep Singh Ghotra
-     * @author Aya Abdulnabi
      */
     public LoadScreen(Font customFont, JPanel mainPanel, CardLayout cardLayout) {
         this.customFont = customFont; // store the custom font

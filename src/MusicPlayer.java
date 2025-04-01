@@ -24,21 +24,20 @@ import java.util.Map;
  * {@link FloatControl} to adjust the audio.
  *
  * AI WAS USED IN ORDER TO HELP DEBUG + HELP LEARN MORE ABOUT THE CLASSES IT USES
- * @author
- * Aya Abdulnabi,
- * Kamaldeep Ghorta
+ * @author Aya Abdulnabi
+ * @author Kamaldeep Ghorta
  * @version 1.0
  */
 public class MusicPlayer {
-    /* Clip instance to for background music playback */
+    /** Clip instance to for background music playback */
     private static Clip backgroundMusic;
-    /* Flag to indicate if background music is playing or not */
+    /** Flag to indicate if background music is playing or not */
     private static boolean isPlaying = false;
-    /* Float used to adjust the volume of the background music */
+    /** Float used to adjust the volume of the background music */
     private static float volume = 0.1f;
-    /* Float used to adjust the volume of sound effects*/
+    /** Float used to adjust the volume of sound effects*/
     private static float sfxVolume = 0.1f;
-    /* Cache for loaded sounds and reloading */
+    /** Cache for loaded sounds and reloading */
     private static Map<String, Clip> soundEffects = new HashMap<>();
 
     /**
@@ -46,9 +45,6 @@ public class MusicPlayer {
      * any currently playing music before starting new track.
      *
      * @param filePath Path to the audio file
-     *
-     * @author Aya Abdulnabi
-     * @author Kamaldeep Ghorta
      */
     public static void playBackgroundMusic(String filePath) {
         try {
@@ -84,8 +80,6 @@ public class MusicPlayer {
      *
      * @param filePath Path to the sound effect file
      *
-     * @author Aya Abdulnabi
-     * @author Kamaldeep Ghorta
      */
     public static void playSoundEffect(String filePath) {
         try {
@@ -124,7 +118,6 @@ public class MusicPlayer {
      *
      * @param volumeLevel Desired volume level
      *
-     * @author Aya Abdulnabi
      */
     public static void setSfxVolume(float volumeLevel) {
         sfxVolume = Math.max(0.0f, Math.min(0.5f, volumeLevel));
@@ -136,7 +129,6 @@ public class MusicPlayer {
      *
      * @param volumeLevel Desired volume level
      *
-     * @author Aya Abdulnabi
      */
     public static void setVolume(float volumeLevel) {
         volume = Math.max(0.0f, Math.min(1.0f, volumeLevel));
@@ -150,7 +142,6 @@ public class MusicPlayer {
     /**
      * Stops the currently playing background music.
      *
-     * @author Aya Abdulnabi
      */
     public static void stopBackgroundMusic() {
         if (backgroundMusic != null && backgroundMusic.isRunning()) {
@@ -163,7 +154,6 @@ public class MusicPlayer {
      * Toggles background music playback state.
      * If playing, stops the music. If stopped, resumes playing
      *
-     * @author Aya Abdulnabi
      */
     public static void toggleBackgroundMusic() {
        // If playying, stop, otherwise, if not playing, let it play

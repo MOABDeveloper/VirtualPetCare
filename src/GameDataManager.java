@@ -24,7 +24,8 @@ import java.io.File;
  * @version 1.0
  */
 public class GameDataManager {
-    private static final Store sharedStore = new Store(); // Shared across game
+    /** Store that is shared across the games */
+    private static final Store sharedStore = new Store();
 
     /* Made with the help of Artificial Intelligence */
     private static final Gson gson = new GsonBuilder()

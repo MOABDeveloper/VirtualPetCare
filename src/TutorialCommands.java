@@ -22,12 +22,17 @@ package src;
  * @version 1.0
  */
 public class TutorialCommands {
-    /* Strings for each screen on Tutorial */
+    /** String for the gift giving tutorial */
     public String GiftGivingText = "Who doesn't love presents? You can give your pet a gift by clicking the Gift button-or the G key-to dress it up! This will make your pet's happiness meter MAX OUT! If your pet gets angry, it will ignore you until you give it a gift!";
+    /** String for the feeding tutorial */
     public String FeedingScreenText = "Your pet will get hungry like all pets do!. You can give your pet food by clicking the Feed button-or the F key-in order to make it fuller! Try different foods, some are super filling, while others are just snacks. ";
+    /** String for the vet tutorial */
     public String VetScreenText = "Oh no, your pet is sick! Click the Vet button-or V key-for a quick heal! The vet fixes everything, but you'll have to wait for a bit before going again, so don't leave it till last minute!";
+    /** String for the exercise tutorial */
     public String ExerciseScreenText = "Get up and move! Click the Exercise button-or E key-to make your pet do some workout. Exercise keeps your pet fit, but will make your pet more sleepy and fullness decreases, so be careful!";
+    /** String for the sleeping tutorial */
     public String SleepScreenText = "All that playing and exercising, of course they'll get tired! Click the Sleep button-or the Z key-to let them rest. Be patient though, because your pet won't wake up until it's fully rested!";
+    /** String for the playing tutorial */
     public String PlayScreenText = "Naturally pets need to play. You can play with your pet by clicking the Play button-or the P key-to let them have fun! Playing makes your happiness meter increase! If your pet gets angry, it will ignore you until you play with it!";
 
 

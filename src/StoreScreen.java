@@ -30,41 +30,43 @@ import java.util.List;
  * @version 1.0
  */
 public class StoreScreen extends JLayeredPane {
-    /* Font used throughout store UI */
+    /** Font used throughout store UI */
     private Font customFont;
-    /* Layout for switching screens */
+    /** Layout for switching screens */
     private CardLayout mainCardLayout;
-    /* Main container that holds all screens */
+    /** Main container that holds all screens */
     private JPanel mainPanel;
-    /* Switching screen within the store */
+    /** Switching screen within the store */
     private CardLayout shopCardLayout;
-    /* Panel that contains the store pages */
+    /** Panel that contains the store pages */
     private JPanel shopPanel;
-    /* A list of all the clickable buttons */
+    /** A list of all the clickable buttons */
     private List<JButton> allButtons = new ArrayList<>();
-    /* The store that holds foods, toys, and gifts */
+    /** The store that holds foods, toys, and gifts */
     private Store store;
-    /* The players inventory */
+    /** The players inventory */
     private PlayerInventory playerInventory;
-    /* The pets and players inventory */
+    /** The pets and players inventory */
     private GameData gameData;
-    /* Button to go to the next screen */
+    /**Button to go to the next screen */
     private JButton nextButton;
-    /* Button to go to the previous screen */
+    /** Button to go to the previous screen */
     private JButton prevButton;
-    /* A label to show the player how many coins they have */
+    /** A label to show the player how many coins they have */
     private JLabel coinLabel;
+    /** Where the game will be saved */
     private String saveFilePath;
 
 
 
     /** Constructor of the class that sets the font, switches screens, and sets up the store screen
      *
-     * @param customFont
-     * @param mainCardLayout
-     * @param mainPanel
-     * @param store
-     * @param gameData
+     * @param customFont     The custom font to be used for all text rendering in the UI
+     * @param mainCardLayout The CardLayout manager that handles screen transition between different screens.
+     * @param mainPanel      The main container panel where all screens are added
+     * @param store          The Store instance that contains available items and handles purchasing logic.
+     * @param gameData       The current game state data, including player inventory and resources, used to populate the store interface.
+     * @param saveFilePath   The save file where game data will be saved. Required for loading/saving state
      */
     public StoreScreen(Font customFont, CardLayout mainCardLayout, JPanel mainPanel, Store store, GameData gameData, String saveFilePath) {
         /* Save custom font */
@@ -289,8 +291,6 @@ public class StoreScreen extends JLayeredPane {
      *
      * If the shop panel and its layout are properly initialized,
      * this method displays "Page 1" and updates the navigation buttons accordingly.
-     *
-     * @author Aya Abdulnabi
      */
     public void resetToFirstPage() {
         if (shopCardLayout != null && shopPanel != null) {
