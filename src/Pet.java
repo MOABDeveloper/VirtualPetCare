@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * This screen also shows live updates of the pet's stats through progress bars for
  * health, sleep, fullness, and happiness. These stats gradually decline over time
- * using a built-in timer, adding a real-time care element to the game.
+ * using a built-in timer.
  * Other features include:
  * - A coin display to track the player's in-game currency
  * - A working store button for in-game purchases
@@ -751,51 +751,79 @@ public class Pet {
     }
 
 
-
+    /**
+     * Sets the pet type and updates the stat decline rates based on the selected type.
+     * If the given type does not exist in the petTypeMap, it prints an error message.
+     *
+     * @param petType The type of the pet.
+     */
     public void setPetType(String petType) {
+        // Check if the provided pet type exists in the map of valid pet types
         if (petTypeMap.containsKey(petType)) {
+            // Set the pet type (if valid)
             this.petType = petType;
             updateRatesBasedOfType();
         } else {
+            // If the type is not recognized, print an error message for debugging
             System.out.println("Invalid pet type: " + petType);
         }
     }
 
+
+    /**
+     * Applies periodic stat decline logic for the pet based on its current state.
+     * This method should be called on a timer to simulate the passage of time.
+     *
+     * Every 15 calls, it:
+     * - Decreases sleep, fullness, and happiness if the pet is awake
+     * - Regenerates sleep if the pet is sleeping
+     * - Lowers health if the pet is starving or exhausted
+     * - Updates state flags like isHungry, isHappy, isSleeping, and isDead
+     */
     public void applyDecline() {
+        // Increment declineCounter every time this method is called
         declineCounter++;
 
+        // Only apply stat decline every 15 calls to slow down decay
         if(declineCounter % 15 == 0)
         {
+            // Do nothing if the pet is already dead
             if (isDead) return;
 
-            // 1. Passive stat decline (except health)
+            // 1. Passive stat changes depending on sleep state
             if (!isSleeping) {
+                // If awake, reduce fullness and sleep
                 decreaseFullness(fullnessDeclineRate);
                 decreaseSleep(sleepDeclineRate);
+
+                // If starving (fullness is 0), happiness drops faster
                 decreaseHappiness(fullness <= 0 ? happinessDeclineRate * 2 : happinessDeclineRate);
             } else {
                 // Regenerate sleep while sleeping
                 increaseSleep(sleepDeclineRate);
             }
 
-            // 2. Check Hunger (Fullness == 0)
+            // 2. Hunger check
             if (fullness <= 0) {
+                // If starving, mark as hungry and reduce health
                 isHungry = true;
-                decreaseHealth(healthDeclineRate); // gradual health loss
+                decreaseHealth(healthDeclineRate);
             } else {
+                // If not starving, set isHungry to false
                 isHungry = false;
             }
 
-            // 3. Check Happiness (Angry state)
+            // 3. Update happiness status
             isHappy = happiness > 0;
 
             // 4. Sleep logic
             if (sleep <= 0) {
-                decreaseHealth(healthDeclineRate); // penalty for exhaustion
+                // If sleep reaches 0, pet gets sick (health penalty) and is forced to sleep
+                decreaseHealth(healthDeclineRate);
                 sleep = 0;
                 isSleeping = true;
             } else if (sleep >= maxSleep) {
-                isSleeping = false; // wakes up when rested
+                isSleeping = false; // Wakes up when rested
             }
 
             // 5. Check Death
@@ -806,19 +834,42 @@ public class Pet {
         }
     }
 
+
+    /**
+     * Checks if the pet is currently wearing an outfit.
+     *
+     * @return true if the pet has an outfit equipped, false if not.
+     */
     public boolean isWearingOutfit() {
         return currentOutfit != null && !currentOutfit.isEmpty();
     }
 
 
+    /**
+     * Checks if the pet's health is critically low.
+     *
+     * @return true if health is less than or equal to 25% of max health, false otherwise.
+     */
     public boolean isWarningHealth() {
         return health <= (maxHealth / 4);
     }
 
+
+    /**
+     * Checks if the pet's sleep level is critically low.
+     *
+     * @return true if sleep is less than or equal to 25% of max sleep, false otherwise.
+     */
     public boolean isWarningSleep() {
         return sleep <= (maxSleep / 4);
     }
 
+
+    /**
+     * Checks if the pet's fullness level is critically low.
+     *
+     * @return true if fullness is less than or equal to 25% of the maximum, false otherwise.
+     */
     public boolean isWarningFullness() {
         return fullness <= (maxFullness / 4);
     }
@@ -845,33 +896,31 @@ public class Pet {
      * @param outfitName The name of the outfit to equip, or null/empty to remove the current outfit.
      * @return true if the outfit was successfully set or removed; false otherwise.
      *
-     * @author
-     * Mohammed Abdulnabi
-     * Kamaldeep Singh Ghotra
-     *
      */
     public boolean setOutfit(String outfitName) {
+        // If the outfit is null or empty, remove the current outfit
         if (outfitName == null || outfitName.isEmpty()) {
             this.currentOutfit = null;
-            System.out.println("Outfit removed.");
             return true;
         }
 
+        // Get the outfit that is allowed for this pet type (from the predefined map)
         String allowedOutfit = allowedOutfits.get(this.petType);
-        System.out.println("Setting outfit: " + outfitName);
 
+        // If no allowed outfit is found for this pet type, deny the request
         if (allowedOutfit == null) {
             System.out.println("ERROR: No outfit restrictions defined for this pet type.");
             return false;
         }
 
+        // If the provided outfit doesn't match the allowed outfit, deny it
         if (!outfitName.equalsIgnoreCase(allowedOutfit)) {
             System.out.println("ERROR: " + this.petType + " can only wear " + allowedOutfit + "!");
             return false;
         }
 
+        // Outfit is valid and allowed — set it as the current outfit
         this.currentOutfit = outfitName;
-        System.out.println(this.name + " is now wearing " + outfitName);
         return true;
     }
 
@@ -880,7 +929,6 @@ public class Pet {
      * Removes the currently equipped outfit from the pet, if one exists.
      * Outputs the removed outfit's name to the console for logging or debugging.
      *
-     * @author Mohammed Abdulnabi
      */
     public void removeOutfit() {
         if (this.currentOutfit != null && !this.currentOutfit.isEmpty()) {
@@ -894,7 +942,6 @@ public class Pet {
      * Resets the pet's state to its default.
      * This method is typically used when restarting the game or reviving the pet.
      *
-     * @author Kamaldeep Ghotra
      */
     public void resetState() {
             this.isDead = false;
@@ -907,38 +954,4 @@ public class Pet {
             this.fullness = maxFullness;
             this.happiness = maxHappiness;
     }
-
-
-
-
-//    private String getAllowedOutfit(Pet pet) {
-//        switch (pet.getPetType()) {
-//            case "PetOption1":
-//                return "outfit1";
-//            case "PetOption2":
-//                return "outfit2";
-//            case "PetOption3":
-//                return "outfit3";
-//            default:
-//                return "None"; // In case of an unknown pet type
-//        }
-//    }
-//
-//    private boolean isOutfit(String itemName) {
-//        return itemName.equals("outfit1") || itemName.equals("outfit2") || itemName.equals("outfit3");
-//    }
-//
-//    public boolean canWearOutfit(String outfitName) {
-//        // Each pet type is restricted to a specific outfit
-//        switch (this.petType) {
-//            case "PetOption1":
-//                return outfitName.equals("outfit1");
-//            case "PetOption2":
-//                return outfitName.equals("outfit2");
-//            case "PetOption3":
-//                return outfitName.equals("outfit3");
-//            default:
-//                return false; // If petType is unknown, deny all outfits
-//        }
-//    }
 }

@@ -26,30 +26,6 @@ public class MainScreen extends JFrame {
     private static PlayerInventory playerInventory;
 
     MainScreen() {
-//        // Load custom font
-//        try {
-//            // loading font from resources folder
-//            InputStream fontStream = getClass().getResourceAsStream("/resources/Early GameBoy.ttf");
-//            if (fontStream == null) {
-//                throw new IOException("Font file not found!");
-//            }
-//            customFont = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(16f); // def size
-//        } catch (IOException | FontFormatException e) {
-//            e.printStackTrace();
-//            // if font fails to load, go back to default
-//            customFont = new Font("Arial", Font.PLAIN, 24);
-//        }
-//        try {
-//            InputStream soundStream = getClass().getResourceAsStream("/resources/button_clicked.wav");
-//            if (soundStream != null) {
-//                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundStream);
-//                buttonClickSound = AudioSystem.getClip();
-//                buttonClickSound.open(audioInputStream);
-//            }
-//        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-//            e.printStackTrace();
-//            System.out.println("Could not load button click sound");
-//        }
         try {
             InputStream fontStream = getClass().getResourceAsStream("/Early GameBoy.ttf");
             if (fontStream == null) {
@@ -75,8 +51,7 @@ public class MainScreen extends JFrame {
         }
 
 
-
-        MusicPlayer.playBackgroundMusic("resources/background_music.wav");
+        MusicPlayer.playBackgroundMusic("background_music.wav");
         MusicPlayer.setVolume(0.2f);
         // actual screen
         this.setTitle("Virtual Pet");
@@ -96,8 +71,6 @@ public class MainScreen extends JFrame {
         JLayeredPane creditScreen = new CreditScreen(customFont, cardLayout, mainPanel);
         //InGameScreen inGameScreen = new InGameScreen(customFont, cardLayout, mainPanel,);
         Store store = GameDataManager.getSharedStore();
-
-
 
         // add screens to the main panel
         mainPanel.add(homeScreen, "Home");
@@ -158,7 +131,7 @@ public class MainScreen extends JFrame {
         buttonLabel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                MusicPlayer.playSoundEffect("resources/button_clicked.wav");
+                MusicPlayer.playSoundEffect("button_clicked.wav");
                 if (location.equals("Load")) {
                     // Remove old LoadScreen if it exists (optional but clean)
                     Component[] components = mainPanel.getComponents();
