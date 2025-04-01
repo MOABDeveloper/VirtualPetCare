@@ -46,10 +46,10 @@ public class GameDataManager {
      * The game data (pet, inventory, and updated play time) is then converted to JSON and written to the file.
      * After saving, the session start time is reset.
      *
-     * @param filename         the file path to save the game data
-     * @param pet              the pet instance
-     * @param inventory        the player's inventory
-     * @param previousPlayTime the previous total play time in milliseconds
+     * @param filename  the file path to save the game data
+     * @param pet  the pet instance
+     * @param inventory  the player's inventory
+     * @param previousPlayTime  the previous total play time in milliseconds
      */
     public static void saveGame(String filename, Pet pet, PlayerInventory inventory, long previousPlayTime) {
         long sessionDuration = System.currentTimeMillis() - sessionStartTime;
@@ -166,8 +166,8 @@ public class GameDataManager {
      * but with the updated inventory. This updated game data is then saved back to the file.
      * </p>
      *
-     * @param filename         the file path of the saved game to update
-     * @param updatedInventory the updated player inventory
+     * @param filename  the file path of the saved game to update
+     * @param updatedInventory  the updated player inventory
      */
     public static void saveInventoryToGameFile(String filename, PlayerInventory updatedInventory) {
         GameData existingData = loadGame(filename);

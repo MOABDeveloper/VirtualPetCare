@@ -1,11 +1,31 @@
 package src;
 
+
+/**
+ * Represents a pet type configuration used to influence how quickly a pet's stats decline over time.
+ * Each pet type has its own multipliers that scale the base decline rates for health, fullness,
+ * sleep, and happiness. These multipliers determine how challenging it is to maintain each stat
+ * depending on the selected pet type.
+ *
+ * @author Mohammed Abdulnabi
+ */
 public class PetType {
+    /* Mutlipliers for pet stats */
     private float healthDeclineMultiplier;
     private float fullnessDeclineMultiplier;
     private float sleepDeclineMultiplier;
     private float happinessDeclineMultiplier;
 
+
+    /**
+     * Constructs a PetType with specific multipliers for how quickly each stat declines.
+     * These multipliers allow different pet types to have unique characteristics and behaviors.
+     *
+     * @param healthDeclineMultiplier  how fast the health stat declines.
+     * @param fullnessDeclineMultiplier  how fast the fullness stat declines.
+     * @param sleepDeclineMultiplier  how fast the sleep stat declines
+     * @param happinessDeclineMultiplier  how fast the happiness stat declines
+     */
     public PetType(float healthDeclineMultiplier, float fullnessDeclineMultiplier, float sleepDeclineMultiplier, float happinessDeclineMultiplier) {
         this.healthDeclineMultiplier = healthDeclineMultiplier;
         this.fullnessDeclineMultiplier = fullnessDeclineMultiplier;
@@ -13,35 +33,43 @@ public class PetType {
         this.happinessDeclineMultiplier = happinessDeclineMultiplier;
     }
 
+
+    /**
+     * Gets the multiplier that controls how quickly the pet's health stat declines over time.
+     *
+     * @return the health decline multiplier for this pet type
+     */
     public float getHealthDeclineMultiplier() {
         return healthDeclineMultiplier;
     }
 
-    public void setHealthDeclineMultiplier(float multiplier) {
-        this.healthDeclineMultiplier = multiplier;
-    }
 
+    /**
+     * Retrieves the multiplier that determines how quickly the pet's fullness stat declines.
+     *
+     * @return the current fullness decline multiplier for this pet type
+     */
     public float getFullnessDeclineMultiplier() {
         return fullnessDeclineMultiplier;
     }
 
-    public void setFullnessDeclineMultiplier(float multiplier) {
-        this.fullnessDeclineMultiplier = multiplier;
-    }
 
+    /**
+     * Retrieves the multiplier that determines how quickly the pet's sleep stat declines.
+     *
+     * @return the current sleep decline multiplier for this pet type
+     */
     public float getSleepDeclineMultiplier() {
         return sleepDeclineMultiplier;
     }
 
-    public void setSleepDeclineMultiplier(float multiplier) {
-        this.sleepDeclineMultiplier = multiplier;
-    }
 
+    /**
+     * Retrieves the multiplier that determines how quickly the pet's happiness stat declines.
+     *
+     * @return the current happiness decline multiplier for this pet type
+     */
     public float getHappinessDeclineMultiplier() {
         return happinessDeclineMultiplier;
-    }
-
-    public void setHappinessDeclineMultiplier(float multiplier) {
-        this.happinessDeclineMultiplier = multiplier;
     }
 }
