@@ -35,11 +35,6 @@ public class PlayerInventory {
     }
 
 
-    public int fake()
-    {
-        return 1;
-    }
-
     public int getPlayerCoins() {
         return playerCoins;
     }
