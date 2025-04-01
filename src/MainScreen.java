@@ -239,6 +239,14 @@ public class MainScreen extends JFrame {
         layeredPane.add(parentalControlButton, Integer.valueOf(2));
 
 
+
+        JLabel passwordTextLabel = new JLabel("ENTER PASSWORD");
+        passwordTextLabel.setFont(customFont);
+        passwordTextLabel.setFont(customFont.deriveFont(23f));
+        passwordTextLabel.setForeground(Color.BLACK); // Set text color
+        passwordTextLabel.setBounds(380, 290, 800, 30); // Position above the image
+        passwordTextLabel.setVisible(false); // Initially hidden
+        layeredPane.add(passwordTextLabel, Integer.valueOf(4));
         ImageIcon passwordIcon = new ImageIcon("resources/password_popup.png"); // actual pop-up
         int desiredWidth = 1000;
         int desiredHeight = 664;
@@ -277,6 +285,15 @@ public class MainScreen extends JFrame {
         // Password input field
         JTextField passwordField = new JTextField();
 
+        Component[] components = parentPane.getComponents();
+        for (int i = 0; i < components.length; i++) {
+            Component comp = components[i];
+            if (comp instanceof JLabel && ((JLabel)comp).getText().equals("ENTER PASSWORD")) {
+                comp.setVisible(true);
+                break;
+            }
+        }
+
         //password text box
         passwordField.setBounds(210, 335, 650, 40);
         parentPane.add(passwordField, Integer.valueOf(4));
@@ -304,6 +321,14 @@ public class MainScreen extends JFrame {
         backButton.addActionListener(e -> {
             passwordLabel.setVisible(false);
             overlayLabel.setVisible(false);
+            Component[] comps = parentPane.getComponents();
+            for (int i = 0; i < comps.length; i++) {
+                Component comp = comps[i];
+                if (comp instanceof JLabel && ((JLabel)comp).getText().equals("ENTER PASSWORD")) {
+                    comp.setVisible(false);
+                    break;
+                }
+            }
             parentPane.remove(backButton);
             parentPane.remove(doneButton);
             parentPane.remove(passwordField);
@@ -323,6 +348,14 @@ public class MainScreen extends JFrame {
 
             passwordLabel.setVisible(false);
             overlayLabel.setVisible(false);
+            Component[] comppass = parentPane.getComponents();
+            for (int i = 0; i < comppass.length; i++) {
+                Component comp = comppass[i];
+                if (comp instanceof JLabel && ((JLabel)comp).getText().equals("ENTER PASSWORD")) {
+                    comp.setVisible(false);
+                    break;
+                }
+            }
             parentPane.remove(backButton);
             parentPane.remove(doneButton);
             parentPane.remove(passwordField);
