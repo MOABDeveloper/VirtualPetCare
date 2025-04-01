@@ -1,6 +1,13 @@
 package src;
 
-// main function
+/**
+ * The Main class serves as the entry point for the virtual pet simulation game.
+ * It initializes the main application window by creating an instance of MainScreen.
+ *
+ * This class contains the standard main method used to launch a Java application.
+ *
+ * @author Mohammed Abdulnabi
+ */
 public class Main {
     public static void main(String[] args) {
         MainScreen frame = new MainScreen();
