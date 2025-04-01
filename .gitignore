@@ -1,9 +1,15 @@
-# .gitignore
-
-# Ignore compiled Java files
+# Compiled Java class files
 *.class
 
-# Ignore IntelliJ/IDEA and other IDE build folders
-/out/
-/.idea/
-/*.iml
+# Maven build directory
+target/
+
+# IntelliJ IDEA project files
+.idea/
+*.iml
+out/
+
+# OS-specific or miscellaneous files (optional)
+.DS_Store
+Thumbs.db
+
