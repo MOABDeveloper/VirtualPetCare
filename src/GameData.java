@@ -1,5 +1,10 @@
 package src;
 
+
+/**
+ * Represents the current state of the game, including the player's pet,
+ * inventory, and total play time.
+ */
 public class GameData {
     private Pet pet;
     private PlayerInventory inventory;

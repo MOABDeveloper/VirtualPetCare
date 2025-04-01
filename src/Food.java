@@ -1,10 +1,12 @@
 package src;
 
+
 public class Food {
     private String name;
     private int price;
     private int fullness;
     private String description;
+
 
     public Food(String name, int price, int fullness, String description) {
         this.name = name;
@@ -13,21 +15,26 @@ public class Food {
         this.description = description;
     }
 
+
     public String getName() {
         return name;
     }
+
 
     public int getPrice() {
         return price;
     }
 
+
     public int getFullness() {
         return fullness;
     }
 
+
     public String getDescription() {
         return description;
     }
+
 
     @Override
     public boolean equals(Object obj) {

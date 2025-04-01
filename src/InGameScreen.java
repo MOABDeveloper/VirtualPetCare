@@ -560,6 +560,7 @@ public class InGameScreen extends JLayeredPane {
         progressBar.repaint();
     }
 
+
     /**
      * Sets the visual background and adds utility buttons to the screen.
      *
