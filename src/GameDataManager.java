@@ -12,9 +12,20 @@ import java.util.Map;
 import java.io.File;
 
 
+/**
+ * Manages storing the game and its corresponding data.
+ *
+ * The following class adds functionality for managing game data, parental control settings,
+ * and player inventory. This class uses Gson to alter data in JSon files,
+ * including saving and loading game data, as well as handling parental control and inventory operations.
+ *
+ * @author Mohammed Abdulnabi
+ * @author Kamaldeep Ghotra
+ */
 public class GameDataManager {
     private static final Store sharedStore = new Store(); // Shared across game
 
+    /* Made with the help of Artificial Intelligence */
     private static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(new TypeToken<Map<Food, Integer>>() {}.getType(), new FoodInventoryAdapter())
             .registerTypeAdapter(new TypeToken<Map<Toys, Integer>>() {}.getType(), new ToyInventoryAdapter())
@@ -27,8 +38,18 @@ public class GameDataManager {
     // Track when this session started
     private static long sessionStartTime = System.currentTimeMillis();
 
+
     /**
-     * Save game data to a custom-named file (e.g., one per pet or user).
+     * Saves the game data to a file with the given filename.
+     *
+     * The session duration since the last save is calculated and added to the previous play time.
+     * The game data (pet, inventory, and updated play time) is then converted to JSON and written to the file.
+     * After saving, the session start time is reset.
+     *
+     * @param filename         the file path to save the game data
+     * @param pet              the pet instance
+     * @param inventory        the player's inventory
+     * @param previousPlayTime the previous total play time in milliseconds
      */
     public static void saveGame(String filename, Pet pet, PlayerInventory inventory, long previousPlayTime) {
         long sessionDuration = System.currentTimeMillis() - sessionStartTime;
@@ -37,34 +58,49 @@ public class GameDataManager {
         GameData data = new GameData(pet, inventory, updatedPlayTime);
         try (FileWriter writer = new FileWriter(filename)) {
             gson.toJson(data, writer);
-            //.out.println("Game saved to '" + filename + "' with total play time: " + (updatedPlayTime / 1000) + "s");
 
         } catch (IOException e) {
-            //System.out.println("Failed to save game: " + e.getMessage());
+            System.out.println("Error saving game");
         }
 
         // Reset session start time
         sessionStartTime = System.currentTimeMillis();
     }
 
+
     /**
-     * Load game data from a custom-named file.
+     * Loads game data from the specified file.
+     * <p>
+     * The method attempts to decode the JSON content of the file into a GameData object.
+     * If the file cannot be read, it returns null.
+     * </p>
+     *
+     * @param filename the file path from which to load the game data
+     * @return the loaded GameData object, or null if loading fails
      */
     public static GameData loadGame(String filename) {
         try (FileReader reader = new FileReader(filename)) {
             GameData data = gson.fromJson(reader, GameData.class);
-            //System.out.println("Game loaded from '" + filename + "'");
             sessionStartTime = System.currentTimeMillis();
 
             return data;
         } catch (IOException e) {
-            //System.out.println("Failed to load game from '" + filename + "': " + e.getMessage());
+            System.out.println("Error loading game");
             return null;
         }
     }
 
     private static final String PARENTAL_CONTROL_FILE = "config/parental_control.json";
 
+
+    /**
+     * Saves the parental control settings to a predefined configuration file.
+     * <p>
+     * The settings are converted to JSON and saved to "config/parental_control.json".
+     * </p>
+     *
+     * @param parentalControl the parental control settings to be saved
+     */
     public static void saveParentalControlSettings(ParentalControl parentalControl) {
         try (FileWriter writer = new FileWriter(PARENTAL_CONTROL_FILE)) {
             gson.toJson(parentalControl, writer);
@@ -74,12 +110,18 @@ public class GameDataManager {
     }
 
 
+    /**
+     * Loads parental control settings from the predefined configuration file.
+     *
+     * If the configuration file does not exist, a new default ParentalControl instance is returned.
+     *
+     * @return the loaded ParentalControl settings, or a default instance if loading fails
+     */
     public static ParentalControl loadParentalControlSettings() {
         File file = new File(PARENTAL_CONTROL_FILE);
         if (!file.exists()) {
             return new ParentalControl(); // Return default if no file
         }
-
         try (FileReader reader = new FileReader(file)) {
             ParentalControl parentalControl = gson.fromJson(reader, ParentalControl.class);
             return parentalControl != null ? parentalControl : new ParentalControl();
@@ -90,6 +132,14 @@ public class GameDataManager {
     }
 
 
+    /**
+     * Determines whether a new game can be created based on the number of save files.
+     *
+     * The method checks if the "saves/" directory exists and counts the number of JSON files.
+     * A new game can be created if there are fewer than 3 save files.
+     *
+     * @return true if a new game can be created; false otherwise
+     */
     public static boolean canCreateNewGame() {
         File dir = new File("saves/");
         if (dir.exists() && dir.isDirectory()) {
@@ -99,52 +149,26 @@ public class GameDataManager {
     }
 
 
-    public static String getPetTypeFromSave(String filePath) {
-        if (filePath == null || filePath.isEmpty()) {
-            System.err.println("Error: Save file path is empty!");
-            return "default";  // Default pet type if no file is provided
-        }
-
-        try {
-            File file = new File(filePath);
-            if (!file.exists()) {
-                System.err.println("Error: Save file does not exist.");
-                return "default";
-            }
-
-            // Load saved game data
-            GameData loadedGame = loadGame(filePath);
-            if (loadedGame != null && loadedGame.getPet() != null) {
-                return loadedGame.getPet().getPetType(); // Retrieve pet type
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return "default";  // Return default pet type in case of error
-    }
-
+    /**
+     * Returns the shared Store instance used across the game.
+     *
+     * @return the shared Store instance
+     */
     public static Store getSharedStore() {
         return sharedStore;
     }
 
-    public static void saveInventory(String filename, PlayerInventory inventory) {
-        try (FileWriter writer = new FileWriter(filename)) {
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(PlayerInventory.class, new PlayerInventoryAdapter(getSharedStore()))
-                    .registerTypeAdapter(new TypeToken<Map<Food, Integer>>() {}.getType(), new FoodInventoryAdapter())
-                    .registerTypeAdapter(new TypeToken<Map<Gifts, Integer>>() {}.getType(), new GiftInventoryAdapter())
-                    .registerTypeAdapter(new TypeToken<Map<Toys, Integer>>() {}.getType(), new ToyInventoryAdapter())
-                    .setPrettyPrinting()
-                    .create();
 
-            gson.toJson(inventory, writer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+    /**
+     * Updates the inventory section of a saved game file with the provided inventory.
+     * <p>
+     * The existing game data is loaded, and a new GameData object is created using the existing pet and play time,
+     * but with the updated inventory. This updated game data is then saved back to the file.
+     * </p>
+     *
+     * @param filename         the file path of the saved game to update
+     * @param updatedInventory the updated player inventory
+     */
     public static void saveInventoryToGameFile(String filename, PlayerInventory updatedInventory) {
         GameData existingData = loadGame(filename);
         if (existingData != null) {
@@ -159,6 +183,4 @@ public class GameDataManager {
             }
         }
     }
-
-
 }
