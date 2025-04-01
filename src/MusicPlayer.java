@@ -67,17 +67,20 @@ public class MusicPlayer {
             Clip clip = soundEffects.get(filePath);
 
             if (clip == null) {
-                // Load the sound from classpath
+                // Load from classpath
                 InputStream raw = MusicPlayer.class.getResourceAsStream("/" + filePath);
                 if (raw == null) {
-                    System.out.println("Sound effect not found: " + filePath);
+                    System.out.println("Sound not found: " + filePath);
                     return;
                 }
 
                 BufferedInputStream buffered = new BufferedInputStream(raw);
                 AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(buffered);
+
                 clip = AudioSystem.getClip();
                 clip.open(audioInputStream);
+
+                // Cache it for reuse
                 soundEffects.put(filePath, clip);
             }
 
@@ -88,7 +91,7 @@ public class MusicPlayer {
                 gainControl.setValue(dB);
             }
 
-            clip.setFramePosition(0); // Rewind to start
+            clip.setFramePosition(0);
             clip.start();
 
         } catch (Exception e) {
