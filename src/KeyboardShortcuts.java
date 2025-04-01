@@ -12,6 +12,8 @@ import java.awt.event.KeyEvent;
  * This class allows players to perform key actions using keyboard bindings instead of clicking buttons.
  * Common actions like feeding, exercising, gifting, playing, and visiting the vet are mapped to keys.
  *
+ * - AI WAS USED IN ORDER TO LEARN HOW TO TAKE IN KEYBOARD INPUTS
+ *
  * Keys mapped:
  * - P: Play with pet
  * - F: Feed the pet
@@ -22,6 +24,7 @@ import java.awt.event.KeyEvent;
  *
  *
  * @author Aya Abdulnabi
+ * @version 1.0
  */
 public class KeyboardShortcuts {
     /* Reference to the in game UI*/

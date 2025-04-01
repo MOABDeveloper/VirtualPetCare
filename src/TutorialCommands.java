@@ -19,6 +19,7 @@ package src;
  * @author Kamaldeep Ghotra
  * @author Mohammed Abdulnabi
  * @author Aya Abdulnabi
+ * @version 1.0
  */
 public class TutorialCommands {
     /* Strings for each screen on Tutorial */

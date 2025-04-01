@@ -7,7 +7,28 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * The StoreScreen class represents the in-game store interface where players can purchase items
+ * for their pets. It provides a multiple pages with categorized items (food, toys, and gifts),
+ * purchase functionality with coin validation, and visual feedback for transactions.
+ *
+ * Features include:
+ * - Three categorized store pages (food, toys, outfits) with navigation buttons
+ * - Interactive item displays with images, prices, and descriptions
+ * - Purchase validation based on player's coin balance and pet compatibility
+ * - Real-time coin display updates
+ * - Custom popup dialogs for item details and purchase feedback
+ * - Integration with the game's inventory system for persistent item storage
+ *
+ * The class extends JLayeredPane to manage visual elements at different depth levels
+ * and uses CardLayout for seamless page transitions within the store.
+ *
+ * @author
+ * Aya Abdulnabi,
+ * Mohammed Abdulnabi
+ * Kamaldeep Ghorta
+ * @version 1.0
+ */
 public class StoreScreen extends JLayeredPane {
     /* Font used throughout store UI */
     private Font customFont;
@@ -37,8 +58,8 @@ public class StoreScreen extends JLayeredPane {
 
 
 
-    /** constructor
-     * *
+    /** Constructor of the class that sets the font, switches screens, and sets up the store screen
+     *
      * @param customFont
      * @param mainCardLayout
      * @param mainPanel
@@ -122,8 +143,14 @@ public class StoreScreen extends JLayeredPane {
     }
 
 
-
+    /**
+     * Sets up the home navigation buttons with functionality to switch in between
+     * the different screens between the stores.
+     *
+     * @author Aya Abdulnabi
+     */
     private void setupNavButtons() {
+        // Load the default next page arrow
         nextButton = createNavButton("resources/next_page.png", 700, 600);
         nextButton.addActionListener(e -> {
             shopCardLayout.next(shopPanel);
@@ -131,6 +158,7 @@ public class StoreScreen extends JLayeredPane {
         });
         add(nextButton, Integer.valueOf(3));
 
+        // Load the default previous page arrow
         prevButton = createNavButton("resources/prev_page.png", 300, 600);
         prevButton.addActionListener(e -> {
             shopCardLayout.previous(shopPanel);
@@ -144,9 +172,8 @@ public class StoreScreen extends JLayeredPane {
      * Sets up the home button with functionality to return to InGameScreen.
      */
     private void setupHomeButton() {
-        JButton homeButton = MainScreen.buttonCreate(800, 50, 192, 64,
-                "resources/home_button.png", "resources/home_button_clicked.png", "InGame");
-
+        // Create the home button to bring you back to the InGame screeen
+        JButton homeButton = MainScreen.buttonCreate(800, 50, 192, 64, "resources/home_button.png", "resources/home_button_clicked.png", "InGame");
         homeButton.addActionListener(e -> {
             resetToFirstPage();
 
@@ -243,13 +270,13 @@ public class StoreScreen extends JLayeredPane {
      * @author Aya Abdulnabi
      */
     private JButton createNavButton(String imagePath, int x, int y) {
+        // Create the buttons and make them have a sound when clicked on them
         JButton button = new JButton(new ImageIcon(imagePath));
         button.setBounds(x, y, 64, 64);
         button.setOpaque(false);
         button.setContentAreaFilled(false);
         button.setBorderPainted(false);
         button.setFocusPainted(false);
-
         button.addActionListener(e -> {
             MusicPlayer.playSoundEffect("resources/button_clicked.wav");
         });
@@ -281,16 +308,19 @@ public class StoreScreen extends JLayeredPane {
      * @author Aya Abdulnabi
      */
     private void setupBackground() {
+        // Default background
         ImageIcon background = new ImageIcon("resources/grid.png");
         JLabel backgroundLabel = new JLabel(background);
         backgroundLabel.setBounds(0, 0, 1080, 750);
         add(backgroundLabel, Integer.valueOf(0));
 
+        // Default shop image
         ImageIcon shopBG = new ImageIcon("resources/shop_bg.png");
         JLabel bgLabel = new JLabel(shopBG);
         bgLabel.setBounds(0, -15, 1080, 750);
         add(bgLabel, Integer.valueOf(1));
 
+        // Text inside the shop_bg
         JLabel shopText = new JLabel("SHOP");
         shopText.setFont(customFont.deriveFont(Font.BOLD, 18f));
         shopText.setForeground(Color.BLACK);

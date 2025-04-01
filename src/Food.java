@@ -11,6 +11,7 @@ package src;
  *
  * @author Mohammed Abdulnabi
  * @author Kamaldeep Ghotra
+ * @version 1.0
  */
 public class Food {
     private String name;

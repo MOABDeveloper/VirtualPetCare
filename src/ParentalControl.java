@@ -14,6 +14,7 @@ package src;
  * </ul>
  *
  * @author Kamaldeep Ghotra
+ * @version 1.0
  */
 public class ParentalControl {
     /* Parental control password (set to 1234) */

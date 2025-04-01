@@ -9,6 +9,7 @@ package src;
  * </p>
  *
  * @author Mohammed Abdulnabi
+ * @version 1.0
  */
 public class Toys {
     private String name;

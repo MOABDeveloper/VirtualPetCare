@@ -14,6 +14,7 @@ import java.util.Map;
  * @author Kamaldeep Ghotra
  * @author Mohammed Abdulnabi
  * @author Aya Abdulnabi
+ * @version 1.0
  */
 public class Store {
     private final Map<String, Food> foodMap;

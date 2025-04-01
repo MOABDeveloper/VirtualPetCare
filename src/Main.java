@@ -7,6 +7,7 @@ package src;
  * This class contains the standard main method used to launch a Java application.
  *
  * @author Mohammed Abdulnabi
+ * @version 1.0
  */
 public class Main {
     public static void main(String[] args) {

@@ -2,19 +2,45 @@ package src;
 import javax.swing.*;
 import java.awt.*;
 
-// credit scrren
-public class CreditScreen extends JLayeredPane {
-    private Font customFont;
-    private CardLayout cardLayout;  // Changed from static
-    private JPanel mainPanel;      // Changed from static
+/**
+ * This class constructs the credits screen UI for the Virtual Pet application.
+ *
+ * <p>
+ * It extends {@link JLayeredPane} to allow layering of background images, UI components, and text. This screen
+ * displays the names of the project contributors and references the course and term for which it was developed.
+ * It includes a background image, a credit title, and a label describing the project.
+ * </p>
+ *
+ * @author
+ * Clair Yu,
+ * Aya Abdulnabi
+ * @version 1.0
+ */
 
+public class CreditScreen extends JLayeredPane {
+    /* Font used throughout store UI */
+    private Font customFont;
+    /* Layout to swap different screens in the game */
+    private CardLayout cardLayout;
+    /* Main panel that holds all the screens*/
+    private JPanel mainPanel;
+
+    /**
+     * Constructs the credits screen and initializes all visual components, including
+     * the background image, credit information, and the Home button that navigates
+     * back to the main screen.
+     *
+     * @param customFont the custom font to apply to all text components
+     * @param cardLayout the CardLayout manager that controls screen switching
+     * @param mainPanel the main JPanel container that holds all screens
+     */
     public CreditScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel) {
         this.customFont = customFont;
         this.cardLayout = cardLayout;
         this.mainPanel = mainPanel;
         setPreferredSize(new Dimension(1080, 750));
 
-        // background
+        // Default background
         ImageIcon background = new ImageIcon("resources/grid.png");
         JLabel backgroundLabel = new JLabel(background);
         backgroundLabel.setBounds(0, 0, 1080, 750);
@@ -22,7 +48,7 @@ public class CreditScreen extends JLayeredPane {
 
         ImageIcon creditImage = new ImageIcon("resources/credit_screen.png");
 
-        // Scale down the image if needed (same scaling code as before)
+        // Credit screen image
         JLabel creditLabel = new JLabel(creditImage);
         creditLabel.setBounds(0, 0, creditImage.getIconWidth(), creditImage.getIconHeight());
         add(creditLabel, Integer.valueOf(1));
@@ -34,18 +60,15 @@ public class CreditScreen extends JLayeredPane {
         titleLabel.setBounds(315, 30, 1000, 50);
         add(titleLabel, Integer.valueOf(2));
 
+        // Text to reprent the semester it was made + which group made it
         JLabel subLabel = new JLabel("\"Virtual Pet\" is a project created for COMPSCI 2212 Winter 2025 at Western University");
         subLabel.setFont(customFont.deriveFont(12f));
         subLabel.setForeground(Color.decode("#d09b62"));
         subLabel.setBounds(70, 70, 1000, 50);
         add(subLabel, Integer.valueOf(4));
 
-        // Fixed Home Button - uses the MainScreen.buttonCreate method
-        JButton homeButton = MainScreen.buttonCreate(20, 20, 192, 64,
-                "resources/white_button.png",
-                "resources/white_button_clicked.png",
-                "Home");  // Changed to "Home" to match your main screen's name
-
+        // Home button with styling
+        JButton homeButton = MainScreen.buttonCreate(20, 20, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
         JLabel homeText = new JLabel("< HOME");
         homeText.setFont(customFont);
         homeText.setForeground(Color.BLACK);

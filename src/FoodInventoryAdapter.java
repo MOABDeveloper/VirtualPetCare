@@ -5,11 +5,28 @@ import com.google.gson.*;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * Code Derived and adapted from;
+ * https://stackoverflow.com/questions/68011041/how-to-serialize-hashmapobject-object-with-gson
+ * A custom GSON adapter for serializing and deserializing a player's food inventory.
+ *
+ * <p>This adapter handles the conversion between a {@code Map<Food, Integer>} and JSON format. During serialization,
+ * it uses food names as keys for readability.
+ * During deserialization, it reconstructs Food objects by looking them up in the Store names.</p>
+ *
+ * <p>The implementation ensures that the food inventory is saved in a human-readable format
+ * while maintaining the ability to restore the actual Food objects when loading the game.</p>
+ *
+ * @see Store
+ * @see Food
+ * @author
+ * Mohammed Abdulnabi,
+ * Kamaldeep Ghorta
+ * @version  1.0
+ */
 public class FoodInventoryAdapter implements JsonSerializer<Map<Food, Integer>>, JsonDeserializer<Map<Food, Integer>> {
-
-
     /**
+     *
      * Converts a Map of Food objects to a JSON object using their names as keys.
      * This allows food items to be saved in a clean, readable format.
      *

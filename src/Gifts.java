@@ -9,6 +9,7 @@ package src;
  * </p>
  *
  * @author Mohammed Ali Abdulnabi
+ * @version 1.0
  */
 public class Gifts {
     private String name;

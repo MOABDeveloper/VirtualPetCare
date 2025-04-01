@@ -8,75 +8,100 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The {@code MusicPlayer} class manages all audios played throughout the game
+ * including sound effects and background music.
+ *
+ * <p>Key features include:
+ * <ul>
+ *   <li>Background music playback with looping</li>
+ *   <li>Sound effect management with caching</li>
+ *   <li>Independent volume control for music and SFX</li>
+ *   <li>Audio resource loading from classpath</li>
+ * </ul>
+ *
+ * <p>This class integrates {@link Clip} for audio playback and
+ * {@link FloatControl} to adjust the audio.
+ *
+ * AI WAS USED IN ORDER TO HELP DEBUG + HELP LEARN MORE ABOUT THE CLASSES IT USES
+ * @author
+ * Aya Abdulnabi,
+ * Kamaldeep Ghorta
+ * @version 1.0
+ */
 public class MusicPlayer {
+    /* Clip instance to for background music playback */
     private static Clip backgroundMusic;
+    /* Flag to indicate if background music is playing or not */
     private static boolean isPlaying = false;
+    /* Float used to adjust the volume of the background music */
     private static float volume = 0.1f;
+    /* Float used to adjust the volume of sound effects*/
     private static float sfxVolume = 0.1f;
-    private static Map<String, Clip> soundEffects = new HashMap<>(); // Cache for sound effects
+    /* Cache for loaded sounds and reloading */
+    private static Map<String, Clip> soundEffects = new HashMap<>();
 
-    // Background music methods (existing)
+    /**
+     * Plays background music from the specified file path, it stops
+     * any currently playing music before starting new track.
+     *
+     * @param filePath Path to the audio file
+     *
+     * @author Aya Abdulnabi
+     * @author Kamaldeep Ghorta
+     */
     public static void playBackgroundMusic(String filePath) {
         try {
+            // Stop if already existing music is playing
             if (backgroundMusic != null && backgroundMusic.isRunning()) {
                 backgroundMusic.stop();
             }
 
+            // Load audio from the file path if found
             InputStream raw = MusicPlayer.class.getResourceAsStream("/" + filePath);
             if (raw == null) {
                 System.out.println("Background music file not found: " + filePath);
                 return;
             }
-
+            // Set up audio stream and clip
             BufferedInputStream buffered = new BufferedInputStream(raw);
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(buffered);
-
             backgroundMusic = AudioSystem.getClip();
             backgroundMusic.open(audioInputStream);
 
+            // Set the volume, continously loop and let it play
             setVolume(volume);
             backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
             isPlaying = true;
 
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            System.out.println("Could not play background music: " + e.getMessage());
+            System.out.println("Unable to play background music: " + e.getMessage());
         }
     }
 
-//    public static void playBackgroundMusic(String filePath) {
-//        try {
-//            if (backgroundMusic != null && backgroundMusic.isRunning()) {
-//                backgroundMusic.stop();
-//            }
-//
-//            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
-//            backgroundMusic = AudioSystem.getClip();
-//            backgroundMusic.open(audioInputStream);
-//
-//            setVolume(volume);
-//            backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
-//            isPlaying = true;
-//
-//        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
+    /**
+     * Plays a sound effect from the specified file path
+     *
+     * @param filePath Path to the sound effect file
+     *
+     * @author Aya Abdulnabi
+     * @author Kamaldeep Ghorta
+     */
     public static void playSoundEffect(String filePath) {
         try {
+            // Check to see if sound effect is already cached or not
             Clip clip = soundEffects.get(filePath);
 
             if (clip == null) {
-                // Load from classpath
+                // Load new sound effect from the file path
                 InputStream raw = MusicPlayer.class.getResourceAsStream("/" + filePath);
                 if (raw == null) {
                     System.out.println("Sound not found: " + filePath);
                     return;
                 }
-
+                // Set up audio stream and clip
                 BufferedInputStream buffered = new BufferedInputStream(raw);
                 AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(buffered);
-
                 clip = AudioSystem.getClip();
                 clip.open(audioInputStream);
 
@@ -84,13 +109,7 @@ public class MusicPlayer {
                 soundEffects.put(filePath, clip);
             }
 
-            // Set SFX volume
-            if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-                FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-                float dB = (float) (Math.log(sfxVolume) / Math.log(10.0) * 20.0);
-                gainControl.setValue(dB);
-            }
-
+            // Play from beginning
             clip.setFramePosition(0);
             clip.start();
 
@@ -99,44 +118,26 @@ public class MusicPlayer {
         }
     }
 
-    // New methods for sound effects
-//    public static void playSoundEffect(String filePath) {
-//        try {
-//            Clip clip = soundEffects.get(filePath);
-//
-//            if (clip == null) {
-//                // Load the sound if not already cached
-//                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(
-//                        new File(filePath).getAbsoluteFile());
-//                clip = AudioSystem.getClip();
-//                clip.open(audioInputStream);
-//                soundEffects.put(filePath, clip);
-//            }
-//
-//            // Set SFX volume
-//            if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-//                FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-//                float dB = (float) (Math.log(sfxVolume) / Math.log(10.0) * 20.0);
-//                gainControl.setValue(dB);
-//            }
-//
-//            clip.setFramePosition(0); // Rewind to start
-//            clip.start();
-//
-//        } catch (Exception e) {
-//            System.out.println("Error playing sound effect: " + e.getMessage());
-//        }
-//    }
-
+    /**
+     * Sets the volume level for sound effects.
+     * Between 0.0 (silent) and 0.5 (max).
+     *
+     * @param volumeLevel Desired volume level
+     *
+     * @author Aya Abdulnabi
+     */
     public static void setSfxVolume(float volumeLevel) {
         sfxVolume = Math.max(0.0f, Math.min(0.5f, volumeLevel));
     }
 
-    public static float getSfxVolume() {
-        return sfxVolume;
-    }
-
-    // Existing methods remain unchanged
+    /**
+     * Sets the volume level for background music.
+     * Between 0.0 (silent) and 1.0 (max)
+     *
+     * @param volumeLevel Desired volume level
+     *
+     * @author Aya Abdulnabi
+     */
     public static void setVolume(float volumeLevel) {
         volume = Math.max(0.0f, Math.min(1.0f, volumeLevel));
         if (backgroundMusic != null && backgroundMusic.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
@@ -146,6 +147,11 @@ public class MusicPlayer {
         }
     }
 
+    /**
+     * Stops the currently playing background music.
+     *
+     * @author Aya Abdulnabi
+     */
     public static void stopBackgroundMusic() {
         if (backgroundMusic != null && backgroundMusic.isRunning()) {
             backgroundMusic.stop();
@@ -153,7 +159,14 @@ public class MusicPlayer {
         }
     }
 
+    /**
+     * Toggles background music playback state.
+     * If playing, stops the music. If stopped, resumes playing
+     *
+     * @author Aya Abdulnabi
+     */
     public static void toggleBackgroundMusic() {
+       // If playying, stop, otherwise, if not playing, let it play
         if (isPlaying) {
             stopBackgroundMusic();
         } else {

@@ -7,23 +7,27 @@ import java.util.Map;
 
 
 /**
- * The InGameScreen class represents the main gameplay screen in the virtual pet game.
- * It allows the player to interact with their pet through feeding, playing, exercising,
- * gifting outfits, putting the pet to sleep, and visiting the vet.
+ * Pet class represents a pet in the Virtual Pet game
  *
- * This screen also shows live updates of the pet's stats through progress bars for
- * health, sleep, fullness, and happiness. These stats gradually decline over time
- * using a built-in timer.
- * Other features include:
- * - A coin display to track the player's in-game currency
- * - A working store button for in-game purchases
- * - Popup menus for selecting food and toys from the inventory
- * - Keyboard shortcut support
- * - Sound effects tied to pet actions
- * - Parental control tracking for play session duration
+ * <p>This class shows the behavior and attributes of a virtual pet, including its needs (health, sleep, fullness, happiness),
+ * state flags (sleeping, hungry, happy, dead), as well as interactions (playing, feeding, vet visits, gifting). The pet's stats decline
+ * over time based on its type and current state, makming player intervention to maintain its well-being.</p>
  *
- * @author Kamaldeep Ghotra
- * @author Mohammed Abdulnabi
+ * <p>Key features:
+ * <ul>
+ *   <li>Multiple pet types with different stat decline behaviors</li>
+ *   <li>Periodic stat decay simulation through applyDecline()</li>
+ *   <li>State management</li>
+ *   <li>Outfit customization restricted by pet type</li>
+ *   <li>Cooldown mechanics for special actions</li>
+ *   <li>Warnings for critical stat levels</li>
+ * </ul>
+ * </p>
+ *
+ * <p>The class uses GSON annotations for serialization/deserialization of pet state.</p>
+ * @author
+ * Kamaldeep Ghorta,
+ * Mohammed Abdulnabi
  */
 public class Pet {
     /* The name given to the pet by the player */

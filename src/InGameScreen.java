@@ -32,6 +32,7 @@ import javax.swing.Timer;
  * Mohammed Abdulnabi,
  * Aya Abdulnabi,
  * Kamaldeep Ghotra
+ * @version 1.0
  */
 public class InGameScreen extends JLayeredPane {
     /* Custom font for styling (for the text labels on buttons) */
@@ -101,9 +102,9 @@ public class InGameScreen extends JLayeredPane {
      * @param gameData      The current game data, including pet and inventory.
      * @param saveFilePath  The file path used when saving the current session.
      *
-     * @author Mohammed abudlnabi
+     * @author Mohammed Abdulnabi
      * @author Kamaldeep Singh Ghotra
-     * @author aray abdulnabi
+     * @author Aya Abdulnabi
      */
     public InGameScreen(Font customFont, CardLayout cardLayout, JPanel mainPanel, GameData gameData, String saveFilePath) {
         this.customFont = customFont;  // Store custom font
@@ -257,8 +258,8 @@ public class InGameScreen extends JLayeredPane {
      * saves parental control data, and switches back to the Home screen.
      *
      *
-     * @author Mohammed Abudlnabi
-     * @author aya abdulnabi
+     * @author Mohammed Abdulnabi
+     * @author Aya Abdulnabi
      * @author Kamaldeep Ghotra
      */
     private void createBackButton() {
@@ -879,7 +880,7 @@ public class InGameScreen extends JLayeredPane {
         add(exerciseIconLabel, Integer.valueOf(3));
         add(exerciseButton, Integer.valueOf(2));
 
-        //displayu the icon label
+        //display the icon label
         JLabel exerciseTextLabel = new JLabel("EXERCISE");
         exerciseTextLabel.setFont(customFont.deriveFont(Font.BOLD, 14f));
         exerciseTextLabel.setForeground(Color.BLACK);

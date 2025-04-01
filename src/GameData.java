@@ -10,6 +10,7 @@ package src;
  * This class is used to store and retrieve key components of the game state.
  *</p>
  * @author Mohammed Abdulnabi
+ * @version 1.0
  */
 public class GameData {
     private Pet pet;

@@ -21,6 +21,7 @@ import java.util.Map;
  *
  * @author Mohammed Abdulnabi
  * @author Kamaldeep Ghotra
+ * @version 1.0
  */
 public class PlayerInventory {
 

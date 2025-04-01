@@ -8,6 +8,7 @@ package src;
  * depending on the selected pet type.
  *
  * @author Mohammed Abdulnabi
+ * @version 1.0
  */
 public class PetType {
     /* Mutlipliers for pet stats */

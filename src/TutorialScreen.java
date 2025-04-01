@@ -6,16 +6,37 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
-
+/**
+ * This class constructs the tutorial screen UI for the Virtual Pet application.
+ *<p>
+ * The {@code TutorialScreen} class constructs the interactive tutorial interface for the Virtual Pet application.
+ * It uses a {@link CardLayout} to switch between multiple screens that guide users through various commands
+ * and features, including feeding, playing, gifting, vet visits, sleeping, and exercising.
+ *</p>
+ *
+ * @author
+ * Clair Yu,
+ * Aya Abdulnabi
+ * @version 1.0
+ */
 public class TutorialScreen extends JLayeredPane {
+    /* Custom used throughout this class */
     private Font customFont;
+    /* Layout to swap different screens in the game */
     private static CardLayout cardLayout;
+    /* Main panel that holds all the screens*/
     private static JPanel mainPanel;
-
-    //For the backend
+    /* Tutorial text from the backend*/
     private TutorialCommands tutorialText;
 
+    /**
+     * Constructs the tutorial screen, initializes navigation, loads assets and fonts,
+     * and adds all tutorial steps to the panel.
+     *
+     * @param customFont the font to apply to on-screen text
+     */
     public TutorialScreen(Font customFont) {
+        // set the custom font and the dimensions of the screen
         this.customFont = customFont;
         setPreferredSize(new Dimension(1080, 750));
         try {
@@ -30,28 +51,16 @@ public class TutorialScreen extends JLayeredPane {
             this.customFont = new Font("Arial", Font.PLAIN, 24);
         }
 
-//        try {
-//            InputStream fontStream = getClass().getResourceAsStream("/resources/Early GameBoy.ttf");
-//            if (fontStream == null) {
-//                throw new IOException("Font file not found!");
-//            }
-//            this.customFont = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(16f);
-//        } catch (IOException | FontFormatException e) {
-//            e.printStackTrace();
-//            System.out.println("Font file not found!");
-//            this.customFont = new Font("Arial", Font.PLAIN, 24);
-//        }
-
-
         // From the backend
         this.tutorialText = new TutorialCommands();
 
-        // set up, create new screen
+        // Set up and create differnt screens
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
         mainPanel.setBounds(0, 0, 1080, 750); // Set bounds for the mainPanel
-        add(mainPanel, Integer.valueOf(1)); // Add mainPanel to the layered pane
+        add(mainPanel, Integer.valueOf(1));
 
+        // Creating home button to lead back to the main screen
         JButton homeButton = MainScreen.buttonCreate(20, 20, 192, 64, "resources/white_button.png", "resources/white_button_clicked.png", "Home");
         JLabel homeText = new JLabel("< HOME");
         homeText.setFont(customFont);
@@ -62,9 +71,10 @@ public class TutorialScreen extends JLayeredPane {
         add(homeText, Integer.valueOf(3));
         add(homeButton, Integer.valueOf(2));
 
+        // Reset back to the first tutorial page
         resetToGiveGift();
 
-        // creating screens
+        // Creating the different screens
         JLayeredPane givingGift = giftGiving();
         JLayeredPane feedingScreen = feedingScreen();
         JLayeredPane vetScreen = vetScreen();
@@ -72,7 +82,7 @@ public class TutorialScreen extends JLayeredPane {
         JLayeredPane sleepingScreen = sleepScreen();
         JLayeredPane playScreen = playingScreen();
 
-        // add screens into panel
+        // Add all screens onto the panel
         mainPanel.add(givingGift, "Give Gift");
         mainPanel.add(feedingScreen, "Feeding");
         mainPanel.add(vetScreen, "Vet");
@@ -85,6 +95,10 @@ public class TutorialScreen extends JLayeredPane {
         setVisible(true);
     }
 
+    /**
+     * Builds the tutorial screen for the "Give Gift" action.
+     * @return the complete screen as a {@link JLayeredPane}
+     */
     private JLayeredPane giftGiving() {
         JLayeredPane giftGivingScreen = new JLayeredPane();
         giftGivingScreen.setPreferredSize(new Dimension(1080, 750));
@@ -93,6 +107,7 @@ public class TutorialScreen extends JLayeredPane {
         JButton rightArrow = createButtonWithCardLayout(800, 250, 64, 64, "resources/arrow_button.png", "resources/arrow_button_click.png", "Feeding", cardLayout, mainPanel);
         giftGivingScreen.add(rightArrow, Integer.valueOf(1));
 
+        // Button to go to the next screen
         ImageIcon rightArrowImage = new ImageIcon("resources/right_arrow.png");
         JLabel rightArrowLabel = new JLabel(rightArrowImage);
         rightArrowLabel.setBounds(817, 265, 32, 32);
@@ -100,11 +115,14 @@ public class TutorialScreen extends JLayeredPane {
 
         // Build base tutorial screen
         JLayeredPane screen = tutorialScreen("resources/give_gift_tutorial.png", giftGivingScreen);
-
         JTextArea textArea = new JTextArea(tutorialText.getGiftGivingText());
         return setText(screen, textArea);
     }
 
+    /**
+     * Builds the tutorial screen for the "Feeding" action.
+     * @return the complete screen as a {@link JLayeredPane}
+     */
     private JLayeredPane feedingScreen() {
         JLayeredPane feedingScreen = new JLayeredPane();
         feedingScreen.setPreferredSize(new Dimension(1080, 750));
@@ -121,11 +139,14 @@ public class TutorialScreen extends JLayeredPane {
 
         // Build base tutorial screen
         JLayeredPane screen = tutorialScreen("resources/feeding_tutorial.png", feedingScreen);
-
         JTextArea textArea = new JTextArea(tutorialText.getFeedingScreenText());
         return setText(screen, textArea);
     }
 
+    /**
+     * Builds the tutorial screen for the "Vet" action.
+     * @return the complete screen as a {@link JLayeredPane}
+     */
     private JLayeredPane vetScreen() {
         JLayeredPane vetScreen = new JLayeredPane();
         vetScreen.setPreferredSize(new Dimension(1080, 750));
@@ -148,6 +169,10 @@ public class TutorialScreen extends JLayeredPane {
 
     }
 
+    /**
+     * Builds the tutorial screen for the "Exercise" action.
+     * @return the complete screen as a {@link JLayeredPane}
+     */
     private JLayeredPane exerciseScreen() {
         JLayeredPane exerciseScreen = new JLayeredPane();
         exerciseScreen.setPreferredSize(new Dimension(1080, 750));
@@ -169,6 +194,10 @@ public class TutorialScreen extends JLayeredPane {
         return setText(screen, textArea);
     }
 
+    /**
+     * Builds the tutorial screen for the "Sleep" action.
+     * @return the complete screen as a {@link JLayeredPane}
+     */
     private JLayeredPane sleepScreen() {
         JLayeredPane sleepingScreen = new JLayeredPane();
         sleepingScreen.setPreferredSize(new Dimension(1080, 750));
@@ -190,6 +219,10 @@ public class TutorialScreen extends JLayeredPane {
         return setText(screen, textArea);
     }
 
+    /**
+     * Builds the tutorial screen for the "Play" action.
+     * @return the complete screen as a {@link JLayeredPane}
+     */
     private JLayeredPane playingScreen() {
         JLayeredPane playScreen = new JLayeredPane();
         playScreen.setPreferredSize(new Dimension(1080, 750));
@@ -210,7 +243,12 @@ public class TutorialScreen extends JLayeredPane {
         return setText(screen, textArea);
     }
 
+    /**
+     * Adds left and right arrow icons to a given screen.
+     * @param screenSource the pane to which the arrows will be added
+     */
     public void arrowImageIcon(JLayeredPane screenSource) {
+        // Load the default arrows and position them correctly
         ImageIcon rightArrowImage = new ImageIcon("resources/right_arrow.png");
         ImageIcon leftArrowImage = new ImageIcon("resources/left_arrow.png");
 
@@ -225,7 +263,21 @@ public class TutorialScreen extends JLayeredPane {
 
     }
 
-    // Wrapper method to create buttons with CardLayout functionality
+    /**
+     * Utility method that creates a navigation button that switches screens
+     * in a CardLayout-managed panel.
+     *
+     * @param x                 X-coordinate
+     * @param y                 Y-coordinate
+     * @param width             Width of button
+     * @param height            Height of button
+     * @param defaultImageSource  Button image path
+     * @param pressedImageSource  Pressed state image path
+     * @param location            CardLayout panel name to switch to
+     * @param cardLayout          The layout manager
+     * @param mainPanel           The parent container
+     * @return the created {@link JButton}
+     */
     public static JButton createButtonWithCardLayout(int x, int y, int width, int height, String defaultImageSource, String pressedImageSource, String location, CardLayout cardLayout, JPanel mainPanel) {
         // Call the existing buttonCreate function
         JButton button = MainScreen.buttonCreate(x, y, width, height, defaultImageSource, pressedImageSource, location);
@@ -234,24 +286,34 @@ public class TutorialScreen extends JLayeredPane {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(mainPanel, location); // Switch to the specified screen
+                // Switch to the specific screen
+                cardLayout.show(mainPanel, location);
             }
         });
 
         return button;
     }
 
+    /**
+     * Resets the tutorial screen to the initial "Give Gift" screen.
+     */
     public void resetToGiveGift() {
         cardLayout.show(mainPanel, "Give Gift");
     }
 
+    /**
+     * Creates the base for all tutorial screens with background and tutorial image.
+     *
+     * @param defaultImageSource the tutorial image path
+     * @param screenSource the screen container
+     * @return the modified screen container
+     */
     private JLayeredPane tutorialScreen(String defaultImageSource, JLayeredPane screenSource) {
+        // Set the default background for the tutorial screen and scale it
         ImageIcon background = new ImageIcon("resources/grid.png");
         JLabel backgroundLabel = new JLabel(background);
-
         backgroundLabel.setBounds(0, 0, 1080, 750);
         screenSource.add(backgroundLabel, Integer.valueOf(1));
-
         ImageIcon defaultImageIcon = new ImageIcon(defaultImageSource);
         int width = defaultImageIcon.getIconWidth() - 1000;
         int height = defaultImageIcon.getIconHeight() - 700;
@@ -262,6 +324,7 @@ public class TutorialScreen extends JLayeredPane {
         imageLabel.setBounds(-86, -90, width, height);
         screenSource.add(imageLabel, Integer.valueOf(2));
 
+        // Load image that will store where the text will be
         ImageIcon textBoxImageIcon = new ImageIcon("resources/text_box.png");
         JLabel textBoxLabel = new JLabel(textBoxImageIcon);
         textBoxLabel.setBounds(105, 100, 860, 540);
@@ -270,7 +333,16 @@ public class TutorialScreen extends JLayeredPane {
         return screenSource;
 
     }
+
+    /**
+     * Adds instructional text to the specified screen using a styled {@link JTextArea}.
+     *
+     * @param screen the layered pane to which text should be added
+     * @param textArea the text content
+     * @return the updated screen with instructional text
+     */
     private JLayeredPane setText(JLayeredPane screen, JTextArea textArea) {
+        // Sets the text inside the back written in the backend class
         textArea.setFont(customFont.deriveFont(15f));
         textArea.setForeground(Color.BLACK);
         textArea.setOpaque(false);

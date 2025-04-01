@@ -21,6 +21,7 @@ import java.io.File;
  *
  * @author Mohammed Abdulnabi
  * @author Kamaldeep Ghotra
+ * @version 1.0
  */
 public class GameDataManager {
     private static final Store sharedStore = new Store(); // Shared across game
