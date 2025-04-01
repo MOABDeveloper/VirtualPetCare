@@ -1,8 +1,10 @@
 package src;
 
 import javax.sound.sampled.*;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +22,15 @@ public class MusicPlayer {
                 backgroundMusic.stop();
             }
 
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
+            InputStream raw = MusicPlayer.class.getResourceAsStream("/" + filePath);
+            if (raw == null) {
+                System.out.println("Background music file not found: " + filePath);
+                return;
+            }
+
+            BufferedInputStream buffered = new BufferedInputStream(raw);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(buffered);
+
             backgroundMusic = AudioSystem.getClip();
             backgroundMusic.open(audioInputStream);
 
@@ -29,19 +39,43 @@ public class MusicPlayer {
             isPlaying = true;
 
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
+            System.out.println("Could not play background music: " + e.getMessage());
         }
     }
 
-    // New methods for sound effects
+//    public static void playBackgroundMusic(String filePath) {
+//        try {
+//            if (backgroundMusic != null && backgroundMusic.isRunning()) {
+//                backgroundMusic.stop();
+//            }
+//
+//            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
+//            backgroundMusic = AudioSystem.getClip();
+//            backgroundMusic.open(audioInputStream);
+//
+//            setVolume(volume);
+//            backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
+//            isPlaying = true;
+//
+//        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     public static void playSoundEffect(String filePath) {
         try {
             Clip clip = soundEffects.get(filePath);
 
             if (clip == null) {
-                // Load the sound if not already cached
-                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(
-                        new File(filePath).getAbsoluteFile());
+                // Load the sound from classpath
+                InputStream raw = MusicPlayer.class.getResourceAsStream("/" + filePath);
+                if (raw == null) {
+                    System.out.println("Sound effect not found: " + filePath);
+                    return;
+                }
+
+                BufferedInputStream buffered = new BufferedInputStream(raw);
+                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(buffered);
                 clip = AudioSystem.getClip();
                 clip.open(audioInputStream);
                 soundEffects.put(filePath, clip);
@@ -58,9 +92,38 @@ public class MusicPlayer {
             clip.start();
 
         } catch (Exception e) {
-            System.out.println("Error playing sound effect: " + e.getMessage());
+            System.out.println("Error playing sound effect: " + filePath + " (" + e.getMessage() + ")");
         }
     }
+
+    // New methods for sound effects
+//    public static void playSoundEffect(String filePath) {
+//        try {
+//            Clip clip = soundEffects.get(filePath);
+//
+//            if (clip == null) {
+//                // Load the sound if not already cached
+//                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(
+//                        new File(filePath).getAbsoluteFile());
+//                clip = AudioSystem.getClip();
+//                clip.open(audioInputStream);
+//                soundEffects.put(filePath, clip);
+//            }
+//
+//            // Set SFX volume
+//            if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+//                FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+//                float dB = (float) (Math.log(sfxVolume) / Math.log(10.0) * 20.0);
+//                gainControl.setValue(dB);
+//            }
+//
+//            clip.setFramePosition(0); // Rewind to start
+//            clip.start();
+//
+//        } catch (Exception e) {
+//            System.out.println("Error playing sound effect: " + e.getMessage());
+//        }
+//    }
 
     public static void setSfxVolume(float volumeLevel) {
         sfxVolume = Math.max(0.0f, Math.min(0.5f, volumeLevel));

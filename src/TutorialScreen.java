@@ -19,7 +19,7 @@ public class TutorialScreen extends JLayeredPane {
         this.customFont = customFont;
         setPreferredSize(new Dimension(1080, 750));
         try {
-            InputStream fontStream = getClass().getResourceAsStream("/resources/Early GameBoy.ttf");
+            InputStream fontStream = getClass().getResourceAsStream("/Early GameBoy.ttf");
             if (fontStream == null) {
                 throw new IOException("Font file not found!");
             }
@@ -29,6 +29,18 @@ public class TutorialScreen extends JLayeredPane {
             System.out.println("Font file not found!");
             this.customFont = new Font("Arial", Font.PLAIN, 24);
         }
+
+//        try {
+//            InputStream fontStream = getClass().getResourceAsStream("/resources/Early GameBoy.ttf");
+//            if (fontStream == null) {
+//                throw new IOException("Font file not found!");
+//            }
+//            this.customFont = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(16f);
+//        } catch (IOException | FontFormatException e) {
+//            e.printStackTrace();
+//            System.out.println("Font file not found!");
+//            this.customFont = new Font("Arial", Font.PLAIN, 24);
+//        }
 
 
         // From the backend

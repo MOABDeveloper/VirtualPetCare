@@ -541,82 +541,215 @@ public class Pet {
         this.happinessDeclineRate = Math.round(baseHappiness * type.getHappinessDeclineMultiplier());
     }
 
+
+    /**
+     * Returns the type of the pet (e.g., "PetOption1", "PetOption2", or "PetOption3").
+     *
+     * @return A string representing the pet's type.
+     */
     public String getPetType() {
         return petType;
     }
 
+
+    /**
+     * Checks if the pet is currently sleeping.
+     *
+     * @return true if the pet is sleeping; false otherwise.
+     */
     public boolean isSleeping() {
         return isSleeping;
     }
 
+
+    /**
+     * Checks if the pet is currently hungry.
+     *
+     * @return true if the pet's fullness has dropped to 0; false otherwise.
+     */
     public boolean isHungry() {
         return isHungry;
     }
 
+
+    /**
+     * Checks if the pet is currently angry.
+     * A pet is considered angry when its happiness reaches zero.
+     *
+     * @return true if happiness is 0, false otherwise.
+     */
     public boolean isAngry() {
+        // Check if happiness is 0
         if(getHappiness() == 0)
         {
-            return true;
+            return true;  // Angry pet
         }
-        return false;
+        return false;  // Pet is not angry
     }
 
+
+    /**
+     * Checks if the pet is dead.
+     * A pet is considered dead when its health is 0 or less.
+     * Also updates the internal `isDead` flag accordingly.
+     *
+     * @return true if the pet's health is 0 or below, false otherwise.
+     */
     public boolean isDead() {
+        // If health less than or equal to 0, mark the pet as dead
         if(getHealth() <= 0) {
             isDead = true;
         }
         else{
+            // Otherwise, the pet is not dead
             isDead = false;
         }
-        return isDead;
+        return isDead;  // Return whether the pet is dead or not
     }
 
+
+    /**
+     * Sets the dead status of the pet.
+     *
+     * This method allows external classes to manually mark the pet
+     * as dead or alive based on game logic or revive features.
+     *
+     * @param isDead true if the pet should be marked as dead, false otherwise.
+     */
     public void setDead(boolean isDead) {
         this.isDead = isDead;
     }
+
+    /**
+     * Sets the sleeping status of the pet.
+     *
+     * This can be used to manually put the pet to sleep or wake it up,
+     * depending on the game state or user actions.
+     *
+     * @param isSleeping true if the pet should be marked as sleeping, false to wake it up.
+     */
 
     public void setSleeping(boolean isSleeping) {
         this.isSleeping = isSleeping;
     }
 
+
+    /**
+     * Sets the hungry status of the pet.
+     *
+     * This flag indicates whether the pet is currently hungry. It can be
+     * toggled manually or based on gameplay events like fullness reaching zero.
+     *
+     * @param isHungry true if the pet is hungry; false otherwise.
+     */
     public void setHungry(boolean isHungry) {
         this.isHungry = isHungry;
     }
 
+
+    /**
+     * Sets the rate at which the pet's health declines over time.
+     *
+     * This value determines how quickly the pet loses health during gameplay,
+     * especially when other needs like sleep or food are unmet.
+     *
+     * @param rate The new health decline rate to assign.
+     */
     public void setHealthDeclineRate(int rate) {
         this.healthDeclineRate = rate;
     }
 
+
+    /**
+     * Sets the rate at which the pet's fullness decreases over time.
+     *
+     * This rate controls how quickly the pet gets hungry as the game progresses.
+     *
+     * @param rate The new fullness decline rate to assign.
+     */
     public void setFullnessDeclineRate(int rate) {
         this.fullnessDeclineRate = rate;
     }
+
+
+    /**
+     * Sets the rate at which the pet's sleep level declines over time.
+     *
+     * A higher rate means the pet gets tired more quickly during gameplay.
+     *
+     * @param rate The new sleep decline rate to apply.
+     */
 
     public void setSleepDeclineRate(int rate) {
         this.sleepDeclineRate = rate;
     }
 
+
+    /**
+     * Sets the rate at which the pet's happiness decreases over time.
+     *
+     * A higher value means the pet becomes unhappy more quickly if not entertained or cared for.
+     *
+     * @param rate The new happiness decline rate to assign.
+     */
     public void setHappinessDeclineRate(int rate) {
         this.happinessDeclineRate = rate;
     }
 
+
+    /**
+     * Sets the pet's current happiness value.
+     *
+     * This method directly assigns a new happiness value, which should typically
+     * be within the range of 0 and the pet's max happiness.
+     *
+     * @param happiness The new happiness value to assign.
+     */
     public void setHappiness(int happiness) {
         this.happiness = happiness;
     }
+
+
+    /**
+     * Returns the rate at which the pet's health decreases over time.
+     *
+     * @return The health decline rate as an integer value.
+     */
     public int getHealthDeclineRate() {
         return healthDeclineRate;
     }
+
+
+    /**
+     * Returns the rate at which the pet's fullness decreases over time.
+     *
+     * @return The fullness decline rate as an integer value.
+     */
 
     public int getFullnessDeclineRate() {
         return fullnessDeclineRate;
     }
 
+
+    /**
+     * Returns the rate at which the pet's sleep level decreases over time.
+     *
+     * @return The sleep decline rate as an integer.
+     */
     public int getSleepDeclineRate() {
         return sleepDeclineRate;
     }
 
+
+    /**
+     * Returns the rate at which the pet's happiness decreases over time.
+     *
+     * @return The happiness decline rate as an integer.
+     */
     public int getHappinessDeclineRate() {
         return happinessDeclineRate;
     }
+
 
 
     public void setPetType(String petType) {

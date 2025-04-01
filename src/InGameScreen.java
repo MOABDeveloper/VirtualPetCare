@@ -3,8 +3,10 @@ package src;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import javax.swing.Timer;
 
 
@@ -1102,7 +1104,7 @@ public class InGameScreen extends JLayeredPane {
                     boolean fed = inventory.feedPet(pet, food);
                     if (fed) {
                         FullnessProgressBar.setValue(pet.getFullness());
-                        playSound("resources/eating_sound.wav");
+                        playSound("eating_sound.wav");
                         updateGif(getGifPath("Eating"),1500);
                         refreshCoinDisplay(); // Add this to update coin display
 
@@ -1164,7 +1166,7 @@ public class InGameScreen extends JLayeredPane {
                     if (inventory.hasToy(toy)) {
                         pet.increaseHappiness(25);
                         HappinessProgressBar.setValue(pet.getHappiness());
-                        playSound("resources/play_sound.wav");
+                        playSound("play_sound.wav");
                         updateGif(getGifPath("Playing"),1500);
 
                         // Add coin reward for playing
@@ -1315,17 +1317,24 @@ public class InGameScreen extends JLayeredPane {
      */
     private void playSound(String soundFilePath) {
         try {
-            // Load audio input stream from the given file path
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundFilePath).getAbsoluteFile());
+            InputStream raw = getClass().getResourceAsStream("/" + soundFilePath);
+            if (raw == null) {
+                System.out.println("Sound file not found: " + soundFilePath);
+                return;
+            }
+
+            BufferedInputStream buffered = new BufferedInputStream(raw);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(buffered);
+
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             clip.start();
-        }
-        //throw error if there is an issue getting the file.
-        catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            // Suppress stack trace and show a simple message
+            System.out.println("Could not play sound: " + soundFilePath + " (" + e.getMessage() + ")");
         }
     }
+
 
     /**
      * Displays the player's current coin count on the screen using a styled label and coin icon.

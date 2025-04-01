@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -25,23 +26,46 @@ public class MainScreen extends JFrame {
     private static PlayerInventory playerInventory;
 
     MainScreen() {
-        // Load custom font
+//        // Load custom font
+//        try {
+//            // loading font from resources folder
+//            InputStream fontStream = getClass().getResourceAsStream("/resources/Early GameBoy.ttf");
+//            if (fontStream == null) {
+//                throw new IOException("Font file not found!");
+//            }
+//            customFont = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(16f); // def size
+//        } catch (IOException | FontFormatException e) {
+//            e.printStackTrace();
+//            // if font fails to load, go back to default
+//            customFont = new Font("Arial", Font.PLAIN, 24);
+//        }
+//        try {
+//            InputStream soundStream = getClass().getResourceAsStream("/resources/button_clicked.wav");
+//            if (soundStream != null) {
+//                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundStream);
+//                buttonClickSound = AudioSystem.getClip();
+//                buttonClickSound.open(audioInputStream);
+//            }
+//        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+//            e.printStackTrace();
+//            System.out.println("Could not load button click sound");
+//        }
         try {
-            // loading font from resources folder
-            InputStream fontStream = getClass().getResourceAsStream("/resources/Early GameBoy.ttf");
+            InputStream fontStream = getClass().getResourceAsStream("/Early GameBoy.ttf");
             if (fontStream == null) {
                 throw new IOException("Font file not found!");
             }
-            customFont = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(16f); // def size
+            customFont = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(16f); // default size
         } catch (IOException | FontFormatException e) {
             e.printStackTrace();
-            // if font fails to load, go back to default
+            // if font fails to load, fallback to default
             customFont = new Font("Arial", Font.PLAIN, 24);
         }
+
         try {
-            InputStream soundStream = getClass().getResourceAsStream("/resources/button_clicked.wav");
+            InputStream soundStream = getClass().getResourceAsStream("/button_clicked.wav");
             if (soundStream != null) {
-                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundStream);
+                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new BufferedInputStream(soundStream));
                 buttonClickSound = AudioSystem.getClip();
                 buttonClickSound.open(audioInputStream);
             }
@@ -49,6 +73,7 @@ public class MainScreen extends JFrame {
             e.printStackTrace();
             System.out.println("Could not load button click sound");
         }
+
 
 
         MusicPlayer.playBackgroundMusic("resources/background_music.wav");
