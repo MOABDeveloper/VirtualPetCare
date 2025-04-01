@@ -1,0 +1,40 @@
+{
+  "pet": {
+    "name": "e",
+    "petType": "PetOption1",
+    "health": 100,
+    "sleep": 22,
+    "fullness": 95,
+    "happiness": 94,
+    "maxHealth": 100,
+    "maxSleep": 100,
+    "maxFullness": 100,
+    "maxHappiness": 100,
+    "healthDeclineRate": 3,
+    "fullnessDeclineRate": 5,
+    "sleepDeclineRate": 3,
+    "happinessDeclineRate": 3,
+    "isSleeping": false,
+    "isHungry": false,
+    "isHappy": true,
+    "isDead": false,
+    "lastVetVisitTime": 0,
+    "vetCooldownDuration": 30,
+    "lastPlayTime": 0,
+    "playCooldownDuration": 20
+  },
+  "inventory": {
+    "playerCoins": 712,
+    "foodInventory": {
+      "Carrot Cake": 0,
+      "Lamb Chop": 0,
+      "Orange": 5
+    },
+    "giftInventory": {},
+    "toyInventory": {
+      "Wand": 1
+    },
+    "outfitInventory": {}
+  },
+  "totalPlayTime": 24303
+}
