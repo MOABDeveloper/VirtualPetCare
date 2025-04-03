@@ -31,7 +31,7 @@ public class TutorialCommands {
     /** String for the exercise tutorial */
     public String ExerciseScreenText = "Get up and move! Click the Exercise button-or E key-to make your pet do some workout. Exercise keeps your pet fit, but will make your pet more sleepy and fullness decreases, so be careful!";
     /** String for the sleeping tutorial */
-    public String SleepScreenText = "All that playing and exercising, of course they'll get tired! Click the Sleep button-or the Z key-to let them rest. Be patient though, because your pet won't wake up until it's fully rested!";
+    public String SleepScreenText = "All that playing and exercising, of course they'll get tired! Click the Sleep button-or the S key-to let them rest. Be patient though, because your pet won't wake up until it's fully rested!";
     /** String for the playing tutorial */
     public String PlayScreenText = "Naturally pets need to play. You can play with your pet by clicking the Play button-or the P key-to let them have fun! Playing makes your happiness meter increase! If your pet gets angry, it will ignore you until you play with it!";
 

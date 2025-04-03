@@ -72,7 +72,6 @@ public class KeyboardShortcuts {
      * - E: Exercise the pet
      * - V: Visit the vet
      * - Z: Put the pet to sleep
-     * - ENTER: Also mapped to sleep (for accessibility)
      */
     public void setupKeyBindings() {
         InputMap userInput = inGameScreen.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -84,15 +83,6 @@ public class KeyboardShortcuts {
             @Override
             public void actionPerformed(ActionEvent e) {
                 clickButtonAtPosition(390, 550);
-            }
-        });
-
-        // Sleep - Z key
-        userInput.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "Sleep");
-        actionMap.put("Sleep", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                clickButtonAtPosition(150, 500);
             }
         });
 
@@ -133,7 +123,7 @@ public class KeyboardShortcuts {
         });
 
         // Sleep - Z key
-        userInput.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, 0), "sleepPet");
+        userInput.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), "sleepPet");
         actionMap.put("sleepPet", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
